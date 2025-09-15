@@ -1,0 +1,2464 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Charged application",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "Rider",
+      "description": "APIs related to riders"
+    },
+    {
+      "name": "Driver",
+      "description": "Driver specific APIs"
+    },
+    {
+      "name": "Admin",
+      "description": "Admin Panel APIs"
+    },
+    {
+      "name": "Ride",
+      "description": "Ride related APIs"
+    },
+    {
+      "name": "Payment",
+      "description": "Payment related APIs"
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://api.charged.autos",
+      "description": "Client's Prod server"
+    },
+    {
+      "url": "http://3.20.152.91:3000",
+      "description": "Client's Live server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/rider": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns User JSON",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "userLogin",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns User JSON",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "userProfileUpdate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "abc@example.com"
+                  },
+                  "is_online": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "ABC Rd, Carolina"
+                  },
+                  "address_coordinates": {
+                    "type": "string",
+                    "example": "<lat>,<long>"
+                  },
+                  "work_address": {
+                    "type": "string",
+                    "example": "ABC Rd, Carolina"
+                  },
+                  "work_address_coordinates": {
+                    "type": "string",
+                    "example": "<lat>,<long>"
+                  },
+                  "android_fcm_token": {
+                    "type": "string",
+                    "example": "ffJe9lpt-BH_fAHI8yhJHz:APA91bFsjvxqqfHJ9u6C6z-jkNH1cIAY8nTNzeHaoLPg0JiG-TnEUojUynXMdQd4RBXJh8-oXUjwNEEfQfdqMcuHAi6foaaAG8Ntdl8L4-yYeGRVDGCxyiE"
+                  },
+                  "ios_fcm_token": {
+                    "type": "string",
+                    "example": "ffJe9lpt-BH_fAHI8yhJHz:APA91bFsjvxqqfHJ9u6C6z-jkNH1cIAY8nTNzeHaoLPg0JiG-TnEUojUynXMdQd4RBXJh8-oXUjwNEEfQfdqMcuHAi6foaaAG8Ntdl8L4-yYeGRVDGCxyiE"
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "example": "America/Los_Angeles"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "example": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/640px-User_icon_2.svg.png"
+                  },
+                  "is_riderbusiness": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/getmyrides": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get My Rides",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "records",
+            "in": "query",
+            "description": "Items per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "statuses",
+            "in": "query",
+            "description": "Comma separated Statuses",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "started,accepted"
+            }
+          }
+        ],
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "getRiderRides",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/getride/{id}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get Specific Ride",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "getRiderRide",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/sendnotification": {
+      "get": {
+        "summary": "Sends Push notification",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "pushNotification",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ride/fetchdriver/{id}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "fetch driver for a ride",
+        "tags": [
+          "Ride"
+        ],
+        "operationId": "riderFetchDriver",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Driver Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ride/fetchrider/{id}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "fetch rider for a ride",
+        "tags": [
+          "Ride"
+        ],
+        "operationId": "driverFetchRider",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Rider Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/changeridestatus/{id}": {
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Change Ride status",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "riderChangeRideStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "canceled"
+                    ],
+                    "example": "canceled"
+                  },
+                  "cancellation_reason": {
+                    "type": "string",
+                    "example": "Cancelled because driver was late"
+                  },
+                  "cancellation_fee": {
+                    "type": "number",
+                    "example": 52.16
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/ride/addrating/{id}": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Add Ride rating",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "postDriverRideRating",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rating": {
+                    "type": "number",
+                    "example": 4
+                  },
+                  "review": {
+                    "type": "string",
+                    "example": "test review"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/uploadfiles": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Upload Driver Files e.g. profile image etc",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "uploadDriverFiles",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/paymentmethods": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns Rider Payment Methods",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "riderPM",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/paymentmethods/{paymentMethodId}": {
+      "delete": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete Rider Added Payment Method",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "deleteRiderPM",
+        "parameters": [
+          {
+            "name": "paymentMethodId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Payment Method Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/payment/addmethod": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Add Payment Method",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "addPaymentMethod",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "stripe_payment_method_id": {
+                    "type": "string",
+                    "example": "pm_1RRataFvRmmDtAaV3u92l9fM"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/myrewardpoints": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get My Reward Points",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "getRiderRewardPoints",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/rider/getrewards": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get Rewards",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "getRewards",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns User JSON",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "userLogin",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns User JSON",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "userProfileUpdate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "abc@example.com"
+                  },
+                  "is_online": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "android_fcm_token": {
+                    "type": "string",
+                    "example": "ffJe9lpt-BH_fAHI8yhJHz:APA91bFsjvxqqfHJ9u6C6z-jkNH1cIAY8nTNzeHaoLPg0JiG-TnEUojUynXMdQd4RBXJh8-oXUjwNEEfQfdqMcuHAi6foaaAG8Ntdl8L4-yYeGRVDGCxyiE"
+                  },
+                  "ios_fcm_token": {
+                    "type": "string",
+                    "example": "ffJe9lpt-BH_fAHI8yhJHz:APA91bFsjvxqqfHJ9u6C6z-jkNH1cIAY8nTNzeHaoLPg0JiG-TnEUojUynXMdQd4RBXJh8-oXUjwNEEfQfdqMcuHAi6foaaAG8Ntdl8L4-yYeGRVDGCxyiE"
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "example": "America/Los_Angeles"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "example": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/640px-User_icon_2.svg.png"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/getmyrides": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get My Rides",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "records",
+            "in": "query",
+            "description": "Items per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "statuses",
+            "in": "query",
+            "description": "Comma separated Statuses",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "started,accepted"
+            }
+          }
+        ],
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "getDriverRides",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/myearnings": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get My Earnings",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start Date",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2025-08-01"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End Date",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2025-08-22"
+            }
+          }
+        ],
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "getDriverEarnings",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/getride/{id}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get Specific Ride",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "getDriverRide",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/changeridestatus/{id}": {
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Change Ride status",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "driverChangeRideStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "canceled",
+                      "accepted",
+                      "started",
+                      "completed"
+                    ],
+                    "example": "accepted"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/saveridelocation/{id}": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Save Ride location",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "driverSaveRideLocation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number",
+                    "example": 30.1212
+                  },
+                  "lng": {
+                    "type": "number",
+                    "example": 22.1313
+                  },
+                  "heading": {
+                    "type": "number",
+                    "example": 12.031
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/ride/addrating/{id}": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Add Ride rating",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "postRiderRideRating",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rating": {
+                    "type": "number",
+                    "example": 4
+                  },
+                  "review": {
+                    "type": "string",
+                    "example": "test review"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/details": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Save Driver Details",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "saveDriverDetails",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "car_model": {
+                    "type": "string",
+                    "example": "XUV"
+                  },
+                  "car_color": {
+                    "type": "string",
+                    "example": "White"
+                  },
+                  "ride_type_id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "car_year": {
+                    "type": "number",
+                    "example": 2020
+                  },
+                  "license_plate": {
+                    "type": "string",
+                    "example": "PB22 CE 1234"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Update Driver Details",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "updateDriverDetails",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "car_model": {
+                    "type": "string",
+                    "example": "XUV"
+                  },
+                  "car_color": {
+                    "type": "string",
+                    "example": "White"
+                  },
+                  "ride_type_id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "car_year": {
+                    "type": "number",
+                    "example": 2020
+                  },
+                  "license_plate": {
+                    "type": "string",
+                    "example": "PB22 CE 1234"
+                  },
+                  "last_location_lat": {
+                    "type": "number",
+                    "example": 32.2
+                  },
+                  "last_location_lng": {
+                    "type": "number",
+                    "example": 23.22
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/documenttypes": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Fetch Document Types available",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "fetchDocumentTypes",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/documents": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Fetch Drivers Uploaded Documents",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "fetchDocuments",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/uploaddocument/{type}": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Upload Driver Documents for verifiction from Admin",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "uploadDriverDocuments",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Document type"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/uploadfiles": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Upload Driver Files e.g. profile image etc",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "uploadDriverFiles",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/payment/initiate/{rideId}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Initiate Payment",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "initiatePayment",
+        "parameters": [
+          {
+            "name": "rideId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/payment/complete/{rideId}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Complete Payment",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "completePayment",
+        "parameters": [
+          {
+            "name": "rideId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/payment/createdriverstripeaccount": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Create Driver Stripe Connect account",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "createDriverStripeAccount",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/payment/accountstatus": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get Driver Stripe account status",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "fetchDriverStripeAccountStatus",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/payment/stripeloginlink": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Generate Driver Stripe Login link",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "generateDriverStripeLogin",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/driver/payment/accountconfirmation": {
+      "get": {
+        "summary": "Driver Stripe Connect account confirmation",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "driverStripeAccountConfirmation",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns Admin JSON",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminLogin",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/create": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns Admin JSON",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminCreate",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/getdrivers": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns Drivers list",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "driversList",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/deleteusers/{id}": {
+      "delete": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete Users from Admin Panel",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminDeleteUsers",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "User Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/getdriverdocs/{driver}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns Drivers document",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "driverDocsList",
+        "parameters": [
+          {
+            "name": "driver",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Driver Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/verifydriverdoc/{driver}/{document}": {
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns Drivers document",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "driverDocVerify",
+        "parameters": [
+          {
+            "name": "driver",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Driver Id"
+          },
+          {
+            "name": "document",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Document Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "verified",
+                      "rejected",
+                      "pending"
+                    ],
+                    "example": "verified"
+                  },
+                  "rejection_reason": {
+                    "type": "string",
+                    "example": "test reason //only to be sent if status is rejected"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "example": "optional notes text"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/updatestatus/{driver}": {
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Update Driver's status",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "driverDetailStatus",
+        "parameters": [
+          {
+            "name": "driver",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Driver Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "is_active": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/getriders": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns Riders list",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "ridersList",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/dashboardstats": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns Dashboard Stats",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "dashboardstats",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/ride/userrides/{user}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Return Users rides for Admin Panel",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminUserRides",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "User Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/documenttypes": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Create Document Type",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminCreateDocumentType",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "drivingLicense"
+                  },
+                  "display_name": {
+                    "type": "string",
+                    "example": "Driving License"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Sample Description"
+                  },
+                  "is_required": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "user_type": {
+                    "type": "string",
+                    "example": "driver"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns Document Types list",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminDocumentTypesList",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/documenttypes/{id}": {
+      "delete": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete DocumentType from Admin Panel",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminDeleteDocumentType",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Document Type Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Update DocumentType from Admin Panel",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminUpdateDocumentType",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Document Type Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "drivingLicense"
+                  },
+                  "display_name": {
+                    "type": "string",
+                    "example": "Driving License"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Sample Description"
+                  },
+                  "is_required": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "user_type": {
+                    "type": "string",
+                    "example": "driver"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/uploadfiles": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Upload Admin Files e.g. icon, docs etc",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "uploadAdminFiles",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/rewardpoints/{user}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Return Users reward points for Admin Panel",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminUserRewardPoints",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "User Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Add User reward points from Admin Panel",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminAddUserRewardPoints",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "User Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "example": "Sample Description"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/rewardpoints/{id}": {
+      "delete": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete User reward points from Admin Panel",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminDeleteUserRewardPoints",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Reward Point Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/rewards": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Return All Rewards for Admin Panel",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminRewards",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Add rewards from Admin Panel",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminAddRewards",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Sample Reward"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Sample Description"
+                  },
+                  "point_required": {
+                    "type": "number",
+                    "example": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin/rewards/{id}": {
+      "delete": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete rewards from Admin Panel",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "adminDeleteRewards",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Reward Point Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ride/ridetype": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Create Ride Type",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "saveRideType",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Charged X"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Can accomodate upto 4 people"
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "example": "normal"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "example": "https://static.vecteezy.com/system/resources/thumbnails/053/733/048/small_2x/modern-car-captured-in-close-upgraphy-with-precision-and-innovation-free-photo.jpg"
+                  },
+                  "base_price": {
+                    "type": "number",
+                    "example": 15
+                  },
+                  "price_per_km": {
+                    "type": "number",
+                    "example": 15
+                  },
+                  "price_per_minute": {
+                    "type": "number",
+                    "example": 10
+                  },
+                  "min_fare": {
+                    "type": "number",
+                    "example": 20
+                  },
+                  "cancel_fee": {
+                    "type": "number",
+                    "example": 15
+                  },
+                  "refund_distance_in_m": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "minimum_billable_distance": {
+                    "type": "number",
+                    "example": 5
+                  },
+                  "commission_percentage": {
+                    "type": "number",
+                    "example": 5
+                  },
+                  "govt_tax_percentage": {
+                    "type": "number",
+                    "example": 15.23
+                  },
+                  "sort_order": {
+                    "type": "number",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get All Ride Types",
+        "tags": [
+          "Ride"
+        ],
+        "operationId": "getAllRideTypes",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ride/ridetype/{ride_type}": {
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Update Ride type details",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "updateRideTypeDetails",
+        "parameters": [
+          {
+            "name": "ride_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Type Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Charged X"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Can accomodate upto 4 people"
+                  },
+                  "keyword": {
+                    "type": "string",
+                    "example": "normal"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "example": "https://static.vecteezy.com/system/resources/thumbnails/053/733/048/small_2x/modern-car-captured-in-close-upgraphy-with-precision-and-innovation-free-photo.jpg"
+                  },
+                  "price_per_km": {
+                    "type": "number",
+                    "example": 15
+                  },
+                  "price_per_minute": {
+                    "type": "number",
+                    "example": 10
+                  },
+                  "min_fare": {
+                    "type": "number",
+                    "example": 20
+                  },
+                  "cancel_fee": {
+                    "type": "number",
+                    "example": 15
+                  },
+                  "refund_distance_in_m": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "minimum_billable_distance": {
+                    "type": "number",
+                    "example": 5
+                  },
+                  "commission_percentage": {
+                    "type": "number",
+                    "example": 5
+                  },
+                  "govt_tax_percentage": {
+                    "type": "number",
+                    "example": 15.23
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "sort_order": {
+                    "type": "number",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ride": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Create Ride",
+        "tags": [
+          "Ride"
+        ],
+        "operationId": "saveRide",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ride_type_id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "pickup_address": {
+                    "type": "string",
+                    "example": "JalVayu Vihar, Mohali, Punjab"
+                  },
+                  "pickup_lat": {
+                    "type": "number",
+                    "example": 30.676
+                  },
+                  "pickup_lng": {
+                    "type": "number",
+                    "example": 76.726
+                  },
+                  "dropoff_address": {
+                    "type": "string",
+                    "example": "Madanpura Chowk, Mohali, Punjab"
+                  },
+                  "dropoff_lat": {
+                    "type": "number",
+                    "example": 30.717
+                  },
+                  "dropoff_lng": {
+                    "type": "number",
+                    "example": 76.724
+                  },
+                  "distance_km": {
+                    "type": "number",
+                    "example": 6.2
+                  },
+                  "duration_minutes": {
+                    "type": "number",
+                    "example": 13
+                  },
+                  "base_fare": {
+                    "type": "number",
+                    "example": 79
+                  },
+                  "distance_fare": {
+                    "type": "number",
+                    "example": 79
+                  },
+                  "time_fare": {
+                    "type": "number",
+                    "example": 79
+                  },
+                  "surge_multiplier": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "total_fare": {
+                    "type": "number",
+                    "example": 250
+                  },
+                  "govt_tax_percentage": {
+                    "type": "number",
+                    "example": 15.23
+                  },
+                  "driver_earnings": {
+                    "type": "number",
+                    "example": 220
+                  },
+                  "platform_fee": {
+                    "type": "number",
+                    "example": 30
+                  },
+                  "payment_method_id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "payment_status": {
+                    "type": "string",
+                    "example": "completed"
+                  },
+                  "customer_name": {
+                    "type": "string",
+                    "example": "Test Customer"
+                  },
+                  "customer_phone": {
+                    "type": "string",
+                    "example": "+15671234567"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Returns Last 10 Rides for admin dashboard",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "getAllRides",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ride/fetchride/{id}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get Specific Ride",
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "getAdminRide",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Ride Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ride/rider/sendchatnotification/{receiverId}": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Send Ride Chat Notifications",
+        "tags": [
+          "Rider"
+        ],
+        "operationId": "sendDriverChatNotifications",
+        "parameters": [
+          {
+            "name": "receiverId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Receiver Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Test notification message body"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ride/driver/sendchatnotification/{receiverId}": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Send Ride Chat Notifications",
+        "tags": [
+          "Driver"
+        ],
+        "operationId": "sendRiderChatNotifications",
+        "parameters": [
+          {
+            "name": "receiverId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Receiver Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Test notification message body"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/payment/addpm": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "ADD P M",
+        "tags": [
+          "Payment"
+        ],
+        "operationId": "addPM",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "_metadata": {
+    "fetched_from": "https://api.charged.autos/api-docs/swagger-ui-init.js",
+    "fetched_at": "2025-09-15T00:35:08.365Z",
+    "generated_by": "charged-admin-api-inventory"
+  }
+}

@@ -18,6 +18,14 @@ import NotFound from "./pages/NotFound";
 import Rewards from "./pages/Rewards";
 import { Toaster } from "react-hot-toast";
 import Documents from "./pages/Documents";
+import TipsPage from "./pages/tips/TipsPage";
+import BusinessListPage from "./pages/business/BusinessListPage";
+import BusinessDetailPage from "./pages/business/BusinessDetailPage";
+import ReferralsPage from "./pages/referrals/ReferralsPage";
+import DriverReferralWalletsPage from "./pages/referrals/DriverReferralWalletsPage";
+import RiderReferralWalletsPage from "./pages/referrals/RiderReferralWalletsPage";
+import ScheduledRidesPage from "./pages/scheduled/ScheduledRidesPage";
+import PromotionsPage from "./pages/promotions/PromotionsPage";
 
 // Create a theme instance
 const theme = createTheme({
@@ -77,6 +85,14 @@ const App: React.FC = () => {
               <Route path="rewards" element={<Rewards />} />
               <Route path="drivers" element={<Drivers />} />
               <Route path="documents" element={<Documents />} />
+              <Route path="tips" element={<TipsPage />} />
+              <Route path="businesses" element={<BusinessListPage />} />
+              <Route path="businesses/:orgId" element={<BusinessDetailPage />} />
+              <Route path="referrals" element={<ReferralsPage />} />
+              <Route path="referrals/drivers" element={<DriverReferralWalletsPage />} />
+              <Route path="referrals/riders" element={<RiderReferralWalletsPage />} />
+              <Route path="scheduled" element={<ScheduledRidesPage />} />
+            <Route path="promotions" element={<PromotionsPage />} />
               <Route path="rides/:rideId" element={<RideDetails />} />
               <Route path="*" element={<NotFound />} />
             </Route>

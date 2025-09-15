@@ -1,0 +1,48 @@
+{
+  "completed": {
+    "id": "ride-123",
+    "ride_number": "RIDE-001",
+    "rider_id": "rider-123",
+    "driver_id": "driver-123",
+    "status": "completed",
+    "fare_cents": 1500,
+    "distance_km": 5.2,
+    "duration_minutes": 15,
+    "pickup_address": "123 Main St, Halifax, NS",
+    "dropoff_address": "456 University Ave, Halifax, NS",
+    "started_at": "2024-01-01T10:00:00Z",
+    "completed_at": "2024-01-01T10:15:00Z",
+    "created_at": "2024-01-01T09:45:00Z"
+  },
+  "in_progress": {
+    "id": "ride-124",
+    "ride_number": "RIDE-002",
+    "rider_id": "rider-124",
+    "driver_id": "driver-124",
+    "status": "in_progress",
+    "fare_cents": 1200,
+    "distance_km": 3.8,
+    "duration_minutes": 12,
+    "pickup_address": "789 Spring Garden Rd, Halifax, NS",
+    "dropoff_address": "321 Barrington St, Halifax, NS",
+    "started_at": "2024-01-01T11:00:00Z",
+    "completed_at": null,
+    "created_at": "2024-01-01T10:45:00Z"
+  },
+  "cancelled": {
+    "id": "ride-125",
+    "ride_number": "RIDE-003",
+    "rider_id": "rider-125",
+    "driver_id": null,
+    "status": "cancelled",
+    "fare_cents": 0,
+    "distance_km": 0,
+    "duration_minutes": 0,
+    "pickup_address": "555 Robie St, Halifax, NS",
+    "dropoff_address": "777 Quinpool Rd, Halifax, NS",
+    "started_at": null,
+    "completed_at": null,
+    "cancelled_at": "2024-01-01T12:00:00Z",
+    "created_at": "2024-01-01T11:45:00Z"
+  }
+}

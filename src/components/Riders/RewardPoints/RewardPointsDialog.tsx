@@ -17,7 +17,7 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { formatDate } from "../../../utils/formatters";
 import { Minus, Plus } from "lucide-react";
 import { AdjustmentType, RewardPointDetail, Rider } from "../../../types";
@@ -123,7 +123,12 @@ const RewardPointsDialog: React.FC<RewardPointsDialogProps> = ({
                           AdjustmentType.DECREMENT,
                         )
                       }
-                      disabled={false}
+                      disabled={!rewards || rewards <= 0}
+                      title={
+                        !rewards || rewards <= 0 
+                          ? "No reward points available to consume" 
+                          : "Consume reward points"
+                      }
                     >
                       Consume Reward Points
                     </Button>

@@ -39,6 +39,7 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
   const [formSubmitValues, setFormSubmitValues] =
     useState<ChangeRewardPointsBody>();
   const [isRewardPointsChanging,setIsRewardPointsChanging]=useState<boolean>(false);
+  const [validationError, setValidationError] = useState<string>("");
   const { updateRewardPoints } = useAuth();
 
   const handleCloseAdjustmentDialog = () => {
@@ -46,11 +47,35 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
       amount: undefined,
       description: undefined,
     });
+    setValidationError("");
     setIsAdjustmentDialogOpen(false);
   };
 
   const handleFormSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    
+    // Clear previous validation errors
+    setValidationError("");
+    
+    // Validate that we have required fields
+    if (!formSubmitValues?.amount || !formSubmitValues?.description) {
+      setValidationError("Please fill in all required fields.");
+      return;
+    }
+
+    // Validate for decrement operations - check if rider has sufficient points
+    if (adjustmentType === AdjustmentType.DECREMENT) {
+      const amountToConsume = Math.abs(Number(formSubmitValues.amount));
+      const currentPoints = rider.rewardPoints || 0;
+      
+      if (amountToConsume > currentPoints) {
+        setValidationError(
+          `Insufficient reward points. Current balance: ${currentPoints} points. Cannot consume ${amountToConsume} points.`
+        );
+        return;
+      }
+    }
+
     setIsRewardPointsChanging(true);
 
     const newForm: ChangeRewardPointsBody = {
@@ -62,10 +87,16 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
       description: formSubmitValues?.description || "",
     };
 
-    await updateRewardPoints(Number(rider.id), newForm);
-    await fetchRewardPoints(Number(rider.id));
-    handleCloseAdjustmentDialog();
-    setIsRewardPointsChanging(false);
+    try {
+      await updateRewardPoints(Number(rider.id), newForm);
+      await fetchRewardPoints(Number(rider.id));
+      handleCloseAdjustmentDialog();
+    } catch (error) {
+      console.error("Error updating reward points:", error);
+      setValidationError("Failed to update reward points. Please try again.");
+    } finally {
+      setIsRewardPointsChanging(false);
+    }
   };
 
   return (
@@ -100,6 +131,41 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
         <DialogContent dividers>
           <Grid container spacing={4} justifyContent="center" sx={{ mb: 3 }} />
 
+          {/* Current balance display */}
+          <Grid item xs={12}>
+            <Box sx={{ 
+              p: 2, 
+              backgroundColor: 'grey.50', 
+              borderRadius: 1, 
+              border: '1px solid', 
+              borderColor: 'grey.200' 
+            }}>
+              <Typography variant="body2" color="text.secondary">
+                Current Reward Points Balance
+              </Typography>
+              <Typography variant="h6" color="primary" sx={{ fontWeight: 'bold' }}>
+                {rider.rewardPoints || 0} points
+              </Typography>
+            </Box>
+          </Grid>
+
+          {/* Validation error display */}
+          {validationError && (
+            <Grid item xs={12}>
+              <Box sx={{ 
+                p: 2, 
+                backgroundColor: 'error.light', 
+                borderRadius: 1, 
+                border: '1px solid', 
+                borderColor: 'error.main' 
+              }}>
+                <Typography variant="body2" color="error.main">
+                  {validationError}
+                </Typography>
+              </Box>
+            </Grid>
+          )}
+
           {/* Amount input */}
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom>
@@ -123,15 +189,22 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
                   : "Enter the number of rewards to consume"
               }
               onChange={(e) => {
+                const value = Number(e.target.value);
                 setFormSubmitValues((prev) => ({
-                  amount: Number(e.target.value),
+                  amount: value,
                   description: prev?.description ?? "",
                 }));
+                
+                // Clear validation error when user starts typing
+                if (validationError) {
+                  setValidationError("");
+                }
               }}
+              error={!!validationError}
               helperText={
                 adjustmentType === AdjustmentType.INCREMENT
                   ? "Specify how many reward points you want to add."
-                  : "Specify how many reward points you want to consume."
+                  : `Specify how many reward points you want to consume. (Max: ${rider.rewardPoints || 0} points)`
               }
             />
           </Grid>
@@ -177,10 +250,16 @@ const RewardAdjustmentDialog: React.FC<RewardAdjustmentDialogProps> = ({
               color="primary"
               fullWidth
               disabled={
-                !formSubmitValues?.amount || !formSubmitValues?.description || isRewardPointsChanging
+                !formSubmitValues?.amount || 
+                !formSubmitValues?.description || 
+                isRewardPointsChanging ||
+                !!validationError ||
+                (adjustmentType === AdjustmentType.DECREMENT && 
+                 formSubmitValues?.amount && 
+                 formSubmitValues.amount > (rider.rewardPoints || 0)) === true
               }
             >
-              Submit
+              {isRewardPointsChanging ? "Processing..." : "Submit"}
             </Button>
           </Grid>
         </DialogContent>

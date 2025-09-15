@@ -9,7 +9,7 @@ import {
 // This file contains the API calls for the admin panel
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:3000",
+  baseURL: "https://api.charged.autos",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -20,15 +20,34 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const userString = localStorage.getItem("charged_admin_user");
-    const user = JSON.parse(userString as string);
-    const token = user?.token;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (userString) {
+      const user = JSON.parse(userString);
+      const token = user?.token;
+      console.log("🔑 Sending token with request:", token ? "Yes" : "No");
+      console.log("🔑 Token preview:", token ? `${token.substring(0, 20)}...` : "None");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } else {
+      console.log("❌ No user found in localStorage");
     }
 
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  },
+);
+
+// Add a response interceptor to log API responses
+instance.interceptors.response.use(
+  (response) => {
+    console.log("✅ API Response:", response.status, response.config.url);
+    return response;
+  },
+  (error) => {
+    console.error("❌ API Error:", error.response?.status, error.config?.url);
+    console.error("❌ Error details:", error.response?.data);
     return Promise.reject(error);
   },
 );

@@ -1,0 +1,45 @@
+{
+  "admin": {
+    "id": "admin-123",
+    "email": "admin@charged.autos",
+    "name": "Admin User",
+    "role": "admin",
+    "token": "admin-token-123",
+    "created_at": "2024-01-01T00:00:00Z"
+  },
+  "driver": {
+    "id": "driver-123",
+    "email": "driver@test.com",
+    "name": "Test Driver",
+    "role": "driver",
+    "token": "driver-token-123",
+    "phone": "+1234567890",
+    "vehicle_type": "Charged X",
+    "status": "active",
+    "rating": 4.5,
+    "total_rides": 100,
+    "created_at": "2024-01-01T00:00:00Z"
+  },
+  "rider": {
+    "id": "rider-123",
+    "email": "rider@test.com",
+    "name": "Test Rider",
+    "role": "rider",
+    "token": "rider-token-123",
+    "phone": "+1234567890",
+    "status": "active",
+    "rating": 4.8,
+    "total_rides": 50,
+    "created_at": "2024-01-01T00:00:00Z"
+  },
+  "business": {
+    "id": "business-123",
+    "email": "business@test.com",
+    "name": "Test Business",
+    "role": "business",
+    "token": "business-token-123",
+    "org_id": "org-123",
+    "status": "active",
+    "created_at": "2024-01-01T00:00:00Z"
+  }
+}

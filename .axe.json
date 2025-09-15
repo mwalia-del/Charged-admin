@@ -1,0 +1,31 @@
+{
+  "rules": {
+    "color-contrast": { "enabled": true },
+    "keyboard-navigation": { "enabled": true },
+    "focus-order-semantics": { "enabled": true },
+    "aria-allowed-attr": { "enabled": true },
+    "aria-required-attr": { "enabled": true },
+    "aria-valid-attr-value": { "enabled": true },
+    "aria-required-children": { "enabled": true },
+    "aria-required-parent": { "enabled": true },
+    "aria-roles": { "enabled": true },
+    "aria-valid-role": { "enabled": true },
+    "button-name": { "enabled": true },
+    "form-field-multiple-labels": { "enabled": true },
+    "heading-order": { "enabled": true },
+    "html-has-lang": { "enabled": true },
+    "image-alt": { "enabled": true },
+    "label": { "enabled": true },
+    "link-name": { "enabled": true },
+    "list": { "enabled": true },
+    "listitem": { "enabled": true },
+    "page-has-heading-one": { "enabled": true },
+    "region": { "enabled": true },
+    "table-fake-caption": { "enabled": true },
+    "td-has-header": { "enabled": true },
+    "th-has-data-cells": { "enabled": true }
+  },
+  "tags": ["wcag2a", "wcag2aa", "wcag21aa"],
+  "include": ["http://localhost:3000/**"],
+  "exclude": ["http://localhost:3000/static/**"]
+}

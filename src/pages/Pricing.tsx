@@ -14,16 +14,26 @@ import {
   Divider,
   InputAdornment,
   Avatar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import {
   Save as SaveIcon,
   Refresh as RefreshIcon,
-  // ElectricCar as ElectricIcon,
-  // DirectionsCar as CarIcon,
-  // AirportShuttle as SuvIcon,
+  Settings as SettingsIcon,
+  DirectionsCar as VehicleIcon,
 } from "@mui/icons-material";
-import { rideTypes } from "../types";
+import { rideTypes, VehicleClass, VehicleClassUpdate } from "../types";
 import { useAuth } from "../contexts/AuthContext";
+import { generateMockVehicleClassesResponse } from "../API/mockVehicleClassesData";
+import VehicleClassRow from "./pricing/components/VehicleClassRow";
 import toast from "react-hot-toast";
 
 // // Ride type icons mapping
@@ -35,14 +45,19 @@ import toast from "react-hot-toast";
 
 const Pricing: React.FC = () => {
   const [pricingRules, setPricingRules] = useState<rideTypes[]>([]);
+  const [vehicleClasses, setVehicleClasses] = useState<VehicleClass[]>([]);
   const [loading, setLoading] = useState(true);
+  const [vehicleClassesLoading, setVehicleClassesLoading] = useState(false);
   const [savingRules, setSavingRules] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
+  const [vehicleClassesError, setVehicleClassesError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState(0);
   const { getRidetypes, updateRidetype } = useAuth();
 
   // Load pricing rules on component mount
   useEffect(() => {
     fetchPricingRules();
+    fetchVehicleClasses();
     // eslint-disable-next-line
   }, []);
 
@@ -84,6 +99,40 @@ const Pricing: React.FC = () => {
     }
   };
 
+  const fetchVehicleClasses = async () => {
+    setVehicleClassesLoading(true);
+    try {
+      // Use mock data for now
+      const response = generateMockVehicleClassesResponse();
+      setVehicleClasses(response.vehicle_classes);
+      setVehicleClassesError(null);
+    } catch (err) {
+      setVehicleClassesError("Failed to load vehicle classes. Please try again.");
+      console.error("Error fetching vehicle classes:", err);
+    } finally {
+      setVehicleClassesLoading(false);
+    }
+  };
+
+  const handleVehicleClassUpdate = (code: string, updates: VehicleClassUpdate) => {
+    setVehicleClasses(prev => 
+      prev.map(vc => 
+        vc.code === code 
+          ? { ...vc, ...updates, updated_at: new Date().toISOString() }
+          : vc
+      )
+    );
+    toast.success("Vehicle class updated successfully. Changes are live now!");
+  };
+
+  const handleVehicleClassError = (error: string) => {
+    toast.error(error);
+  };
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
@@ -112,17 +161,33 @@ const Pricing: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Pricing Rules
+        Pricing & Vehicle Management
       </Typography>
 
       <Typography variant="body1" color="text.secondary" paragraph>
-        Configure pricing rules for different ride types including base prices,
-        per-kilometer rates, cancellation fees, and refund policies.
+        Configure pricing rules for different ride types and manage vehicle class availability across all platforms.
       </Typography>
 
-      <Box sx={{ mt: 4 }}>
-        <Grid container spacing={4}>
-          {pricingRules.map((rule) => (
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+        <Tabs value={activeTab} onChange={handleTabChange}>
+          <Tab 
+            icon={<SettingsIcon />} 
+            label="Pricing Rules" 
+            iconPosition="start"
+          />
+          <Tab 
+            icon={<VehicleIcon />} 
+            label="Vehicle Classes" 
+            iconPosition="start"
+          />
+        </Tabs>
+      </Box>
+
+      {/* Pricing Rules Tab */}
+      {activeTab === 0 && (
+        <Box sx={{ mt: 4 }}>
+          <Grid container spacing={4}>
+            {pricingRules.map((rule) => (
             <Grid item xs={12} md={4} key={rule.id}>
               <Card elevation={3}>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -360,8 +425,66 @@ const Pricing: React.FC = () => {
               </Card>
             </Grid>
           ))}
-        </Grid>
-      </Box>
+          </Grid>
+        </Box>
+      )}
+
+      {/* Vehicle Classes Tab */}
+      {activeTab === 1 && (
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Vehicle Class Management
+          </Typography>
+          <Typography variant="body2" color="text.secondary" paragraph>
+            Enable or disable vehicle classes across all platforms. Changes take effect immediately.
+          </Typography>
+
+          {vehicleClassesError && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {vehicleClassesError}
+            </Alert>
+          )}
+
+          {vehicleClassesLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Vehicle Class</TableCell>
+                    <TableCell>Base Fare</TableCell>
+                    <TableCell>Per KM</TableCell>
+                    <TableCell>Per Minute</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Last Updated</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {vehicleClasses.map((vehicleClass) => (
+                    <VehicleClassRow
+                      key={vehicleClass.id}
+                      vehicleClass={vehicleClass}
+                      onUpdate={handleVehicleClassUpdate}
+                      onError={handleVehicleClassError}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+
+          <Box sx={{ mt: 3, p: 2, bgcolor: 'info.light', borderRadius: 1 }}>
+            <Typography variant="body2" color="info.contrastText">
+              <strong>Realtime Updates:</strong> When you disable a vehicle class, it will be hidden from all rider, driver, and business apps within seconds. 
+              Any attempt to book a disabled vehicle class will be rejected by the server.
+            </Typography>
+          </Box>
+        </Box>
+      )}
     </Container>
   );
 };

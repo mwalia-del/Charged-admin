@@ -14,7 +14,6 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  Star as StarIcon,
   Visibility as ViewIcon,
   Delete,
 } from "@mui/icons-material";
@@ -22,6 +21,7 @@ import React, { useState } from "react";
 import { formatDate, formatRelativeTime } from "../../../utils/formatters";
 import { Rider } from "../../../types";
 import DeleteRiderDialog from "./DeleteRider/DeleteRiderDialog";
+import StarRating from "../../StarRating/StarRating";
 
 interface RidersTableProps {
   filteredRiders: Rider[];
@@ -65,6 +65,7 @@ const RidersTable = ({
               <TableCell>Rider</TableCell>
               <TableCell>Contact</TableCell>
               <TableCell align="center">Rating</TableCell>
+              <TableCell align="center">Reward Points</TableCell>
               <TableCell align="center">Rides</TableCell>
               <TableCell align="center">Joined</TableCell>
               <TableCell align="center">Last Ride</TableCell>
@@ -100,11 +101,28 @@ const RidersTable = ({
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
+                    <Box sx={{ 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      alignItems: 'center',
+                      gap: 0.5
+                    }}>
+                      <StarRating
+                        rating={rider.rating || 0}
+                        size="medium"
+                        color="primary"
+                      />
+                      <Typography variant="caption" color="text.secondary">
+                        Rating
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center">
                     <Chip
-                      icon={<StarIcon fontSize="small" />}
                       label={rider.rewardPoints}
                       color="primary"
                       variant="outlined"
+                      size="small"
                     />
                   </TableCell>
                   <TableCell align="center">{rider.totalRides}</TableCell>
@@ -141,7 +159,7 @@ const RidersTable = ({
 
             {filteredRiders.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
+                <TableCell colSpan={8} align="center" sx={{ py: 3 }}>
                   <Typography variant="body1" color="text.secondary">
                     No riders found matching your search.
                   </Typography>

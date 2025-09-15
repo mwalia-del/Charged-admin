@@ -26,11 +26,11 @@ import {
   DialogActions,
   Input,
   DialogContentText,
+  Tooltip,
 } from "@mui/material";
 import {
   Search as SearchIcon,
   Visibility as ViewIcon,
-  Star as StarIcon,
   DirectionsCar as CarIcon,
   ElectricCar as ElectricIcon,
   AirportShuttle as SuvIcon,
@@ -38,12 +38,15 @@ import {
   Close as InactiveIcon,
   UploadFile as UploadFileIcon,
   Delete,
+  Refresh as RefreshIcon,
+  ContentCopy as CopyIcon,
 } from "@mui/icons-material";
 import { Driver, Ride, RideType, DocumentType } from "../../types";
 import { useAuth } from "../../contexts/AuthContext";
 import { mockApi } from "../../services/mockApi";
 import DriverDetailsDialog from "./DriverDetails/DriverDetailsDialog";
 import DeleteDriverDialog from "./DeleteDriverDialog/DeleteDriverDialog";
+import StarRating from "../StarRating/StarRating";
 
 const DriversComponent: React.FC = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
@@ -79,6 +82,7 @@ const DriversComponent: React.FC = () => {
   const [uploadingDocument, setUploadingDocument] = useState(false);
   const [isDriverDeleted, setIsDriverDeleted] = useState(false);
   const [deletingDriver, setDeletingDriver] = useState<Driver | null>(null);
+  const [lastDataFetch, setLastDataFetch] = useState<Date | null>(null);
   const { getDrivers, getDriverDocs, getRidesByUserId } = useAuth();
 
   useEffect(() => {
@@ -88,36 +92,57 @@ const DriversComponent: React.FC = () => {
 
   const applyFilters = useCallback(() => {
     let result = [...drivers];
+    console.log("🔍 Applying filters:", { 
+      totalDrivers: drivers.length, 
+      searchQuery, 
+      selectedVehicleType, 
+      selectedStatusFilter 
+    });
 
     // Apply search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
+      const beforeSearch = result.length;
       result = result.filter(
         (driver) =>
           driver?.name?.toLowerCase()?.includes(query) ||
           driver?.email?.toLowerCase()?.includes(query) ||
-          driver?.phone?.includes(query) ||
+          driver?.phone?.toString()?.includes(query) ||
           driver?.license_plate?.toLowerCase().includes(query)
       );
+      console.log("🔍 Search filter:", { query, before: beforeSearch, after: result.length });
       setPage(0);
     }
 
     // Apply vehicle type filter
     if (selectedVehicleType !== "all") {
+      const beforeVehicle = result.length;
       result = result.filter(
         (driver) => driver.car_type === selectedVehicleType
       );
+      console.log("🚗 Vehicle filter:", { 
+        type: selectedVehicleType, 
+        before: beforeVehicle, 
+        after: result.length 
+      });
       setPage(0);
     }
 
     // Apply status filter
     if (selectedStatusFilter !== "all") {
+      const beforeStatus = result.length;
       result = result.filter(
         (driver) => driver.is_active === selectedStatusFilter
       );
+      console.log("📊 Status filter:", { 
+        status: selectedStatusFilter, 
+        before: beforeStatus, 
+        after: result.length 
+      });
       setPage(0);
     }
 
+    console.log("✅ Final filtered results:", result.length);
     setFilteredDrivers(result);
   }, [drivers, searchQuery, selectedVehicleType, selectedStatusFilter]);
 
@@ -134,11 +159,15 @@ const DriversComponent: React.FC = () => {
   const fetchDrivers = async () => {
     setLoading(true);
     try {
+      console.log("🔄 Fetching fresh drivers data...");
       const data = await getDrivers();
+      console.log("📊 Fresh drivers data received:", data.length, "drivers");
       setDrivers(data);
       setFilteredDrivers(data);
+      setLastDataFetch(new Date());
       setError(null);
     } catch (err) {
+      console.error("❌ Error fetching drivers:", err);
       if (err instanceof Error) {
         setError(err.message);
       } else {
@@ -201,11 +230,11 @@ const DriversComponent: React.FC = () => {
   const getVehicleTypeLabel = (type: RideType) => {
     switch (type) {
       case "electric":
-        return "Electric";
+        return "Charged X";
       case "regular":
-        return "Regular";
+        return "Charged Black";
       case "suv":
-        return "SUV";
+        return "Charged Xl";
       default:
         return type;
     }
@@ -230,6 +259,19 @@ const DriversComponent: React.FC = () => {
       default:
         return documentType;
     }
+  };
+
+  const generateReferralId = (driverId: string | number) => {
+    if (!driverId) return 'DRV-UNKNOWN';
+    const idString = String(driverId);
+    const shortId = idString.length > 8 ? idString.substring(0, 8) : idString.padStart(8, '0');
+    return `DRV-${shortId.toUpperCase()}`;
+  };
+
+
+  const copyReferralId = (referralId: string) => {
+    navigator.clipboard.writeText(referralId);
+    // You could add a snackbar notification here
   };
 
   const handleCloseUploadDialog = () => {
@@ -292,14 +334,33 @@ const DriversComponent: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Driver Management
-      </Typography>
-
-      <Typography variant="body1" color="text.secondary" paragraph>
-        View and manage drivers, filter by vehicle type, and see driver
-        statistics.
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+        <Box>
+          <Typography variant="h4" gutterBottom>
+            Driver Management
+          </Typography>
+          <Typography variant="body1" color="text.secondary" paragraph>
+            View and manage drivers, filter by vehicle type, and see driver
+            statistics.
+          </Typography>
+        </Box>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+          <Button
+            variant="outlined"
+            startIcon={<RefreshIcon />}
+            onClick={fetchDrivers}
+            disabled={loading}
+            sx={{ ml: 2 }}
+          >
+            {loading ? "Refreshing..." : "Refresh Data"}
+          </Button>
+          {lastDataFetch && (
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+              Last updated: {lastDataFetch.toLocaleTimeString()}
+            </Typography>
+          )}
+        </Box>
+      </Box>
 
       {error && (
         <Alert severity="error" sx={{ mb: 4 }}>
@@ -343,7 +404,7 @@ const DriversComponent: React.FC = () => {
                 />
                 <Chip
                   icon={<ElectricIcon />}
-                  label="Electric"
+                  label="Charged X"
                   onClick={() => setSelectedVehicleType("electric")}
                   color={
                     selectedVehicleType === "electric" ? "primary" : "default"
@@ -354,7 +415,7 @@ const DriversComponent: React.FC = () => {
                 />
                 <Chip
                   icon={<CarIcon />}
-                  label="Regular"
+                  label="Charged Black"
                   onClick={() => setSelectedVehicleType("regular")}
                   color={
                     selectedVehicleType === "regular" ? "primary" : "default"
@@ -365,7 +426,7 @@ const DriversComponent: React.FC = () => {
                 />
                 <Chip
                   icon={<SuvIcon />}
-                  label="SUV"
+                  label="Charged Xl"
                   onClick={() => setSelectedVehicleType("suv")}
                   color={selectedVehicleType === "suv" ? "primary" : "default"}
                   variant={
@@ -420,6 +481,7 @@ const DriversComponent: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Driver</TableCell>
+                <TableCell>Referral ID</TableCell>
                 <TableCell>Vehicle Type</TableCell>
                 <TableCell>License Plate</TableCell>
                 <TableCell>Rating</TableCell>
@@ -449,6 +511,21 @@ const DriversComponent: React.FC = () => {
                       </Box>
                     </TableCell>
                     <TableCell>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Typography variant="body2" fontFamily="monospace">
+                          {generateReferralId(driver.id)}
+                        </Typography>
+                        <Tooltip title="Copy Referral ID">
+                          <IconButton
+                            size="small"
+                            onClick={() => copyReferralId(generateReferralId(driver.id))}
+                          >
+                            <CopyIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         {getVehicleTypeIcon(driver.car_type)}
                         <Typography variant="body2" sx={{ ml: 1 }}>
@@ -458,9 +535,20 @@ const DriversComponent: React.FC = () => {
                     </TableCell>
                     <TableCell>{driver.license_plate}</TableCell>
                     <TableCell>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <StarIcon sx={{ color: "gold", mr: 0.5 }} />
-                        {driver.rating}
+                      <Box sx={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'center',
+                        gap: 0.5
+                      }}>
+                        <StarRating
+                          rating={driver.rating || 0}
+                          size="medium"
+                          color="primary"
+                        />
+                        <Typography variant="caption" color="text.secondary">
+                          Rating
+                        </Typography>
                       </Box>
                     </TableCell>
                     <TableCell>
@@ -472,27 +560,32 @@ const DriversComponent: React.FC = () => {
                     </TableCell>
                     <TableCell align="center">{driver.total_rides}</TableCell>
                     <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={() => handleViewDriver(driver)}
-                      >
-                        <ViewIcon />
-                      </IconButton>
-                      <IconButton
-                        color="secondary"
-                        size="small"
-                        title="Delete Document"
-                        onClick={() => handleDeleteDriver(driver)}
-                      >
-                        <Delete />
-                      </IconButton>
+                      <Box sx={{ display: 'flex', gap: 0.5 }}>
+                        <Tooltip title="View Driver Details">
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            onClick={() => handleViewDriver(driver)}
+                          >
+                            <ViewIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete Driver">
+                          <IconButton
+                            color="secondary"
+                            size="small"
+                            onClick={() => handleDeleteDriver(driver)}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}
               {filteredDrivers.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} align="center">
+                  <TableCell colSpan={8} align="center">
                     <Typography variant="body1" sx={{ py: 2 }}>
                       No drivers found matching the search criteria
                     </Typography>
@@ -512,6 +605,7 @@ const DriversComponent: React.FC = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+
 
       {/* Driver Details Dialog */}
       <DriverDetailsDialog
@@ -631,6 +725,7 @@ const DriversComponent: React.FC = () => {
           fetchDrivers={fetchDrivers}
         />
       )}
+
     </Container>
   );
 };

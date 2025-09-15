@@ -156,6 +156,18 @@ const RiderRidesDialog = ({
                     </Typography>
                   </Paper>
                 </Grid>
+                <Grid item xs={6} md={3}>
+                  <Paper sx={{ p: 2, textAlign: "center" }} elevation={2}>
+                    <Typography variant="h4" color="primary">
+                      {selectedRider.rating && typeof selectedRider.rating === 'number' 
+                        ? selectedRider.rating.toFixed(1) 
+                        : '0.0'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Rider Rating
+                    </Typography>
+                  </Paper>
+                </Grid>
               </Grid>
 
               <Typography variant="subtitle1" sx={{ mb: 2 }}>

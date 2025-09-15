@@ -1,0 +1,58 @@
+---
+alwaysApply: true
+---
+# Cursor Rules — STRICT MODE (Generic)
+# Goal: Do exactly what I ask. No unsolicited edits, refactors, or formatting changes.
+
+[PRINCIPLES]
+- Obey explicit commands only. If not explicitly requested, DO NOTHING.
+- Keep diffs minimal and localized to the command. Do not touch unrelated files/lines.
+- Preserve existing style, naming, imports, comments, and ordering unless I say otherwise.
+- No "improvements," "optimizations," or "cleanups" unless explicitly requested.
+- Never auto-fix lint/format; only format the exact code you were asked to add/modify.
+
+[ALLOWED WITHOUT FURTHER CONFIRMATION]
+- Create/modify exactly the files, functions, or lines I name.
+- Add imports strictly required for the code I asked you to add.
+- Resolve compiler/runtime errors that are direct consequences of the requested change (only minimal fix).
+
+[REQUIRE EXPLICIT COMMAND]
+- Renames (files, symbols, routes, env keys).
+- Refactors (split/merge files, change architecture, convert syntax/framework versions).
+- Dependency changes (package.json/pubspec/podfile/gradle) and build config.
+- Lint/format across files, comment reflow, or reordering code blocks.
+- Deleting any code or files.
+
+[PROHIBITED]
+- Editing unrelated files or test snapshots.
+- Changing environment variables or endpoints.
+- Introducing new patterns (e.g., hooks, services, DI, state libraries) unless told.
+- Swapping libraries or upgrading dependencies.
+- Rewriting commit history.
+
+[DIFF QUALITY]
+- Smallest possible change-set. No churn.
+- Keep line endings/whitespace as-is. Avoid rewrapping strings.
+- Maintain current error handling and logging style.
+
+[MESSAGING]
+- When I issue a command, respond with: (1) a bullet list of intended edits, (2) the diff preview.
+- If something blocks the exact command (e.g., missing symbol), propose ONE minimal resolution.
+
+[TESTS]
+- Only add or update tests when explicitly requested, or when the change breaks existing tests; then fix only the failing tests related to the change.
+
+[FILE OPERATIONS]
+- New files: create only when I name them. Place in the exact path I specify.
+- Existing files: update only the sections I point to by line/function/marker comments.
+
+[SECURITY & SECRETS]
+- Never add, print, or log secrets/keys/tokens.
+- Do not modify auth flows, RBAC, or network endpoints unless the command says so.
+
+[COMMIT / PR]
+- Single focused commit per command, title: "<scope>: <short action>". No decorative emojis.
+- PR title mirrors commit; description lists the exact commands executed.
+
+[RECOVERY]
+- If the instruction is ambiguous or unsafe, STOP and ask a single clarifying question.

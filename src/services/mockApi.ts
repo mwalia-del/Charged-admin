@@ -113,9 +113,11 @@ const generateRiders = (count: number): Rider[] => {
       phone: `+1${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 900) + 100}${Math.floor(Math.random() * 9000) + 1000}`,
       rewardPoints,
       totalRides,
+      rating: Math.round((Math.random() * 4 + 1) * 10) / 10, // Random rating between 1.0 and 5.0
       created_at: signedUpDate,
       lastRideDate,
       photo: `https://randomuser.me/api/portraits/${Math.random() > 0.5 ? "men" : "women"}/${i % 70}.jpg`,
+      is_active: Math.random() > 0.1, // 90% chance of being active
     });
   }
 

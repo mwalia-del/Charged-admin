@@ -29,6 +29,12 @@ import {
   DirectionsCar as CarIcon,
   DocumentScanner,
   CardGiftcard as Rewards,
+  EmojiEvents as TipsIcon,
+  Business as BusinessIcon,
+  Share as ReferralIcon,
+  AccountBalanceWallet as WalletIcon,
+  Schedule as ScheduledIcon,
+  Campaign as PromotionsIcon,
 } from "@mui/icons-material";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -45,6 +51,13 @@ const navItems: NavItem[] = [
   { text: "Pricing", path: "/pricing", icon: <MoneyIcon /> },
   { text: "Documents", path: "/documents", icon: <DocumentScanner /> },
   { text: "Rewards", path: "/rewards", icon: <Rewards /> },
+  { text: "Tips", path: "/tips", icon: <TipsIcon /> },
+  { text: "Business", path: "/businesses", icon: <BusinessIcon /> },
+  { text: "Referrals", path: "/referrals", icon: <ReferralIcon /> },
+  { text: "Driver Wallets", path: "/referrals/drivers", icon: <WalletIcon /> },
+  { text: "Rider Wallets", path: "/referrals/riders", icon: <WalletIcon /> },
+    { text: "Scheduled Rides", path: "/scheduled", icon: <ScheduledIcon /> },
+    { text: "Promotions", path: "/promotions", icon: <PromotionsIcon /> },
   { text: "Riders", path: "/riders", icon: <PeopleIcon /> },
   { text: "Drivers", path: "/drivers", icon: <CarIcon /> },
 ];
