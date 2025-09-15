@@ -49,7 +49,13 @@
     "endpoints:refresh": "ts-node scripts/dev/run-all.ts",
     "db:migrate": "ts-node scripts/db/migrate.ts",
     "db:rollback": "ts-node scripts/db/rollback.ts",
-    "db:verify": "ts-node scripts/db/verify.ts"
+    "db:verify": "ts-node scripts/db/verify.ts",
+    "prod:contract": "jest --config tests/prod/jest.contract.config.js",
+    "prod:smoke": "playwright test -c tests/prod/playwright.config.ts --project=chromium",
+    "prod:ui:a11y": "axe-crawl --config tests/prod/.axe.json || true",
+    "prod:report:bundle": "node tests/prod/scripts/bundle-reports.js",
+    "prod:state:generate": "node tests/prod/scripts/generate-admin-state.js",
+    "prod:test": "node tests/prod/scripts/run-production-tests.js"
   },
   "eslintConfig": {
     "extends": [
@@ -82,6 +88,8 @@
     "@types/pg": "^8.15.5",
     "@types/supertest": "^6.0.3",
     "archiver": "^7.0.1",
+    "axe-crawl": "^1.0.0",
+    "jest-html-reporters": "^3.1.7",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",

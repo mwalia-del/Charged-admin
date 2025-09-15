@@ -1,0 +1,25 @@
+{
+  "rules": {
+    "color-contrast": { "enabled": true },
+    "keyboard-navigation": { "enabled": true },
+    "focus-order-semantics": { "enabled": true },
+    "aria-allowed-attr": { "enabled": true },
+    "aria-required-attr": { "enabled": true },
+    "aria-valid-attr-value": { "enabled": true },
+    "aria-required-children": { "enabled": true },
+    "aria-required-parent": { "enabled": true },
+    "aria-roles": { "enabled": true },
+    "aria-valid-role": { "enabled": true },
+    "button-name": { "enabled": true },
+    "form-field-multiple-labels": { "enabled": true },
+    "label": { "enabled": true },
+    "link-name": { "enabled": true },
+    "select-name": { "enabled": true },
+    "table-fake-caption": { "enabled": true },
+    "td-headers-attr": { "enabled": true },
+    "th-has-data-cells": { "enabled": true }
+  },
+  "tags": ["wcag2a", "wcag2aa", "wcag21aa"],
+  "reporter": "json",
+  "output": "tests/prod/artifacts/axe-report.json"
+}
