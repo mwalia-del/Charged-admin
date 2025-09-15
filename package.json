@@ -46,7 +46,10 @@
     "gen:endpoints": "ts-node scripts/dev/generate-endpoints.ts",
     "diff:endpoints": "ts-node scripts/dev/diff-endpoints.ts",
     "bundle:endpoints": "ts-node scripts/dev/make-server-bundles.ts",
-    "endpoints:refresh": "ts-node scripts/dev/run-all.ts"
+    "endpoints:refresh": "ts-node scripts/dev/run-all.ts",
+    "db:migrate": "ts-node scripts/db/migrate.ts",
+    "db:rollback": "ts-node scripts/db/rollback.ts",
+    "db:verify": "ts-node scripts/db/verify.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -76,6 +79,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/archiver": "^6.0.3",
     "@types/jest": "^30.0.0",
+    "@types/pg": "^8.15.5",
     "@types/supertest": "^6.0.3",
     "archiver": "^7.0.1",
     "identity-obj-proxy": "^3.0.0",
@@ -85,6 +89,7 @@
     "jest-transform-stub": "^2.0.0",
     "msw": "^2.11.2",
     "openapi-to-postmanv2": "^5.1.0",
+    "pg": "^8.16.3",
     "prettier": "3.5.3",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.1",

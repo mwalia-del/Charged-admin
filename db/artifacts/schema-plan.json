@@ -1,0 +1,135 @@
+{
+  "discovery": {
+    "orm_detected": "raw_sql",
+    "database_type": "postgresql",
+    "existing_tables": [
+      "document_types",
+      "documents", 
+      "driver_details",
+      "notifications",
+      "payment_methods",
+      "reward_points",
+      "rewards",
+      "ride_statuses",
+      "ride_tracking",
+      "ride_types",
+      "rides",
+      "settings",
+      "tokens",
+      "users",
+      "vehicle_classes"
+    ],
+    "current_schema_issues": [
+      "users table uses integer PK instead of UUID",
+      "rides table uses integer PK instead of UUID", 
+      "missing proper enum types for many fields",
+      "missing business/organization tables",
+      "missing wallet/ledger system",
+      "missing tips system",
+      "missing referrals system",
+      "missing scheduled rides",
+      "missing promotions system",
+      "missing invoices system",
+      "missing proper notification tokens table"
+    ]
+  },
+  "required_tables": {
+    "core_identities": [
+      "users",
+      "riders", 
+      "drivers",
+      "businesses"
+    ],
+    "rides_payments": [
+      "rides",
+      "payments",
+      "invoices",
+      "invoice_line_items"
+    ],
+    "wallet_ledger": [
+      "wallets",
+      "wallet_ledger"
+    ],
+    "tips": [
+      "tips"
+    ],
+    "referrals": [
+      "referrals",
+      "referral_issuances"
+    ],
+    "scheduled_rides": [
+      "scheduled_rides"
+    ],
+    "promotions": [
+      "promotions",
+      "promotion_redemptions"
+    ],
+    "business_rewards": [
+      "business_rewards",
+      "business_rewards_ledger"
+    ],
+    "vehicle_classes": [
+      "vehicle_classes"
+    ],
+    "notifications": [
+      "notification_tokens"
+    ],
+    "analytics": [
+      "ride_daily_rollup"
+    ]
+  },
+  "migration_strategy": {
+    "approach": "comprehensive_rebuild",
+    "reason": "Current schema has fundamental issues (integer PKs, missing core tables) that require restructuring",
+    "steps": [
+      "1. Create new tables with proper UUID PKs and constraints",
+      "2. Migrate existing data where possible", 
+      "3. Add missing business logic tables",
+      "4. Create proper indexes and constraints",
+      "5. Add seed data for development"
+    ]
+  },
+  "existing_data_migration": {
+    "users": "Will migrate to new users table with UUID PK",
+    "rides": "Will migrate to new rides table with UUID PK and proper structure",
+    "vehicle_classes": "Already exists, will enhance with proper constraints",
+    "ride_types": "Will be replaced by vehicle_classes system",
+    "rewards": "Will be enhanced and split into business_rewards system"
+  },
+  "new_tables_needed": [
+    "riders",
+    "drivers", 
+    "businesses",
+    "payments",
+    "invoices",
+    "invoice_line_items",
+    "wallets",
+    "wallet_ledger",
+    "tips",
+    "referrals",
+    "referral_issuances", 
+    "scheduled_rides",
+    "promotions",
+    "promotion_redemptions",
+    "business_rewards",
+    "business_rewards_ledger",
+    "notification_tokens",
+    "ride_daily_rollup"
+  ],
+  "enums_to_create": [
+    "user_role",
+    "billing_mode", 
+    "ride_status",
+    "payment_status",
+    "invoice_status",
+    "ledger_entry_type",
+    "tip_status",
+    "referrer_type",
+    "referral_status",
+    "scheduled_ride_status",
+    "scheduled_ride_source",
+    "promotion_audience",
+    "promotion_reward_type",
+    "notification_platform"
+  ]
+}
