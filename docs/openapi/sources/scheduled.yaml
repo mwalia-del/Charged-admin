@@ -1,0 +1,49 @@
+paths:
+  /admin/scheduled-rides:
+    get:
+      tags: [Scheduled]
+      summary: "Get scheduled rides"
+      operationId: "scheduled.getAdminRides"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  
+  /riders/me/scheduled-rides:
+    get:
+      tags: [Scheduled]
+      summary: "Get rider scheduled rides"
+      operationId: "scheduled.getRiderRides"
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    
+    post:
+      tags: [Scheduled]
+      summary: "Create scheduled ride"
+      operationId: "scheduled.createRide"
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "201":
+          $ref: "#/components/responses/Created"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/ServerError"

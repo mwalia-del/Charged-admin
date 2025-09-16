@@ -10,8 +10,7 @@ import {
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { Promotion, PromotionFilters, PromotionSummary } from '../../types';
-// import { listPromotions, getPromotionsSummary } from '../../API/promotions';
-import { generateMockPromotions, generateMockPromotionSummary } from '../../API/mockPromotionsData';
+import { listPromotions, getPromotionsSummary } from '../../API/promotions';
 import PromotionTable from './components/PromotionTable';
 import PromotionFiltersComponent from './components/PromotionFilters';
 import PromotionSummaryCards from './components/PromotionSummaryCards';
@@ -34,61 +33,13 @@ const PromotionsPage: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      // Use mock data for now
-      const mockPromotions = generateMockPromotions();
-      const mockSummary = generateMockPromotionSummary();
-
-      // Apply filters to mock data
-      let filteredPromotions = mockPromotions;
-
-      if (filters.audience) {
-        filteredPromotions = filteredPromotions.filter(p => p.audience === filters.audience);
-      }
-
-      if (filters.status) {
-        const now = new Date();
-        filteredPromotions = filteredPromotions.filter(p => {
-          const startAt = new Date(p.start_at);
-          const endAt = new Date(p.end_at);
-          
-          switch (filters.status) {
-            case 'active':
-              return p.is_active && startAt <= now && endAt >= now;
-            case 'scheduled':
-              return p.is_active && startAt > now;
-            case 'ended':
-              return !p.is_active || endAt < now;
-            default:
-              return true;
-          }
-        });
-      }
-
-      if (filters.search) {
-        const searchLower = filters.search.toLowerCase();
-        filteredPromotions = filteredPromotions.filter(p => 
-          p.title.toLowerCase().includes(searchLower) ||
-          p.description?.toLowerCase().includes(searchLower) ||
-          p.code?.toLowerCase().includes(searchLower)
-        );
-      }
-
-      if (filters.from) {
-        const fromDate = new Date(filters.from);
-        filteredPromotions = filteredPromotions.filter(p => 
-          new Date(p.created_at) >= fromDate
-        );
-      }
-
-      if (filters.to) {
-        const toDate = new Date(filters.to);
-        filteredPromotions = filteredPromotions.filter(p => 
-          new Date(p.created_at) <= toDate
-        );
-      }
-
-      setPromotions(filteredPromotions);
-      setSummary(mockSummary);
+      const [promotionsResult, summaryResult] = await Promise.all([
+        listPromotions(filters),
+        getPromotionsSummary()
+      ]);
+      
+      setPromotions(promotionsResult.data);
+      setSummary(summaryResult);
     } catch (err) {
       console.error('Error fetching promotions:', err);
       setError('Failed to load promotions');

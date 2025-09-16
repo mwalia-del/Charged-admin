@@ -1,0 +1,38 @@
+paths:
+  /businesses/{orgId}/invoices:
+    get:
+      tags: [Invoices]
+      summary: "Get business invoices"
+      operationId: "invoices.getBusinessInvoices"
+      parameters:
+        - in: path
+          name: orgId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  
+  /invoices/{invoiceId}:
+    get:
+      tags: [Invoices]
+      summary: "Get invoice details"
+      operationId: "invoices.getInvoice"
+      parameters:
+        - in: path
+          name: invoiceId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"

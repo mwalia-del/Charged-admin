@@ -1,0 +1,610 @@
+[
+  {
+    "method": "GET",
+    "path": "/catalog/vehicle-classes",
+    "file": "./routes/catalog.js",
+    "line": 6,
+    "auth": null,
+    "service": "catalog"
+  },
+  {
+    "method": "GET",
+    "path": "/",
+    "file": "./routes/users.js",
+    "line": 14,
+    "auth": null,
+    "service": "root"
+  },
+  {
+    "method": "GET",
+    "path": "/rider",
+    "file": "./routes/users.js",
+    "line": 18,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "PUT",
+    "path": "/rider",
+    "file": "./routes/users.js",
+    "line": 20,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "POST",
+    "path": "/rider/uploadfiles",
+    "file": "./routes/users.js",
+    "line": 22,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "GET",
+    "path": "/rider/sendnotification",
+    "file": "./routes/users.js",
+    "line": 24,
+    "auth": null,
+    "service": "root"
+  },
+  {
+    "method": "GET",
+    "path": "/rider/test",
+    "file": "./routes/users.js",
+    "line": 26,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "GET",
+    "path": "/rider/getmyrides",
+    "file": "./routes/users.js",
+    "line": 28,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "GET",
+    "path": "/rider/getride/{id}",
+    "file": "./routes/users.js",
+    "line": 30,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "PUT",
+    "path": "/rider/changeridestatus/{id}",
+    "file": "./routes/users.js",
+    "line": 32,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "POST",
+    "path": "/rider/ride/addrating/{id}",
+    "file": "./routes/users.js",
+    "line": 34,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "POST",
+    "path": "/rider/payment/addmethod",
+    "file": "./routes/users.js",
+    "line": 36,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "GET",
+    "path": "/rider/paymentmethods",
+    "file": "./routes/users.js",
+    "line": 38,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "DELETE",
+    "path": "/rider/paymentmethods/{id}",
+    "file": "./routes/users.js",
+    "line": 40,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "GET",
+    "path": "/rider/myrewardpoints",
+    "file": "./routes/users.js",
+    "line": 42,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "GET",
+    "path": "/rider/getrewards",
+    "file": "./routes/users.js",
+    "line": 44,
+    "auth": "bearerAuth",
+    "service": "root"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/",
+    "file": "./routes/admin.js",
+    "line": 20,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/getdrivers",
+    "file": "./routes/admin.js",
+    "line": 22,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/getdriverdocs/{driver}",
+    "file": "./routes/admin.js",
+    "line": 24,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "PUT",
+    "path": "/admin/verifydriverdoc/{driver}/{document}",
+    "file": "./routes/admin.js",
+    "line": 26,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "PUT",
+    "path": "/admin/updatestatus/{driver}",
+    "file": "./routes/admin.js",
+    "line": 28,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/getriders",
+    "file": "./routes/admin.js",
+    "line": 30,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "DELETE",
+    "path": "/admin/deleteusers/{id}",
+    "file": "./routes/admin.js",
+    "line": 32,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/create",
+    "file": "./routes/admin.js",
+    "line": 34,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "POST",
+    "path": "/admin/documenttypes",
+    "file": "./routes/admin.js",
+    "line": 36,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/documenttypes",
+    "file": "./routes/admin.js",
+    "line": 38,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "PUT",
+    "path": "/admin/documenttypes/{id}",
+    "file": "./routes/admin.js",
+    "line": 40,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "DELETE",
+    "path": "/admin/documenttypes/{id}",
+    "file": "./routes/admin.js",
+    "line": 42,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "POST",
+    "path": "/admin/uploadfiles",
+    "file": "./routes/admin.js",
+    "line": 44,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/ride/fetchlatest",
+    "file": "./routes/admin.js",
+    "line": 46,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/ride/userrides/{user}",
+    "file": "./routes/admin.js",
+    "line": 48,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/dashboardstats",
+    "file": "./routes/admin.js",
+    "line": 50,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "POST",
+    "path": "/admin/rewards",
+    "file": "./routes/admin.js",
+    "line": 52,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "POST",
+    "path": "/admin/rewardpoints/{id}",
+    "file": "./routes/admin.js",
+    "line": 54,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/rewards",
+    "file": "./routes/admin.js",
+    "line": 56,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/rewardpoints/{id}",
+    "file": "./routes/admin.js",
+    "line": 58,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "DELETE",
+    "path": "/admin/rewards/{id}",
+    "file": "./routes/admin.js",
+    "line": 60,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "DELETE",
+    "path": "/admin/rewardpoints/{id}",
+    "file": "./routes/admin.js",
+    "line": 62,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/vehicle-classes",
+    "file": "./routes/admin.js",
+    "line": 65,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/vehicle-classes/{code}",
+    "file": "./routes/admin.js",
+    "line": 66,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "PATCH",
+    "path": "/admin/vehicle-classes/{code}",
+    "file": "./routes/admin.js",
+    "line": 67,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "POST",
+    "path": "/admin/vehicle-classes",
+    "file": "./routes/admin.js",
+    "line": 68,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "DELETE",
+    "path": "/admin/vehicle-classes/{code}",
+    "file": "./routes/admin.js",
+    "line": 69,
+    "auth": "bearerAuth",
+    "service": "admin"
+  },
+  {
+    "method": "GET",
+    "path": "/payment/addpm",
+    "file": "./routes/payments.js",
+    "line": 8,
+    "auth": null,
+    "service": "payment"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/",
+    "file": "./routes/drivers.js",
+    "line": 11,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "PUT",
+    "path": "/driver/",
+    "file": "./routes/drivers.js",
+    "line": 13,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "POST",
+    "path": "/driver/details",
+    "file": "./routes/drivers.js",
+    "line": 15,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "PUT",
+    "path": "/driver/details",
+    "file": "./routes/drivers.js",
+    "line": 17,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/documenttypes",
+    "file": "./routes/drivers.js",
+    "line": 19,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/documents",
+    "file": "./routes/drivers.js",
+    "line": 21,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "POST",
+    "path": "/driver/uploaddocument/{type}",
+    "file": "./routes/drivers.js",
+    "line": 23,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "POST",
+    "path": "/driver/uploadfiles",
+    "file": "./routes/drivers.js",
+    "line": 25,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/getmyrides",
+    "file": "./routes/drivers.js",
+    "line": 27,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/myearnings",
+    "file": "./routes/drivers.js",
+    "line": 29,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/getride/{id}",
+    "file": "./routes/drivers.js",
+    "line": 31,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "PUT",
+    "path": "/driver/changeridestatus/{id}",
+    "file": "./routes/drivers.js",
+    "line": 33,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "POST",
+    "path": "/driver/saveridelocation/{id}",
+    "file": "./routes/drivers.js",
+    "line": 35,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "POST",
+    "path": "/driver/ride/addrating/{id}",
+    "file": "./routes/drivers.js",
+    "line": 37,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/payment/initiate/{rideId}",
+    "file": "./routes/drivers.js",
+    "line": 39,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/payment/complete/{rideId}",
+    "file": "./routes/drivers.js",
+    "line": 41,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/payment/createdriverstripeaccount",
+    "file": "./routes/drivers.js",
+    "line": 43,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/payment/stripeloginlink",
+    "file": "./routes/drivers.js",
+    "line": 45,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/payment/accountstatus",
+    "file": "./routes/drivers.js",
+    "line": 47,
+    "auth": "bearerAuth",
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/driver/payment/accountconfirmation",
+    "file": "./routes/drivers.js",
+    "line": 49,
+    "auth": null,
+    "service": "driver"
+  },
+  {
+    "method": "GET",
+    "path": "/ride/ridetype",
+    "file": "./routes/rides.js",
+    "line": 8,
+    "auth": "bearerAuth",
+    "service": "ride"
+  },
+  {
+    "method": "POST",
+    "path": "/ride/ridetype",
+    "file": "./routes/rides.js",
+    "line": 10,
+    "auth": "bearerAuth",
+    "service": "ride"
+  },
+  {
+    "method": "PUT",
+    "path": "/ride/ridetype/{id}",
+    "file": "./routes/rides.js",
+    "line": 12,
+    "auth": "bearerAuth",
+    "service": "ride"
+  },
+  {
+    "method": "GET",
+    "path": "/ride/fetchdriver/{id}",
+    "file": "./routes/rides.js",
+    "line": 14,
+    "auth": "bearerAuth",
+    "service": "ride"
+  },
+  {
+    "method": "GET",
+    "path": "/ride/fetchrider/{id}",
+    "file": "./routes/rides.js",
+    "line": 16,
+    "auth": "bearerAuth",
+    "service": "ride"
+  },
+  {
+    "method": "POST",
+    "path": "/ride/",
+    "file": "./routes/rides.js",
+    "line": 18,
+    "auth": "bearerAuth",
+    "service": "ride"
+  },
+  {
+    "method": "GET",
+    "path": "/ride/",
+    "file": "./routes/rides.js",
+    "line": 20,
+    "auth": "bearerAuth",
+    "service": "ride"
+  },
+  {
+    "method": "GET",
+    "path": "/ride/fetchride/{id}",
+    "file": "./routes/rides.js",
+    "line": 22,
+    "auth": "bearerAuth",
+    "service": "ride"
+  },
+  {
+    "method": "POST",
+    "path": "/ride/rider/sendchatnotification/{id}",
+    "file": "./routes/rides.js",
+    "line": 24,
+    "auth": "bearerAuth",
+    "service": "ride"
+  },
+  {
+    "method": "POST",
+    "path": "/ride/driver/sendchatnotification/{id}",
+    "file": "./routes/rides.js",
+    "line": 26,
+    "auth": "bearerAuth",
+    "service": "ride"
+  },
+  {
+    "method": "GET",
+    "path": "/health",
+    "file": "app.js",
+    "line": 1,
+    "auth": null,
+    "service": "system"
+  },
+  {
+    "method": "GET",
+    "path": "/api/health",
+    "file": "app.js",
+    "line": 1,
+    "auth": null,
+    "service": "system"
+  }
+]

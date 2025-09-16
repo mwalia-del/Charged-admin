@@ -1,0 +1,188 @@
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: "User login"
+      description: "Authenticate user with email and password"
+      operationId: "authLogin"
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+      responses:
+        "200":
+          description: "Login successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token
+                  - user
+                properties:
+                  token:
+                    type: string
+                    description: "JWT access token"
+                  refreshToken:
+                    type: string
+                    description: "JWT refresh token"
+                  user:
+                    $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: "User registration"
+      description: "Register a new user account"
+      operationId: "authRegister"
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
+                - role
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                phone:
+                  type: string
+                role:
+                  type: string
+                  enum: [rider, driver]
+      responses:
+        "201":
+          description: "Registration successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token
+                  - user
+                properties:
+                  token:
+                    type: string
+                    description: "JWT access token"
+                  refreshToken:
+                    type: string
+                    description: "JWT refresh token"
+                  user:
+                    $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/Error"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: "Refresh access token"
+      description: "Get a new access token using refresh token"
+      operationId: "authRefresh"
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        "200":
+          description: "Token refreshed successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token
+                properties:
+                  token:
+                    type: string
+                    description: "New JWT access token"
+                  refreshToken:
+                    type: string
+                    description: "New JWT refresh token"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /auth/token/exchange:
+    post:
+      tags:
+        - Authentication
+      summary: "Exchange token"
+      description: "Exchange one type of token for another (e.g., temporary for permanent)"
+      operationId: "authTokenExchange"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - targetType
+              properties:
+                token:
+                  type: string
+                targetType:
+                  type: string
+                  enum: [access, refresh, temporary]
+      responses:
+        "200":
+          description: "Token exchanged successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token
+                properties:
+                  token:
+                    type: string
+                  expiresAt:
+                    type: string
+                    format: date-time
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "400":
+          $ref: "#/components/responses/Error"

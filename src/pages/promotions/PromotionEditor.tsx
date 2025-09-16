@@ -17,8 +17,11 @@ import {
   FormControlLabel,
   Divider,
   Alert,
+  CircularProgress,
+  Snackbar,
 } from '@mui/material';
 import { Promotion } from '../../types';
+import { createPromotion, updatePromotion } from '../../API/promotions';
 
 interface PromotionEditorProps {
   open: boolean;
@@ -46,6 +49,12 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
 
   useEffect(() => {
     if (promotion) {
@@ -132,13 +141,36 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
       return;
     }
 
+    setLoading(true);
     try {
-      // TODO: Implement API call
-      console.log('Saving promotion:', formData);
+      if (promotion) {
+        // Update existing promotion
+        await updatePromotion(promotion.id, formData);
+        setSnackbar({
+          open: true,
+          message: 'Promotion updated successfully',
+          severity: 'success'
+        });
+      } else {
+        // Create new promotion
+        await createPromotion(formData as Omit<Promotion, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'updated_by' | 'redemptions_count' | 'global_redemptions_count'>);
+        setSnackbar({
+          open: true,
+          message: 'Promotion created successfully',
+          severity: 'success'
+        });
+      }
       onSave();
       onClose();
     } catch (error) {
       console.error('Error saving promotion:', error);
+      setSnackbar({
+        open: true,
+        message: `Failed to save promotion: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        severity: 'error'
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -146,7 +178,8 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
   const isPercentFieldVisible = ['percent_discount', 'org_credit'].includes(formData.reward_type || '');
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <>
+      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
         <DialogTitle>
           {promotion ? 'Edit Promotion' : 'Create New Promotion'}
         </DialogTitle>
@@ -343,12 +376,34 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSave} variant="contained">
-            {promotion ? 'Update' : 'Create'}
+          <Button onClick={onClose} disabled={loading}>Cancel</Button>
+          <Button 
+            onClick={handleSave} 
+            variant="contained" 
+            disabled={loading}
+            startIcon={loading ? <CircularProgress size={16} /> : undefined}
+          >
+            {loading ? 'Saving...' : (promotion ? 'Update' : 'Create')}
           </Button>
         </DialogActions>
       </Dialog>
+      
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 

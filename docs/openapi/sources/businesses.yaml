@@ -1,0 +1,30 @@
+paths:
+  /businesses:
+    get:
+      tags: [Businesses]
+      summary: "List businesses"
+      operationId: "businesses.list"
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  
+  /businesses/{orgId}:
+    get:
+      tags: [Businesses]
+      summary: "Get business details"
+      operationId: "businesses.get"
+      parameters:
+        - in: path
+          name: orgId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"

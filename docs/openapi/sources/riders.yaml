@@ -1,0 +1,400 @@
+paths:
+  /riders/me:
+    get:
+      tags:
+        - Riders
+      summary: Get current rider profile
+      description: Retrieve the authenticated rider's profile information
+      operationId: getRiderProfile
+      responses:
+        "200":
+          description: Rider profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /riders/me/rides:
+    get:
+      tags:
+        - Riders
+      summary: Get rider's rides
+      description: Retrieve the authenticated rider's ride history
+      operationId: getRiderRides
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - name: status
+          in: query
+          description: Filter by ride status
+          schema:
+            type: string
+            enum:
+              - requested
+              - accepted
+              - in_progress
+              - completed
+              - cancelled
+      responses:
+        "200":
+          description: Rides retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Ride"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /riders/me/referrals/issuances:
+    get:
+      tags:
+        - Riders
+      summary: Get rider's referral issuances
+      description: Retrieve the authenticated rider's referral issuances
+      operationId: getRiderReferralIssuances
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Referral issuances retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ReferralIssuance"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /riders/me/promotions/active:
+    get:
+      tags:
+        - Riders
+      summary: Get active promotions for rider
+      description: Retrieve promotions available to the authenticated rider
+      operationId: getRiderActivePromotions
+      responses:
+        "200":
+          description: Active promotions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Promotion"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /riders/${riderId}/tips?${params.toString()}:
+    get:
+      tags:
+        - Riders
+      summary: Get tips?$params.toString()
+      operationId: getRiders$rideridTips?$params.tostring()
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: riderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: params.toString()
+          in: path
+          required: true
+          schema:
+            type: string
+  /riders/me/scheduled-rides:
+    post:
+      tags:
+        - Riders
+      summary: Create scheduled-rides
+      operationId: postRidersMeScheduled-rides
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: "TODO: Define request schema"
+  /riders/me/scheduled-rides?${params.toString()}:
+    get:
+      tags:
+        - Riders
+      summary: Get scheduled-rides?$params.toString()
+      operationId: getRidersMeScheduled-rides?$params.tostring()
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: params.toString()
+          in: path
+          required: true
+          schema:
+            type: string
+  /riders/me/scheduled-rides/${scheduledRideId}:
+    delete:
+      tags:
+        - Riders
+      summary: Delete $scheduledRideId
+      operationId: deleteRidersMeScheduled-rides$scheduledrideid
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: scheduledRideId
+          in: path
+          required: true
+          schema:
+            type: string
+  /riders/me/referrals/issuances?${params.toString()}:
+    get:
+      tags:
+        - Riders
+      summary: Get issuances?$params.toString()
+      operationId: getRidersMeReferralsIssuances?$params.tostring()
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: params.toString()
+          in: path
+          required: true
+          schema:
+            type: string
+  /riders/me/referrals/summary?${params.toString()}:
+    get:
+      tags:
+        - Riders
+      summary: Get summary?$params.toString()
+      operationId: getRidersMeReferralsSummary?$params.tostring()
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: params.toString()
+          in: path
+          required: true
+          schema:
+            type: string
+  /riders/${riderId}/referral-wallet:
+    get:
+      tags:
+        - Riders
+      summary: Get referral-wallet
+      operationId: getRiders$rideridReferral-wallet
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: riderId
+          in: path
+          required: true
+          schema:
+            type: string
+  /riders/${riderId}/referral-wallet/transactions?page=${page}&page_size=${pageSize}:
+    get:
+      tags:
+        - Riders
+      summary: Get transactions?page=$page&page_size=$pageSize
+      operationId: getRiders$rideridReferral-walletTransactions?page=$page&page_size=$pagesize
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: riderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pageSize
+          in: path
+          required: true
+          schema:
+            type: string
+  /riders/me/promotions/active?${params.toString()}:
+    get:
+      tags:
+        - Riders
+      summary: Get active?$params.toString()
+      operationId: getRidersMePromotionsActive?$params.tostring()
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: params.toString()
+          in: path
+          required: true
+          schema:
+            type: string
+  /admin/getriders:
+    get:
+      tags:
+        - Riders
+      summary: Get getriders
+      operationId: getAdminGetriders
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+      security:
+        - bearerAuth: []

@@ -61,7 +61,7 @@ const updateVehicleClass = async (req, res) => {
     }
 
     // Validate update data
-    const allowedFields = ['is_enabled', 'base_fare_cents', 'per_km_cents', 'per_min_cents', 'display_name'];
+    const allowedFields = ['is_enabled', 'display_name'];
     const updateFields = Object.keys(updateData);
     const invalidFields = updateFields.filter(field => !allowedFields.includes(field));
     
@@ -70,26 +70,6 @@ const updateVehicleClass = async (req, res) => {
         success: false,
         message: `Invalid fields: ${invalidFields.join(', ')}`,
         allowed_fields: allowedFields
-      });
-    }
-
-    // Validate numeric fields
-    if (updateData.base_fare_cents !== undefined && (isNaN(updateData.base_fare_cents) || updateData.base_fare_cents < 0)) {
-      return res.status(400).json({
-        success: false,
-        message: 'base_fare_cents must be a non-negative number'
-      });
-    }
-    if (updateData.per_km_cents !== undefined && (isNaN(updateData.per_km_cents) || updateData.per_km_cents < 0)) {
-      return res.status(400).json({
-        success: false,
-        message: 'per_km_cents must be a non-negative number'
-      });
-    }
-    if (updateData.per_min_cents !== undefined && (isNaN(updateData.per_min_cents) || updateData.per_min_cents < 0)) {
-      return res.status(400).json({
-        success: false,
-        message: 'per_min_cents must be a non-negative number'
       });
     }
 
@@ -113,7 +93,7 @@ const updateVehicleClass = async (req, res) => {
 // Create vehicle class (admin)
 const createVehicleClass = async (req, res) => {
   try {
-    const { code, display_name, is_enabled, base_fare_cents, per_km_cents, per_min_cents } = req.body;
+    const { code, display_name, is_enabled } = req.body;
 
     // Validate required fields
     if (!code || !display_name) {
@@ -143,10 +123,7 @@ const createVehicleClass = async (req, res) => {
     const vehicleClassData = {
       code,
       display_name,
-      is_enabled: is_enabled !== undefined ? is_enabled : true,
-      base_fare_cents: base_fare_cents || 0,
-      per_km_cents: per_km_cents || 0,
-      per_min_cents: per_min_cents || 0
+      is_enabled: is_enabled !== undefined ? is_enabled : true
     };
 
     const newClass = await VehicleClassModel.create(vehicleClassData);

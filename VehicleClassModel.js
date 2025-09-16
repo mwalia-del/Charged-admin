@@ -10,9 +10,6 @@ class VehicleClassModel {
           code,
           display_name,
           is_enabled,
-          base_fare_cents,
-          per_km_cents,
-          per_min_cents,
           created_at,
           updated_at
         FROM vehicle_classes 
@@ -35,9 +32,6 @@ class VehicleClassModel {
           code,
           display_name,
           is_enabled,
-          base_fare_cents,
-          per_km_cents,
-          per_min_cents,
           created_at,
           updated_at
         FROM vehicle_classes 
@@ -62,21 +56,6 @@ class VehicleClassModel {
       if (updateData.is_enabled !== undefined) {
         fields.push(`is_enabled = $${paramCount}`);
         values.push(updateData.is_enabled);
-        paramCount++;
-      }
-      if (updateData.base_fare_cents !== undefined) {
-        fields.push(`base_fare_cents = $${paramCount}`);
-        values.push(updateData.base_fare_cents);
-        paramCount++;
-      }
-      if (updateData.per_km_cents !== undefined) {
-        fields.push(`per_km_cents = $${paramCount}`);
-        values.push(updateData.per_km_cents);
-        paramCount++;
-      }
-      if (updateData.per_min_cents !== undefined) {
-        fields.push(`per_min_cents = $${paramCount}`);
-        values.push(updateData.per_min_cents);
         paramCount++;
       }
       if (updateData.display_name !== undefined) {
@@ -104,9 +83,6 @@ class VehicleClassModel {
           code,
           display_name,
           is_enabled,
-          base_fare_cents,
-          per_km_cents,
-          per_min_cents,
           created_at,
           updated_at
       `;
@@ -126,19 +102,13 @@ class VehicleClassModel {
         INSERT INTO vehicle_classes (
           code, 
           display_name, 
-          is_enabled, 
-          base_fare_cents, 
-          per_km_cents, 
-          per_min_cents
-        ) VALUES ($1, $2, $3, $4, $5, $6)
+          is_enabled
+        ) VALUES ($1, $2, $3)
         RETURNING 
           id,
           code,
           display_name,
           is_enabled,
-          base_fare_cents,
-          per_km_cents,
-          per_min_cents,
           created_at,
           updated_at
       `;
@@ -146,10 +116,7 @@ class VehicleClassModel {
       const values = [
         vehicleClassData.code,
         vehicleClassData.display_name,
-        vehicleClassData.is_enabled !== undefined ? vehicleClassData.is_enabled : true,
-        vehicleClassData.base_fare_cents || 0,
-        vehicleClassData.per_km_cents || 0,
-        vehicleClassData.per_min_cents || 0
+        vehicleClassData.is_enabled !== undefined ? vehicleClassData.is_enabled : true
       ];
 
       const result = await pool.query(query, values);
@@ -181,9 +148,6 @@ class VehicleClassModel {
           code,
           display_name,
           is_enabled,
-          base_fare_cents,
-          per_km_cents,
-          per_min_cents,
           created_at,
           updated_at
         FROM vehicle_classes 

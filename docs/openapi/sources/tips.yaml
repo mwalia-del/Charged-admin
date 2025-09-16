@@ -1,0 +1,36 @@
+paths:
+  /analytics/tips:
+    get:
+      tags: [Tips]
+      summary: "Get tips analytics"
+      operationId: "tips.getAnalytics"
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  
+  /rides/{rideId}/tip:
+    post:
+      tags: [Tips]
+      summary: "Add tip to ride"
+      operationId: "tips.addTip"
+      parameters:
+        - in: path
+          name: rideId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/ServerError"

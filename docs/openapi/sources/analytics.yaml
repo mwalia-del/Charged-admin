@@ -1,0 +1,22 @@
+paths:
+  /analytics/tips:
+    get:
+      tags: [Analytics]
+      summary: "Get tips analytics"
+      operationId: "analytics.getTipsAnalytics"
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  
+  /analytics/tips/summary:
+    get:
+      tags: [Analytics]
+      summary: "Get tips summary"
+      operationId: "analytics.getTipsSummary"
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "500":
+          $ref: "#/components/responses/ServerError"

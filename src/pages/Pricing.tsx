@@ -433,10 +433,10 @@ const Pricing: React.FC = () => {
       {activeTab === 1 && (
         <Box sx={{ mt: 4 }}>
           <Typography variant="h6" gutterBottom>
-            Vehicle Class Management
+            Charged XL Management
           </Typography>
           <Typography variant="body2" color="text.secondary" paragraph>
-            Enable or disable vehicle classes across all platforms. Changes take effect immediately.
+            Enable or disable Charged XL across all platforms. Changes take effect immediately.
           </Typography>
 
           {vehicleClassesError && (
@@ -455,23 +455,22 @@ const Pricing: React.FC = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Vehicle Class</TableCell>
-                    <TableCell>Base Fare</TableCell>
-                    <TableCell>Per KM</TableCell>
-                    <TableCell>Per Minute</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell>Last Updated</TableCell>
-                    <TableCell>Actions</TableCell>
+                    <TableCell>Toggle</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {vehicleClasses.map((vehicleClass) => (
-                    <VehicleClassRow
-                      key={vehicleClass.id}
-                      vehicleClass={vehicleClass}
-                      onUpdate={handleVehicleClassUpdate}
-                      onError={handleVehicleClassError}
-                    />
-                  ))}
+                  {vehicleClasses
+                    .filter(vehicleClass => vehicleClass.code === 'charged_xl')
+                    .map((vehicleClass) => (
+                      <VehicleClassRow
+                        key={vehicleClass.id}
+                        vehicleClass={vehicleClass}
+                        onUpdate={handleVehicleClassUpdate}
+                        onError={handleVehicleClassError}
+                      />
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>

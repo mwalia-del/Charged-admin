@@ -1,0 +1,1233 @@
+--- a/routes/admin.js
++++ b/routes/admin.js
+@@ -1,3 +1,3 @@
+ const express = require('express');
+ const router = express.Router();
++// Generated admin endpoints
+ 
+
+// admin endpoints
+router.get('/admin/getdriverdocs/{id}', getGetdriverdocs{id});
+const getGetdriverdocs{id} = async (req, res) => {
+  try {
+    // TODO: Implement GET /admin/getdriverdocs/{id}
+    const id = req.params.id;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /admin/getdriverdocs/{id} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getGetdriverdocs{id}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.put('/admin/verifydriverdoc/{driverId}/{documentId}', putVerifydriverdoc{driverId}{documentId});
+const putVerifydriverdoc{driverId}{documentId} = async (req, res) => {
+  try {
+    // TODO: Implement PUT /admin/verifydriverdoc/{driverId}/{documentId}
+    const body = req.body;
+    const driverId = req.params.driverId;
+    const documentId = req.params.documentId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'PUT /admin/verifydriverdoc/{driverId}/{documentId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in putVerifydriverdoc{driverId}{documentId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.put('/admin/updatestatus/{driverId}', putUpdatestatus{driverId});
+const putUpdatestatus{driverId} = async (req, res) => {
+  try {
+    // TODO: Implement PUT /admin/updatestatus/{driverId}
+    const body = req.body;
+    const driverId = req.params.driverId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'PUT /admin/updatestatus/{driverId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in putUpdatestatus{driverId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.put('/admin/documenttypes/{id}', putDocumenttypes{id});
+const putDocumenttypes{id} = async (req, res) => {
+  try {
+    // TODO: Implement PUT /admin/documenttypes/{id}
+    const body = req.body;
+    const id = req.params.id;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'PUT /admin/documenttypes/{id} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in putDocumenttypes{id}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.delete('/admin/documenttypes/{documentId}', deleteDocumenttypes{documentId});
+const deleteDocumenttypes{documentId} = async (req, res) => {
+  try {
+    // TODO: Implement DELETE /admin/documenttypes/{documentId}
+    const documentId = req.params.documentId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'DELETE /admin/documenttypes/{documentId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in deleteDocumenttypes{documentId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/ride', getRide);
+const getRide = async (req, res) => {
+  try {
+    // TODO: Implement GET /ride
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /ride endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getRide:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.delete('/admin/rewards/{rewardId}', deleteRewards{rewardId});
+const deleteRewards{rewardId} = async (req, res) => {
+  try {
+    // TODO: Implement DELETE /admin/rewards/{rewardId}
+    const rewardId = req.params.rewardId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'DELETE /admin/rewards/{rewardId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in deleteRewards{rewardId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/admin/rewardpoints/{userId}', getRewardpoints{userId});
+const getRewardpoints{userId} = async (req, res) => {
+  try {
+    // TODO: Implement GET /admin/rewardpoints/{userId}
+    const userId = req.params.userId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /admin/rewardpoints/{userId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getRewardpoints{userId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/admin/rewardpoints/{userId}', postRewardpoints{userId});
+const postRewardpoints{userId} = async (req, res) => {
+  try {
+    // TODO: Implement POST /admin/rewardpoints/{userId}
+    const body = req.body;
+    const userId = req.params.userId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /admin/rewardpoints/{userId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postRewardpoints{userId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.delete('/admin/rewardpoints/{rewardPointId}', deleteRewardpoints{rewardPointId});
+const deleteRewardpoints{rewardPointId} = async (req, res) => {
+  try {
+    // TODO: Implement DELETE /admin/rewardpoints/{rewardPointId}
+    const rewardPointId = req.params.rewardPointId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'DELETE /admin/rewardpoints/{rewardPointId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in deleteRewardpoints{rewardPointId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.delete('/admin/deleteusers/{userId}', deleteDeleteusers{userId});
+const deleteDeleteusers{userId} = async (req, res) => {
+  try {
+    // TODO: Implement DELETE /admin/deleteusers/{userId}
+    const userId = req.params.userId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'DELETE /admin/deleteusers/{userId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in deleteDeleteusers{userId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/admin/promotions?${params.toString()}', getPromotions?${params.toString()});
+const getPromotions?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /admin/promotions?${params.toString()}
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /admin/promotions?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getPromotions?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/admin/promotions/{id}', getPromotions{id});
+const getPromotions{id} = async (req, res) => {
+  try {
+    // TODO: Implement GET /admin/promotions/{id}
+    const id = req.params.id;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /admin/promotions/{id} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getPromotions{id}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.patch('/admin/promotions/{id}', patchPromotions{id});
+const patchPromotions{id} = async (req, res) => {
+  try {
+    // TODO: Implement PATCH /admin/promotions/{id}
+    const body = req.body;
+    const id = req.params.id;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'PATCH /admin/promotions/{id} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in patchPromotions{id}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/admin/promotions/{id}/activate', postPromotions{id}Activate);
+const postPromotions{id}Activate = async (req, res) => {
+  try {
+    // TODO: Implement POST /admin/promotions/{id}/activate
+    const body = req.body;
+    const id = req.params.id;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /admin/promotions/{id}/activate endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postPromotions{id}Activate:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/admin/promotions/{id}/deactivate', postPromotions{id}Deactivate);
+const postPromotions{id}Deactivate = async (req, res) => {
+  try {
+    // TODO: Implement POST /admin/promotions/{id}/deactivate
+    const body = req.body;
+    const id = req.params.id;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /admin/promotions/{id}/deactivate endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postPromotions{id}Deactivate:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.delete('/admin/promotions/{id}', deletePromotions{id});
+const deletePromotions{id} = async (req, res) => {
+  try {
+    // TODO: Implement DELETE /admin/promotions/{id}
+    const id = req.params.id;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'DELETE /admin/promotions/{id} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in deletePromotions{id}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/admin/promotions/{id}/redemptions?page={page}&page_size={pageSize}', getPromotions{id}Redemptions?page={page}&pageSize={pageSize});
+const getPromotions{id}Redemptions?page={page}&pageSize={pageSize} = async (req, res) => {
+  try {
+    // TODO: Implement GET /admin/promotions/{id}/redemptions?page={page}&page_size={pageSize}
+    const id = req.params.id;
+    const page = req.params.page;
+    const pageSize = req.params.pageSize;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /admin/promotions/{id}/redemptions?page={page}&page_size={pageSize} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getPromotions{id}Redemptions?page={page}&pageSize={pageSize}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/admin/promotions/{id}/preview', postPromotions{id}Preview);
+const postPromotions{id}Preview = async (req, res) => {
+  try {
+    // TODO: Implement POST /admin/promotions/{id}/preview
+    const body = req.body;
+    const id = req.params.id;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /admin/promotions/{id}/preview endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postPromotions{id}Preview:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/admin/promotions/summary?${params.toString()}', getPromotionsSummary?${params.toString()});
+const getPromotionsSummary?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /admin/promotions/summary?${params.toString()}
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /admin/promotions/summary?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getPromotionsSummary?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/rides/{rideId}/apply-promotion', postRides{rideId}Apply-promotion);
+const postRides{rideId}Apply-promotion = async (req, res) => {
+  try {
+    // TODO: Implement POST /rides/{rideId}/apply-promotion
+    const body = req.body;
+    const rideId = req.params.rideId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /rides/{rideId}/apply-promotion endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postRides{rideId}Apply-promotion:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/admin/referrals/issuances?${params.toString()}', getReferralsIssuances?${params.toString()});
+const getReferralsIssuances?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /admin/referrals/issuances?${params.toString()}
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /admin/referrals/issuances?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getReferralsIssuances?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/admin/referrals/summary?${params.toString()}', getReferralsSummary?${params.toString()});
+const getReferralsSummary?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /admin/referrals/summary?${params.toString()}
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /admin/referrals/summary?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getReferralsSummary?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/admin/referrals/issuances/{issuanceId}/void', postReferralsIssuances{issuanceId}Void);
+const postReferralsIssuances{issuanceId}Void = async (req, res) => {
+  try {
+    // TODO: Implement POST /admin/referrals/issuances/{issuanceId}/void
+    const body = req.body;
+    const issuanceId = req.params.issuanceId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /admin/referrals/issuances/{issuanceId}/void endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postReferralsIssuances{issuanceId}Void:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/admin/referrals/issuances/export?${params.toString()}', getReferralsIssuancesExport?${params.toString()});
+const getReferralsIssuancesExport?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /admin/referrals/issuances/export?${params.toString()}
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /admin/referrals/issuances/export?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getReferralsIssuancesExport?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/drivers/{driverId}/referral-wallet', getDrivers{driverId}Referral-wallet);
+const getDrivers{driverId}Referral-wallet = async (req, res) => {
+  try {
+    // TODO: Implement GET /drivers/{driverId}/referral-wallet
+    const driverId = req.params.driverId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /drivers/{driverId}/referral-wallet endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getDrivers{driverId}Referral-wallet:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/riders/{riderId}/referral-wallet', getRiders{riderId}Referral-wallet);
+const getRiders{riderId}Referral-wallet = async (req, res) => {
+  try {
+    // TODO: Implement GET /riders/{riderId}/referral-wallet
+    const riderId = req.params.riderId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /riders/{riderId}/referral-wallet endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getRiders{riderId}Referral-wallet:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/drivers/{driverId}/referral-wallet/transactions?page={page}&page_size={pageSize}', getDrivers{driverId}Referral-walletTransactions?page={page}&pageSize={pageSize});
+const getDrivers{driverId}Referral-walletTransactions?page={page}&pageSize={pageSize} = async (req, res) => {
+  try {
+    // TODO: Implement GET /drivers/{driverId}/referral-wallet/transactions?page={page}&page_size={pageSize}
+    const driverId = req.params.driverId;
+    const page = req.params.page;
+    const pageSize = req.params.pageSize;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /drivers/{driverId}/referral-wallet/transactions?page={page}&page_size={pageSize} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getDrivers{driverId}Referral-walletTransactions?page={page}&pageSize={pageSize}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/riders/{riderId}/referral-wallet/transactions?page={page}&page_size={pageSize}', getRiders{riderId}Referral-walletTransactions?page={page}&pageSize={pageSize});
+const getRiders{riderId}Referral-walletTransactions?page={page}&pageSize={pageSize} = async (req, res) => {
+  try {
+    // TODO: Implement GET /riders/{riderId}/referral-wallet/transactions?page={page}&page_size={pageSize}
+    const riderId = req.params.riderId;
+    const page = req.params.page;
+    const pageSize = req.params.pageSize;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /riders/{riderId}/referral-wallet/transactions?page={page}&page_size={pageSize} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getRiders{riderId}Referral-walletTransactions?page={page}&pageSize={pageSize}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/drivers/{driverId}/referral-wallet/payout', postDrivers{driverId}Referral-walletPayout);
+const postDrivers{driverId}Referral-walletPayout = async (req, res) => {
+  try {
+    // TODO: Implement POST /drivers/{driverId}/referral-wallet/payout
+    const body = req.body;
+    const driverId = req.params.driverId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /drivers/{driverId}/referral-wallet/payout endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postDrivers{driverId}Referral-walletPayout:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/admin/scheduled-rides/{scheduledRideId}/assign-driver', postScheduled-rides{scheduledRideId}Assign-driver);
+const postScheduled-rides{scheduledRideId}Assign-driver = async (req, res) => {
+  try {
+    // TODO: Implement POST /admin/scheduled-rides/{scheduledRideId}/assign-driver
+    const body = req.body;
+    const scheduledRideId = req.params.scheduledRideId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /admin/scheduled-rides/{scheduledRideId}/assign-driver endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postScheduled-rides{scheduledRideId}Assign-driver:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/admin/scheduled-rides/{scheduledRideId}/cancel', postScheduled-rides{scheduledRideId}Cancel);
+const postScheduled-rides{scheduledRideId}Cancel = async (req, res) => {
+  try {
+    // TODO: Implement POST /admin/scheduled-rides/{scheduledRideId}/cancel
+    const body = req.body;
+    const scheduledRideId = req.params.scheduledRideId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /admin/scheduled-rides/{scheduledRideId}/cancel endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postScheduled-rides{scheduledRideId}Cancel:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.patch('/riders/me/scheduled-rides/{scheduledRideId}', patchRidersMeScheduled-rides{scheduledRideId});
+const patchRidersMeScheduled-rides{scheduledRideId} = async (req, res) => {
+  try {
+    // TODO: Implement PATCH /riders/me/scheduled-rides/{scheduledRideId}
+    const body = req.body;
+    const scheduledRideId = req.params.scheduledRideId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'PATCH /riders/me/scheduled-rides/{scheduledRideId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in patchRidersMeScheduled-rides{scheduledRideId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.delete('/riders/me/scheduled-rides/{scheduledRideId}', deleteRidersMeScheduled-rides{scheduledRideId});
+const deleteRidersMeScheduled-rides{scheduledRideId} = async (req, res) => {
+  try {
+    // TODO: Implement DELETE /riders/me/scheduled-rides/{scheduledRideId}
+    const scheduledRideId = req.params.scheduledRideId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'DELETE /riders/me/scheduled-rides/{scheduledRideId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in deleteRidersMeScheduled-rides{scheduledRideId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/drivers/{driverId}/tips?${params.toString()}', getDrivers{driverId}Tips?${params.toString()});
+const getDrivers{driverId}Tips?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /drivers/{driverId}/tips?${params.toString()}
+    const driverId = req.params.driverId;
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /drivers/{driverId}/tips?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getDrivers{driverId}Tips?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/riders/{riderId}/tips?${params.toString()}', getRiders{riderId}Tips?${params.toString()});
+const getRiders{riderId}Tips?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /riders/{riderId}/tips?${params.toString()}
+    const riderId = req.params.riderId;
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /riders/{riderId}/tips?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getRiders{riderId}Tips?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+
+// ride endpoints
+router.get('/ride/ridetype', getRideRidetype);
+const getRideRidetype = async (req, res) => {
+  try {
+    // TODO: Implement GET /ride/ridetype
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /ride/ridetype endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getRideRidetype:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.put('/ride/ridetype/{id}', putRideRidetype{id});
+const putRideRidetype{id} = async (req, res) => {
+  try {
+    // TODO: Implement PUT /ride/ridetype/{id}
+    const body = req.body;
+    const id = req.params.id;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'PUT /ride/ridetype/{id} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in putRideRidetype{id}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+
+// business endpoints
+router.post('/businesses/{orgId}/enrollment', postBusinesses{orgId}Enrollment);
+const postBusinesses{orgId}Enrollment = async (req, res) => {
+  try {
+    // TODO: Implement POST /businesses/{orgId}/enrollment
+    const body = req.body;
+    const orgId = req.params.orgId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /businesses/{orgId}/enrollment endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postBusinesses{orgId}Enrollment:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/businesses/{orgId}/rides?${params.toString()}', getBusinesses{orgId}Rides?${params.toString()});
+const getBusinesses{orgId}Rides?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /businesses/{orgId}/rides?${params.toString()}
+    const orgId = req.params.orgId;
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /businesses/{orgId}/rides?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getBusinesses{orgId}Rides?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/businesses/{orgId}/rides/summary?${params.toString()}', getBusinesses{orgId}RidesSummary?${params.toString()});
+const getBusinesses{orgId}RidesSummary?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /businesses/{orgId}/rides/summary?${params.toString()}
+    const orgId = req.params.orgId;
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /businesses/{orgId}/rides/summary?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getBusinesses{orgId}RidesSummary?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/businesses/{orgId}/wallet/credit-purchase', postBusinesses{orgId}WalletCredit-purchase);
+const postBusinesses{orgId}WalletCredit-purchase = async (req, res) => {
+  try {
+    // TODO: Implement POST /businesses/{orgId}/wallet/credit-purchase
+    const body = req.body;
+    const orgId = req.params.orgId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /businesses/{orgId}/wallet/credit-purchase endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postBusinesses{orgId}WalletCredit-purchase:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/businesses/{orgId}/wallet/transactions?page={page}&page_size={pageSize}', getBusinesses{orgId}WalletTransactions?page={page}&pageSize={pageSize});
+const getBusinesses{orgId}WalletTransactions?page={page}&pageSize={pageSize} = async (req, res) => {
+  try {
+    // TODO: Implement GET /businesses/{orgId}/wallet/transactions?page={page}&page_size={pageSize}
+    const orgId = req.params.orgId;
+    const page = req.params.page;
+    const pageSize = req.params.pageSize;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /businesses/{orgId}/wallet/transactions?page={page}&page_size={pageSize} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getBusinesses{orgId}WalletTransactions?page={page}&pageSize={pageSize}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/businesses/{orgId}/invoices/generate', postBusinesses{orgId}InvoicesGenerate);
+const postBusinesses{orgId}InvoicesGenerate = async (req, res) => {
+  try {
+    // TODO: Implement POST /businesses/{orgId}/invoices/generate
+    const body = req.body;
+    const orgId = req.params.orgId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /businesses/{orgId}/invoices/generate endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postBusinesses{orgId}InvoicesGenerate:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/businesses/{orgId}/invoices?page={page}&page_size={pageSize}', getBusinesses{orgId}Invoices?page={page}&pageSize={pageSize});
+const getBusinesses{orgId}Invoices?page={page}&pageSize={pageSize} = async (req, res) => {
+  try {
+    // TODO: Implement GET /businesses/{orgId}/invoices?page={page}&page_size={pageSize}
+    const orgId = req.params.orgId;
+    const page = req.params.page;
+    const pageSize = req.params.pageSize;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /businesses/{orgId}/invoices?page={page}&page_size={pageSize} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getBusinesses{orgId}Invoices?page={page}&pageSize={pageSize}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/businesses/{orgId}/rewards/summary', getBusinesses{orgId}RewardsSummary);
+const getBusinesses{orgId}RewardsSummary = async (req, res) => {
+  try {
+    // TODO: Implement GET /businesses/{orgId}/rewards/summary
+    const orgId = req.params.orgId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /businesses/{orgId}/rewards/summary endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getBusinesses{orgId}RewardsSummary:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/businesses/{orgId}/rewards/ledger?page={page}&page_size={pageSize}', getBusinesses{orgId}RewardsLedger?page={page}&pageSize={pageSize});
+const getBusinesses{orgId}RewardsLedger?page={page}&pageSize={pageSize} = async (req, res) => {
+  try {
+    // TODO: Implement GET /businesses/{orgId}/rewards/ledger?page={page}&page_size={pageSize}
+    const orgId = req.params.orgId;
+    const page = req.params.page;
+    const pageSize = req.params.pageSize;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /businesses/{orgId}/rewards/ledger?page={page}&page_size={pageSize} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getBusinesses{orgId}RewardsLedger?page={page}&pageSize={pageSize}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/businesses/{orgId}/rewards/adjust', postBusinesses{orgId}RewardsAdjust);
+const postBusinesses{orgId}RewardsAdjust = async (req, res) => {
+  try {
+    // TODO: Implement POST /businesses/{orgId}/rewards/adjust
+    const body = req.body;
+    const orgId = req.params.orgId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /businesses/{orgId}/rewards/adjust endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postBusinesses{orgId}RewardsAdjust:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/businesses/{orgId}/promotions/active?${params.toString()}', getBusinesses{orgId}PromotionsActive?${params.toString()});
+const getBusinesses{orgId}PromotionsActive?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /businesses/{orgId}/promotions/active?${params.toString()}
+    const orgId = req.params.orgId;
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /businesses/{orgId}/promotions/active?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getBusinesses{orgId}PromotionsActive?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.post('/businesses/{orgId}/scheduled-rides', postBusinesses{orgId}Scheduled-rides);
+const postBusinesses{orgId}Scheduled-rides = async (req, res) => {
+  try {
+    // TODO: Implement POST /businesses/{orgId}/scheduled-rides
+    const body = req.body;
+    const orgId = req.params.orgId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'POST /businesses/{orgId}/scheduled-rides endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in postBusinesses{orgId}Scheduled-rides:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/businesses/{orgId}/scheduled-rides?${params.toString()}', getBusinesses{orgId}Scheduled-rides?${params.toString()});
+const getBusinesses{orgId}Scheduled-rides?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /businesses/{orgId}/scheduled-rides?${params.toString()}
+    const orgId = req.params.orgId;
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /businesses/{orgId}/scheduled-rides?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getBusinesses{orgId}Scheduled-rides?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.patch('/businesses/{orgId}/scheduled-rides/{scheduledRideId}', patchBusinesses{orgId}Scheduled-rides{scheduledRideId});
+const patchBusinesses{orgId}Scheduled-rides{scheduledRideId} = async (req, res) => {
+  try {
+    // TODO: Implement PATCH /businesses/{orgId}/scheduled-rides/{scheduledRideId}
+    const body = req.body;
+    const orgId = req.params.orgId;
+    const scheduledRideId = req.params.scheduledRideId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'PATCH /businesses/{orgId}/scheduled-rides/{scheduledRideId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in patchBusinesses{orgId}Scheduled-rides{scheduledRideId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.delete('/businesses/{orgId}/scheduled-rides/{scheduledRideId}', deleteBusinesses{orgId}Scheduled-rides{scheduledRideId});
+const deleteBusinesses{orgId}Scheduled-rides{scheduledRideId} = async (req, res) => {
+  try {
+    // TODO: Implement DELETE /businesses/{orgId}/scheduled-rides/{scheduledRideId}
+    const orgId = req.params.orgId;
+    const scheduledRideId = req.params.scheduledRideId;
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'DELETE /businesses/{orgId}/scheduled-rides/{scheduledRideId} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in deleteBusinesses{orgId}Scheduled-rides{scheduledRideId}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+
+// analytics endpoints
+router.get('/analytics/tips?${params.toString()}', getAnalyticsTips?${params.toString()});
+const getAnalyticsTips?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /analytics/tips?${params.toString()}
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /analytics/tips?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getAnalyticsTips?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/analytics/tips/summary?${params.toString()}', getAnalyticsTipsSummary?${params.toString()});
+const getAnalyticsTipsSummary?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /analytics/tips/summary?${params.toString()}
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /analytics/tips/summary?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getAnalyticsTipsSummary?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+router.get('/analytics/tips/export?${params.toString()}', getAnalyticsTipsExport?${params.toString()});
+const getAnalyticsTipsExport?${params.toString()} = async (req, res) => {
+  try {
+    // TODO: Implement GET /analytics/tips/export?${params.toString()}
+    const params.toString() = req.params.params.toString();
+    
+    // Placeholder response
+    res.status(200).json({
+      success: true,
+      message: 'GET /analytics/tips/export?${params.toString()} endpoint implemented',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error in getAnalyticsTipsExport?${params.toString()}:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+
+ module.exports = router;

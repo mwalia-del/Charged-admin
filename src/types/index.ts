@@ -747,17 +747,11 @@ export interface VehicleClass {
   code: string;
   display_name: string;
   is_enabled: boolean;
-  base_fare_cents: number;
-  per_km_cents: number;
-  per_min_cents: number;
   updated_at: string;
 }
 
 export interface VehicleClassUpdate {
   is_enabled?: boolean;
-  base_fare_cents?: number;
-  per_km_cents?: number;
-  per_min_cents?: number;
 }
 
 export interface VehicleClassesResponse {

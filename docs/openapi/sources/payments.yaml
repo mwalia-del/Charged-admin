@@ -1,0 +1,11 @@
+paths:
+  /payment/addpm:
+    get:
+      tags: [Payments]
+      summary: "Add payment method"
+      operationId: "payments.addPaymentMethod"
+      responses:
+        "200":
+          $ref: "#/components/responses/Ok"
+        "500":
+          $ref: "#/components/responses/ServerError"

@@ -1,0 +1,122 @@
+[
+  {
+    "endpoint": "/admin",
+    "method": "GET",
+    "status": "SKIP",
+    "responseTime": 166,
+    "statusCode": 401,
+    "error": "Authentication required but not provided",
+    "response": {
+      "status": true,
+      "message": "unauthorised"
+    }
+  },
+  {
+    "endpoint": "/admin/getdrivers",
+    "method": "GET",
+    "status": "SKIP",
+    "responseTime": 45,
+    "statusCode": 401,
+    "error": "Authentication required but not provided",
+    "response": {
+      "status": true,
+      "message": "unauthorised"
+    }
+  },
+  {
+    "endpoint": "/admin/getdriverdocs/test123",
+    "method": "GET",
+    "status": "SKIP",
+    "responseTime": 45,
+    "statusCode": 401,
+    "error": "Authentication required but not provided",
+    "response": {
+      "status": true,
+      "message": "unauthorised"
+    }
+  },
+  {
+    "endpoint": "/admin/verifydriverdoc/test_driver_123/test_doc_123",
+    "method": "PUT",
+    "status": "SKIP",
+    "responseTime": 64,
+    "statusCode": 401,
+    "error": "Authentication required but not provided",
+    "response": {
+      "status": true,
+      "message": "unauthorised"
+    }
+  },
+  {
+    "endpoint": "/admin/updatestatus/test_driver_123",
+    "method": "PUT",
+    "status": "SKIP",
+    "responseTime": 55,
+    "statusCode": 401,
+    "error": "Authentication required but not provided",
+    "response": {
+      "status": true,
+      "message": "unauthorised"
+    }
+  },
+  {
+    "endpoint": "/admin/documenttypes",
+    "method": "GET",
+    "status": "SKIP",
+    "responseTime": 44,
+    "statusCode": 401,
+    "error": "Authentication required but not provided",
+    "response": {
+      "status": true,
+      "message": "unauthorised"
+    }
+  },
+  {
+    "endpoint": "/admin/documenttypes",
+    "method": "POST",
+    "status": "SKIP",
+    "responseTime": 44,
+    "statusCode": 401,
+    "error": "Authentication required but not provided",
+    "response": {
+      "status": true,
+      "message": "unauthorised"
+    }
+  },
+  {
+    "endpoint": "/admin/documenttypes/test123",
+    "method": "PUT",
+    "status": "SKIP",
+    "responseTime": 44,
+    "statusCode": 401,
+    "error": "Authentication required but not provided",
+    "response": {
+      "status": true,
+      "message": "unauthorised"
+    }
+  },
+  {
+    "endpoint": "/admin/documenttypes/test_doc_123",
+    "method": "DELETE",
+    "status": "SKIP",
+    "responseTime": 46,
+    "statusCode": 401,
+    "error": "Authentication required but not provided",
+    "response": {
+      "status": true,
+      "message": "unauthorised"
+    }
+  },
+  {
+    "endpoint": "/admin/getriders",
+    "method": "GET",
+    "status": "SKIP",
+    "responseTime": 43,
+    "statusCode": 401,
+    "error": "Authentication required but not provided",
+    "response": {
+      "status": true,
+      "message": "unauthorised"
+    }
+  }
+]

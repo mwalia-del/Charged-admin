@@ -1,0 +1,88 @@
+openapi: 3.0.3
+info:
+  title: "Charged API"
+  description: |
+    The Charged API provides comprehensive ride-sharing and transportation services including:
+    
+    - **Ride Management**: Request, track, and manage rides
+    - **User Management**: Riders, drivers, and business accounts
+    - **Payment Processing**: Stripe integration for payments and tips
+    - **Referral System**: User referral programs and rewards
+    - **Promotions**: Discount codes and promotional campaigns
+    - **Scheduled Rides**: Advanced booking and recurring rides
+    - **Business Features**: Corporate accounts, invoicing, and analytics
+    - **Vehicle Classes**: Different vehicle types including Charged XL
+    - **Wallet System**: Digital wallet for credits and transactions
+    
+    ## Authentication
+    Most endpoints require a JWT token obtained from `/auth/login` or `/auth/register`. Include the token in the Authorization header:
+    ```
+    Authorization: Bearer <your-jwt-token>
+    ```
+    
+    ## Rate Limiting
+    API requests are rate limited to 1000 requests per hour per API key.
+    
+    ## Error Handling
+    The API uses standard HTTP status codes and returns detailed error information in JSON format.
+    
+    ## Versioning
+    This API is versioned. The current version is v3, accessible at `/v3/` prefix.
+  
+  version: "3.0.0"
+  contact:
+    name: "Charged API Support"
+    email: "api-support@charged.autos"
+    url: "https://charged.autos/support"
+  license:
+    name: "Proprietary"
+    url: "https://charged.autos/terms"
+
+servers:
+  - url: "https://api.charged.autos/v3"
+    description: "Production server"
+  - url: "https://staging-api.charged.autos/v3"
+    description: "Staging server"
+  - url: "http://localhost:3000/v3"
+    description: "Development server"
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: "Authentication"
+    description: "User authentication and authorization"
+  - name: "Riders"
+    description: "Rider account management and operations"
+  - name: "Drivers"
+    description: "Driver account management and operations"
+  - name: "Businesses"
+    description: "Business account management and corporate features"
+  - name: "Rides"
+    description: "Ride management and tracking"
+  - name: "Wallet"
+    description: "Digital wallet and transaction management"
+  - name: "Payments"
+    description: "Payment processing and Stripe integration"
+  - name: "Tips"
+    description: "Driver tipping system"
+  - name: "Referrals"
+    description: "User referral system and rewards"
+  - name: "Promotions"
+    description: "Promotional campaigns and discount codes"
+  - name: "Scheduled Rides"
+    description: "Advanced booking and scheduled ride management"
+  - name: "Invoices"
+    description: "Business invoicing and billing"
+  - name: "Catalog"
+    description: "Vehicle classes and service catalog"
+  - name: "Notifications"
+    description: "Push notifications and messaging"
+  - name: "Analytics"
+    description: "Analytics and reporting"
+  - name: "Admin"
+    description: "Administrative operations and management"
+
+externalDocs:
+  description: "Charged API Documentation"
+  url: "https://docs.charged.autos"

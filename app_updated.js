@@ -43,6 +43,14 @@ var catalogRouter = require('./routes/catalog');  // Add catalog routes
 /*var sosRouter = require('./routes/sos');
 var todoRouter = require('./routes/todo');
 var medicineRouter = require('./routes/medicine');                                        
+const businessRouter = require('./business_routes');
+const analyticsRouter = require('./analytics_routes');
+const referralsRouter = require('./referrals_routes');
+const promotionsRouter = require('./promotions_routes');
+const scheduledRouter = require('./scheduled_routes');
+const tipsRouter = require('./tips_routes');
+const invoicesRouter = require('./invoices_routes');
+const rewardsRouter = require('./rewards_routes');
 */
 var options = {
   explorer: true
@@ -83,6 +91,14 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
+app.use('/businesses', businessRouter);
+app.use('/analytics', analyticsRouter);
+app.use('/referrals', referralsRouter);
+app.use('/promotions', promotionsRouter);
+app.use('/scheduled', scheduledRouter);
+app.use('/tips', tipsRouter);
+app.use('/invoices', invoicesRouter);
+app.use('/rewards', rewardsRouter);
   // set locals, only providing error in development                                      
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};                     
