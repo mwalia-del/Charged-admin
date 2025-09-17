@@ -261,11 +261,12 @@ const DriversComponent: React.FC = () => {
     }
   };
 
-  const generateReferralId = (driverId: string | number) => {
-    if (!driverId) return 'DRV-UNKNOWN';
-    const idString = String(driverId);
-    const shortId = idString.length > 8 ? idString.substring(0, 8) : idString.padStart(8, '0');
-    return `DRV-${shortId.toUpperCase()}`;
+  const getReferralId = (driver: Driver) => {
+    // Display the referral code from the database (generated during registration)
+    if (driver.referral_code) {
+      return driver.referral_code;
+    }
+    return 'Not Assigned';
   };
 
 
@@ -512,17 +513,20 @@ const DriversComponent: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Typography variant="body2" fontFamily="monospace">
-                          {generateReferralId(driver.id)}
+                        <Typography variant="body2" fontFamily="monospace" data-testid="driver-referral-code">
+                          {getReferralId(driver)}
                         </Typography>
-                        <Tooltip title="Copy Referral ID">
-                          <IconButton
-                            size="small"
-                            onClick={() => copyReferralId(generateReferralId(driver.id))}
-                          >
-                            <CopyIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
+                        {driver.referral_code && (
+                          <Tooltip title="Copy Referral ID">
+                            <IconButton
+                              size="small"
+                              onClick={() => copyReferralId(driver.referral_code!)}
+                              data-testid="copy-referral-code"
+                            >
+                              <CopyIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                       </Box>
                     </TableCell>
                     <TableCell>

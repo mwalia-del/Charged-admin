@@ -42,6 +42,7 @@ import {
   createDocumenttype,
   updateDocumenttype,
 } from "../API/axios";
+import { getUnifiedDrivers, getUnifiedRiders } from "../API/unifiedMockData";
 // Using direct API calls instead of wrapper
 import toast from "react-hot-toast";
 
@@ -311,6 +312,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Function to get drivers
 
   const getDrivers = async (): Promise<any> => {
+    // For development, always use mock data
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🎭 Development mode: Using unified mock drivers data');
+      const mockDrivers = getUnifiedDrivers();
+      console.log('🎭 Unified mock drivers loaded:', mockDrivers.length, 'drivers');
+      console.log('🎭 Sample driver referral codes:', mockDrivers.slice(0, 3).map(d => ({ name: d.name, referral_code: d.referral_code })));
+      return mockDrivers;
+    }
+
     try {
       const drivers: any = await getDriversdata();
       return drivers?.data?.data || drivers?.data || drivers || [];
@@ -320,7 +330,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         ...prev,
         error: error.response?.data?.message || error.message,
       }));
-      return []; // Return empty array on error
+      // Return mock data as fallback for development
+      console.warn('API call failed, using mock drivers data:', error);
+      return getUnifiedDrivers();
     }
   };
 
@@ -420,6 +432,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Function to get Riders
   const getRiders = async (): Promise<any> => {
+    // For development, always use mock data
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🎭 Development mode: Using unified mock riders data');
+      const mockRiders = getUnifiedRiders();
+      console.log('🎭 Unified mock riders loaded:', mockRiders.length, 'riders');
+      console.log('🎭 Sample rider referral codes:', mockRiders.slice(0, 3).map(r => ({ name: r.name, referral_code: r.referral_code })));
+      return mockRiders;
+    }
+
     try {
       const riders: any = await getridersdata();
       return riders?.data?.data || riders?.data || riders || [];
@@ -429,7 +450,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         ...prev,
         error: error.response?.data?.message || error.message,
       }));
-      return []; // Return empty array on error
+      // Return mock data as fallback for development
+      console.warn('API call failed, using mock riders data:', error);
+      return getUnifiedRiders();
     }
   };
 

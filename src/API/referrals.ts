@@ -11,12 +11,13 @@ import {
   ReferralWalletResponse,
 } from "../types";
 import { 
-  generateMockReferralIssuances, 
-  generateMockReferralSummary,
-  generateMockReferralWallet,
-  generateMockReferralWalletTransactions,
-  generateMockReferralWallets
-} from "./mockReferralData";
+  getUnifiedReferralIssuances,
+  getUnifiedReferralSummary,
+  getUnifiedReferralWallet,
+  getUnifiedReferralWalletTransactions,
+  getUnifiedDrivers,
+  getUnifiedRiders
+} from "./unifiedMockData";
 
 const instance = axios.create({
   baseURL: "https://api.charged.autos",
@@ -54,15 +55,27 @@ export const getIssuances = async (filters: ReferralFilters): Promise<ReferralIs
     if (filters.end_date) params.append("end_date", filters.end_date);
     if (filters.actor_type) params.append("actor_type", filters.actor_type);
     if (filters.actor_id) params.append("actor_id", filters.actor_id);
+    if (filters.referral_id) params.append("referral_id", filters.referral_id);
     if (filters.page) params.append("page", filters.page.toString());
     if (filters.page_size) params.append("page_size", filters.page_size.toString());
 
     const response = await instance.get(`/admin/referrals/issuances?${params.toString()}`);
     return response.data;
   } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockIssuances = generateMockReferralIssuances(100);
+    // Fallback to unified mock data for development
+    console.warn('API call failed, using unified mock data:', error);
+    let mockIssuances = getUnifiedReferralIssuances();
+    
+    // Apply referral_id filter if provided
+    if (filters.referral_id) {
+      const referralId = filters.referral_id.toUpperCase();
+      mockIssuances = mockIssuances.filter(issuance => 
+        issuance.referrer_id === referralId || 
+        issuance.referred_rider_id === referralId ||
+        issuance.issuance_id.includes(referralId)
+      );
+    }
+    
     const page = filters.page || 1;
     const pageSize = filters.page_size || 25;
     const startIndex = (page - 1) * pageSize;
@@ -90,13 +103,14 @@ export const getSummary = async (filters: ReferralFilters): Promise<ReferralSumm
     if (filters.end_date) params.append("end_date", filters.end_date);
     if (filters.actor_type) params.append("actor_type", filters.actor_type);
     if (filters.actor_id) params.append("actor_id", filters.actor_id);
+    if (filters.referral_id) params.append("referral_id", filters.referral_id);
 
     const response = await instance.get(`/admin/referrals/summary?${params.toString()}`);
     return response.data;
   } catch (error) {
     // Fallback to mock data for development
     console.warn('API call failed, using mock data:', error);
-    return generateMockReferralSummary();
+    return getUnifiedReferralSummary();
   }
 };
 
@@ -149,7 +163,7 @@ export const getDriverIssuances = async (filters: ReferralFilters): Promise<Refe
   } catch (error) {
     // Fallback to mock data for development
     console.warn('API call failed, using mock data:', error);
-    const mockIssuances = generateMockReferralIssuances(50).filter((issuance: ReferralIssuance) => issuance.referrer_type === 'driver');
+    const mockIssuances = getUnifiedReferralIssuances().filter((issuance: ReferralIssuance) => issuance.referrer_type === 'driver');
     const page = filters.page || 1;
     const pageSize = filters.page_size || 25;
     const startIndex = (page - 1) * pageSize;
@@ -181,7 +195,7 @@ export const getDriverSummary = async (filters: ReferralFilters): Promise<Referr
   } catch (error) {
     // Fallback to mock data for development
     console.warn('API call failed, using mock data:', error);
-    return generateMockReferralSummary();
+    return getUnifiedReferralSummary();
   }
 };
 
@@ -201,7 +215,7 @@ export const getRiderIssuances = async (filters: ReferralFilters): Promise<Refer
   } catch (error) {
     // Fallback to mock data for development
     console.warn('API call failed, using mock data:', error);
-    const mockIssuances = generateMockReferralIssuances(50).filter((issuance: ReferralIssuance) => issuance.referrer_type === 'rider');
+    const mockIssuances = getUnifiedReferralIssuances().filter((issuance: ReferralIssuance) => issuance.referrer_type === 'rider');
     const page = filters.page || 1;
     const pageSize = filters.page_size || 25;
     const startIndex = (page - 1) * pageSize;
@@ -233,7 +247,7 @@ export const getRiderSummary = async (filters: ReferralFilters): Promise<Referra
   } catch (error) {
     // Fallback to mock data for development
     console.warn('API call failed, using mock data:', error);
-    return generateMockReferralSummary();
+    return getUnifiedReferralSummary();
   }
 };
 
@@ -255,7 +269,7 @@ export const exportReferralsToCSV = async (filters: ReferralFilters): Promise<Bl
   } catch (error) {
     // Fallback for development - create a simple CSV
     console.warn('API call failed, creating mock CSV:', error);
-    const mockIssuances = generateMockReferralIssuances(50);
+    const mockIssuances = getUnifiedReferralIssuances();
     const csvContent = [
       'Date,Ride #,Referred Rider,Referrer Type,Referrer Name,Tier,Amount (CAD),Status,Issuance ID',
       ...mockIssuances.map((issuance: ReferralIssuance) => 
@@ -276,7 +290,13 @@ export const getDriverReferralWallet = async (driverId: string): Promise<Referra
     return response.data;
   } catch (error) {
     console.warn('API call failed, using mock data:', error);
-    return generateMockReferralWallet(driverId, 'driver');
+    const wallet = getUnifiedReferralWallet(driverId);
+    const defaultWallet = { user_id: driverId, user_type: 'driver' as const, total_earnings_cents: 0, total_referral_credits_cents: 0, available_balance_cents: 0, pending_balance_cents: 0, currency: 'CAD', last_updated: new Date().toISOString() };
+    return { 
+      wallet: wallet || defaultWallet,
+      recent_transactions: [],
+      pagination: { page: 1, page_size: 10, total: 0, total_pages: 0 }
+    };
   }
 };
 
@@ -287,7 +307,13 @@ export const getRiderReferralWallet = async (riderId: string): Promise<ReferralW
     return response.data;
   } catch (error) {
     console.warn('API call failed, using mock data:', error);
-    return generateMockReferralWallet(riderId, 'rider');
+    const wallet = getUnifiedReferralWallet(riderId);
+    const defaultWallet = { user_id: riderId, user_type: 'rider' as const, total_earnings_cents: 0, total_referral_credits_cents: 0, available_balance_cents: 0, pending_balance_cents: 0, currency: 'CAD', last_updated: new Date().toISOString() };
+    return { 
+      wallet: wallet || defaultWallet,
+      recent_transactions: [],
+      pagination: { page: 1, page_size: 10, total: 0, total_pages: 0 }
+    };
   }
 };
 
@@ -302,7 +328,7 @@ export const getDriverReferralWalletTransactions = async (
     return response.data;
   } catch (error) {
     console.warn('API call failed, using mock data:', error);
-    const mockTransactions = generateMockReferralWalletTransactions(driverId, 'driver', 20);
+    const mockTransactions = getUnifiedReferralWalletTransactions(driverId);
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     
@@ -329,7 +355,7 @@ export const getRiderReferralWalletTransactions = async (
     return response.data;
   } catch (error) {
     console.warn('API call failed, using mock data:', error);
-    const mockTransactions = generateMockReferralWalletTransactions(riderId, 'rider', 20);
+    const mockTransactions = getUnifiedReferralWalletTransactions(riderId);
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     
@@ -370,8 +396,8 @@ export const getAllReferralWallets = async (): Promise<{ drivers: ReferralWallet
   } catch (error) {
     console.warn('API call failed, using mock data:', error);
     return {
-      drivers: generateMockReferralWallets('driver', 10),
-      riders: generateMockReferralWallets('rider', 10)
+      drivers: getUnifiedDrivers().map((driver: any) => getUnifiedReferralWallet(driver.id)).filter((wallet): wallet is ReferralWallet => wallet !== undefined),
+      riders: getUnifiedRiders().map((rider: any) => getUnifiedReferralWallet(rider.id)).filter((wallet): wallet is ReferralWallet => wallet !== undefined)
     };
   }
 };

@@ -19,6 +19,7 @@ import {
 import { Business, BusinessFilters } from '../../types';
 import { getBusiness, getBusinessRides } from '../../API/business';
 import BusinessHeader from './components/BusinessHeader';
+import BusinessOverview from './components/BusinessOverview';
 import BusinessRideFilters from './components/BusinessRideFilters';
 import BusinessRideTable from './components/BusinessRideTable';
 import BusinessWalletCard from './components/BusinessWalletCard';
@@ -237,14 +238,16 @@ const BusinessDetailPage: React.FC = () => {
       </Box>
 
       <TabPanel value={activeTab} index={0}>
-        <Box sx={{ textAlign: 'center', py: 4 }}>
-          <Typography variant="h6" color="text.secondary">
-            Overview content will be implemented here
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            This tab will show business summary, recent activity, and key metrics.
-          </Typography>
-        </Box>
+        {business ? (
+          <BusinessOverview business={business} />
+        ) : (
+          <Box sx={{ textAlign: 'center', py: 4 }}>
+            <CircularProgress />
+            <Typography variant="body1" sx={{ mt: 2 }}>
+              Loading business overview...
+            </Typography>
+          </Box>
+        )}
       </TabPanel>
 
       <TabPanel value={activeTab} index={1}>

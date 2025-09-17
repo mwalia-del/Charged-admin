@@ -62,11 +62,12 @@ const DriverReferralWalletsPage: React.FC = () => {
     return `$${(cents / 100).toFixed(2)}`;
   };
 
-  const generateReferralId = (driverId: string | number) => {
-    if (!driverId) return 'DRV-UNKNOWN';
-    const idString = String(driverId);
-    const shortId = idString.length > 8 ? idString.substring(0, 8) : idString.padStart(8, '0');
-    return `DRV-${shortId.toUpperCase()}`;
+  const getReferralId = (driver: any) => {
+    // Display the referral code from the database (generated during registration)
+    if (driver.referral_code) {
+      return driver.referral_code;
+    }
+    return 'Not Assigned';
   };
 
   const loadDrivers = useCallback(async () => {
@@ -271,7 +272,7 @@ const DriverReferralWalletsPage: React.FC = () => {
             <TableBody>
               {paginatedDrivers.map((driver) => {
                 const wallet = wallets.get(driver.id);
-                const referralId = generateReferralId(driver.id);
+                const referralId = getReferralId(driver);
                 
                 return (
                   <TableRow key={driver.id} hover>
@@ -287,22 +288,25 @@ const DriverReferralWalletsPage: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="body2" fontFamily="monospace">
+                        <Typography variant="body2" fontFamily="monospace" data-testid="wallet-referral-code">
                           {referralId}
                         </Typography>
-                        <Tooltip title="Copy Referral ID">
-                          <IconButton
-                            size="small"
-                            onClick={() => copyReferralId(referralId)}
-                          >
-                            <CopyIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
+                        {driver.referral_code && (
+                          <Tooltip title="Copy Referral ID">
+                            <IconButton
+                              size="small"
+                              onClick={() => copyReferralId(driver.referral_code)}
+                              data-testid="copy-referral-code"
+                            >
+                              <CopyIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                       </Box>
                     </TableCell>
                     <TableCell>
                       {wallet ? (
-                        <Typography variant="h6" color="primary" fontWeight="bold">
+                        <Typography variant="h6" color="primary" fontWeight="bold" data-testid="wallet-balance">
                           {formatCurrency(wallet.available_balance_cents)}
                         </Typography>
                       ) : (
@@ -343,6 +347,7 @@ const DriverReferralWalletsPage: React.FC = () => {
                             size="small"
                             color="primary"
                             onClick={() => handleViewTransactions(driver)}
+                            data-testid="view-transactions"
                           >
                             <HistoryIcon />
                           </IconButton>
@@ -404,7 +409,7 @@ const DriverReferralWalletsPage: React.FC = () => {
               </TableHead>
               <TableBody>
                 {transactions.map((transaction) => (
-                  <TableRow key={transaction.id}>
+                  <TableRow key={transaction.id} data-testid="transaction-item">
                     <TableCell>
                       <Typography variant="body2">
                         {new Date(transaction.created_at).toLocaleDateString()}

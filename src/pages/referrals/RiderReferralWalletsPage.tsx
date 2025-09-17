@@ -56,11 +56,12 @@ const RiderReferralWalletsPage: React.FC = () => {
     return `$${(cents / 100).toFixed(2)}`;
   };
 
-  const generateReferralId = (riderId: string | number) => {
-    if (!riderId) return 'RID-UNKNOWN';
-    const idString = String(riderId);
-    const shortId = idString.length > 8 ? idString.substring(0, 8) : idString.padStart(8, '0');
-    return `RID-${shortId.toUpperCase()}`;
+  const getReferralId = (rider: any) => {
+    // Display the referral code from the database (generated during registration)
+    if (rider.referral_code) {
+      return rider.referral_code;
+    }
+    return 'Not Assigned';
   };
 
   const loadRiders = useCallback(async () => {
@@ -212,7 +213,7 @@ const RiderReferralWalletsPage: React.FC = () => {
             <TableBody>
               {paginatedRiders.map((rider) => {
                 const wallet = wallets.get(rider.id);
-                const referralId = generateReferralId(rider.id);
+                const referralId = getReferralId(rider);
                 
                 return (
                   <TableRow key={rider.id} hover>
@@ -228,22 +229,25 @@ const RiderReferralWalletsPage: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="body2" fontFamily="monospace">
+                        <Typography variant="body2" fontFamily="monospace" data-testid="wallet-referral-code">
                           {referralId}
                         </Typography>
-                        <Tooltip title="Copy Referral ID">
-                          <IconButton
-                            size="small"
-                            onClick={() => copyReferralId(referralId)}
-                          >
-                            <CopyIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
+                        {rider.referral_code && (
+                          <Tooltip title="Copy Referral ID">
+                            <IconButton
+                              size="small"
+                              onClick={() => copyReferralId(rider.referral_code)}
+                              data-testid="copy-referral-code"
+                            >
+                              <CopyIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                       </Box>
                     </TableCell>
                     <TableCell>
                       {wallet ? (
-                        <Typography variant="h6" color="primary" fontWeight="bold">
+                        <Typography variant="h6" color="primary" fontWeight="bold" data-testid="wallet-balance">
                           {formatCurrency(wallet.available_balance_cents)}
                         </Typography>
                       ) : (
@@ -284,6 +288,7 @@ const RiderReferralWalletsPage: React.FC = () => {
                             size="small"
                             color="primary"
                             onClick={() => handleViewTransactions(rider)}
+                            data-testid="view-transactions"
                           >
                             <HistoryIcon />
                           </IconButton>
@@ -334,7 +339,7 @@ const RiderReferralWalletsPage: React.FC = () => {
               </TableHead>
               <TableBody>
                 {transactions.map((transaction) => (
-                  <TableRow key={transaction.id}>
+                  <TableRow key={transaction.id} data-testid="transaction-item">
                     <TableCell>
                       <Typography variant="body2">
                         {new Date(transaction.created_at).toLocaleDateString()}

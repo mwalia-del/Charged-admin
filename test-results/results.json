@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 4
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -40,7 +42,9 @@
         "outputDir": "/Users/walia777/charged-admin/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 4
+        },
         "id": "chromium",
         "name": "chromium",
         "testDir": "/Users/walia777/charged-admin/tests/e2e",
@@ -54,7 +58,9 @@
         "outputDir": "/Users/walia777/charged-admin/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 4
+        },
         "id": "webkit",
         "name": "webkit",
         "testDir": "/Users/walia777/charged-admin/tests/e2e",
@@ -68,7 +74,9 @@
         "outputDir": "/Users/walia777/charged-admin/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 4
+        },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
         "testDir": "/Users/walia777/charged-admin/tests/e2e",
@@ -91,19 +99,536 @@
       "timeout": 120000
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: Process from config.webServer exited early.",
-      "stack": "Error: Process from config.webServer exited early."
+      "title": "referral-model.spec.ts",
+      "file": "referral-model.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Referral Model E2E Tests",
+          "file": "referral-model.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Driver Referral Model - Complete Flow",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 8,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:01.260Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-3688084e1016dacbe083",
+              "file": "referral-model.spec.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "Rider Referral Model - Complete Flow",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 6,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:01.246Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-e4dd92ef12810f4cb10f",
+              "file": "referral-model.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "Referral Model Business Rules Validation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 4,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:01.253Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-c0441b30881e84002f30",
+              "file": "referral-model.spec.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "Referral Model Integration - Basic Navigation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 7,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:01.254Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-6cf5700e964b142d1d25",
+              "file": "referral-model.spec.ts",
+              "line": 68,
+              "column": 7
+            },
+            {
+              "title": "Driver Referral Model - Complete Flow",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 4,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:02.912Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-3aeb1d4f2274da8eb8f8",
+              "file": "referral-model.spec.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "Rider Referral Model - Complete Flow",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 7,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:02.906Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-7faed1910a01d8ef14de",
+              "file": "referral-model.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "Referral Model Business Rules Validation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 3,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:02.905Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-e1fe5ecd557a579ddb51",
+              "file": "referral-model.spec.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "Referral Model Integration - Basic Navigation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:02.932Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-5e372eadbf7b75bd9bbc",
+              "file": "referral-model.spec.ts",
+              "line": 68,
+              "column": 7
+            },
+            {
+              "title": "Driver Referral Model - Complete Flow",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 21,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:03.644Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-cb58bac06d4c2f66606a",
+              "file": "referral-model.spec.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "Rider Referral Model - Complete Flow",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 13,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:03.651Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-ac01bd50ae0d58ee48ea",
+              "file": "referral-model.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "Referral Model Business Rules Validation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 25,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:03.642Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-1c7ddf52daeb17506381",
+              "file": "referral-model.spec.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "Referral Model Integration - Basic Navigation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 20,
+                      "error": {
+                        "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'",
+                        "stack": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: Error reading storage state from tests/e2e/auth-state.json:\nENOENT: no such file or directory, open 'tests/e2e/auth-state.json'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-17T03:30:03.650Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "dc5d92781042db35f0a4-bbb210951431f2681ac0",
+              "file": "referral-model.spec.ts",
+              "line": 68,
+              "column": 7
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2025-09-15T04:25:48.748Z",
-    "duration": 41696.945,
+    "startTime": "2025-09-17T03:30:00.832Z",
+    "duration": 3734.079,
     "expected": 0,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 12,
     "flaky": 0
   }
 }

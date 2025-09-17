@@ -14,7 +14,7 @@ import {
 import { generateMockBusinesses, generateMockBusinessRides, generateMockBusinessWalletTransactions, generateMockBusinessInvoices, generateMockBusinessRewards } from "./mockBusinessData";
 
 const instance = axios.create({
-  baseURL: "https://api.charged.autos",
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:3001",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -41,13 +41,32 @@ instance.interceptors.request.use(
 
 // Get business list
 export const getBusinessList = async (): Promise<Business[]> => {
+  // For development, always use mock data
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🎭 Development mode: Using mock data');
+    const mockData = generateMockBusinesses(20);
+    console.log('🎭 Generated mock data:', mockData.length, 'businesses');
+    return mockData;
+  }
+
   try {
+    console.log('🌐 Attempting API call to /businesses');
     const response = await instance.get("/businesses");
-    return response.data;
-  } catch (error) {
+    console.log('✅ API response received:', response.data);
+    // Handle both direct array response and wrapped response
+    return Array.isArray(response.data) ? response.data : (response.data.data || []);
+  } catch (error: any) {
     // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    return generateMockBusinesses(20);
+    console.warn('⚠️ API call failed, using mock data');
+    console.warn('Error details:', {
+      message: error.message,
+      code: error.code,
+      status: error.response?.status,
+      url: error.config?.url
+    });
+    const mockData = generateMockBusinesses(20);
+    console.log('🎭 Generated mock data:', mockData.length, 'businesses');
+    return mockData;
   }
 };
 

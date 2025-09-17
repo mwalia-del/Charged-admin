@@ -12,10 +12,12 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import {
   Visibility as ViewIcon,
   Delete,
+  ContentCopy as CopyIcon,
 } from "@mui/icons-material";
 import React, { useState } from "react";
 import { formatDate, formatRelativeTime } from "../../../utils/formatters";
@@ -41,6 +43,19 @@ const RidersTable = ({
   const [isRiderDeleting, setIsRiderDeleting] = useState(false);
   const [riderToDelete, setRiderToDelete] = useState<Rider | null>(null);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const getReferralId = (rider: Rider) => {
+    // Display the referral code from the database (generated during registration)
+    if (rider.referral_code) {
+      return rider.referral_code;
+    }
+    return 'Not Assigned';
+  };
+
+  const copyReferralId = (referralId: string) => {
+    navigator.clipboard.writeText(referralId);
+    // You could add a toast notification here if needed
+  };
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -64,6 +79,7 @@ const RidersTable = ({
             <TableRow>
               <TableCell>Rider</TableCell>
               <TableCell>Contact</TableCell>
+              <TableCell align="center">Referral ID</TableCell>
               <TableCell align="center">Rating</TableCell>
               <TableCell align="center">Reward Points</TableCell>
               <TableCell align="center">Rides</TableCell>
@@ -99,6 +115,25 @@ const RidersTable = ({
                     <Typography variant="body2" color="text.secondary">
                       {rider.phone}
                     </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                      <Typography variant="body2" fontFamily="monospace" data-testid="rider-referral-code">
+                        {getReferralId(rider)}
+                      </Typography>
+                      {rider.referral_code && (
+                        <Tooltip title="Copy Referral ID">
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            onClick={() => copyReferralId(rider.referral_code!)}
+                            data-testid="copy-referral-code"
+                          >
+                            <CopyIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Box>
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ 

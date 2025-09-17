@@ -98,6 +98,8 @@ const Layout: React.FC = () => {
     if (path === "/rewards") return "Special rewards";
     if (path === "/riders") return "Rider Management";
     if (path === "/drivers") return "Driver Management";
+    if (path === "/businesses") return "Business Management";
+    if (path.startsWith("/businesses/")) return "Business Details";
     if (path === "/test-ride") return "Test Ride Simulation";
     if (path.startsWith("/rides/")) return "Ride Details";
 

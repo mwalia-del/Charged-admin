@@ -59,6 +59,7 @@ export interface Rider {
   lastRideDate?: string;
   photo?: string;
   is_active: boolean;
+  referral_code?: string; // 8-digit alphanumeric referral code
 }
 
 // Driver types
@@ -76,6 +77,7 @@ export interface Driver {
   is_active: boolean;
   photo?: string;
   documents: DriverDocument[];
+  referral_code?: string; // 8-digit alphanumeric referral code
   vehicleDetails?: {
     make: string;
     model: string;
@@ -450,6 +452,7 @@ export interface ReferralFilters {
   end_date?: string;
   actor_type?: "referrer" | "referred" | "ride";
   actor_id?: string;
+  referral_id?: string; // Easy filtering by referral ID
   page?: number;
   page_size?: number;
 }

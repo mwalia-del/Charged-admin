@@ -88,7 +88,39 @@ export const listPromotions = async (filters: PromotionFilters = {}): Promise<{ 
     };
   } catch (error) {
     console.error('Error fetching promotions:', error);
-    throw error;
+    // Fallback to mock data for local development
+    console.log('Falling back to mock data for local development');
+    const { generateMockPromotions } = await import('./mockPromotionsData');
+    const mockPromotions = generateMockPromotions();
+    
+    // Apply filters to mock data
+    let filteredPromotions = mockPromotions;
+    
+    if (filters.audience) {
+      filteredPromotions = filteredPromotions.filter(p => p.audience === filters.audience);
+    }
+    
+    if (filters.status) {
+      if (filters.status === 'active') {
+        filteredPromotions = filteredPromotions.filter(p => p.is_active);
+      } else if (filters.status === 'ended') {
+        filteredPromotions = filteredPromotions.filter(p => !p.is_active);
+      }
+    }
+    
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      filteredPromotions = filteredPromotions.filter(p => 
+        p.title.toLowerCase().includes(searchLower) ||
+        (p.description && p.description.toLowerCase().includes(searchLower)) ||
+        (p.code && p.code.toLowerCase().includes(searchLower))
+      );
+    }
+    
+    return {
+      data: filteredPromotions,
+      total: filteredPromotions.length
+    };
   }
 };
 
@@ -113,6 +145,26 @@ export const getPromotion = async (id: string): Promise<Promotion> => {
 
 // Create new promotion
 export const createPromotion = async (promotion: Omit<Promotion, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'updated_by' | 'redemptions_count' | 'global_redemptions_count'>): Promise<Promotion> => {
+  // For development, always use mock data
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🎭 Development mode: Using mock data for createPromotion');
+    
+    // Create a new mock promotion with the provided data
+    const newPromotion: Promotion = {
+      id: `promo-${Date.now()}`,
+      ...promotion,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      created_by: 'admin-mock',
+      updated_by: 'admin-mock',
+      redemptions_count: 0,
+      global_redemptions_count: 0
+    };
+    
+    console.log('🎭 Created mock promotion:', newPromotion);
+    return newPromotion;
+  }
+
   try {
     const serverPromotion = convertToServerPromotion(promotion);
     const response = await fetch(`${API_BASE_URL}/promotions`, {
@@ -133,6 +185,50 @@ export const createPromotion = async (promotion: Omit<Promotion, 'id' | 'created
 
 // Update promotion
 export const updatePromotion = async (id: string, promotion: Partial<Promotion>): Promise<Promotion> => {
+  // For development, always use mock data
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🎭 Development mode: Using mock data for updatePromotion');
+    const { generateMockPromotions } = await import('./mockPromotionsData');
+    const mockPromotions = generateMockPromotions();
+    
+    // Find existing promotion or create a new one
+    let existingPromotion = mockPromotions.find(p => p.id === id);
+    if (!existingPromotion) {
+      // Create a new mock promotion if not found
+      existingPromotion = {
+        id: id,
+        title: 'Mock Promotion',
+        description: 'Mock promotion for development',
+        audience: 'rider',
+        reward_type: 'fixed_discount',
+        value_cents: 0,
+        start_at: new Date().toISOString(),
+        end_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        priority: 1,
+        is_active: true,
+        max_uses_per_user: 1,
+        global_cap: 100,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        created_by: 'admin-mock',
+        updated_by: 'admin-mock',
+        redemptions_count: 0,
+        global_redemptions_count: 0
+      };
+    }
+    
+    // Update the promotion with new data
+    const updatedPromotion: Promotion = {
+      ...existingPromotion,
+      ...promotion,
+      updated_at: new Date().toISOString(),
+      updated_by: 'admin-mock'
+    };
+    
+    console.log('🎭 Updated mock promotion:', updatedPromotion);
+    return updatedPromotion;
+  }
+
   try {
     const serverPromotion = convertToServerPromotion(promotion);
     const response = await fetch(`${API_BASE_URL}/promotions/${id}`, {
@@ -153,6 +249,13 @@ export const updatePromotion = async (id: string, promotion: Partial<Promotion>)
 
 // Delete promotion
 export const deletePromotion = async (id: string): Promise<void> => {
+  // For development, always use mock data
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🎭 Development mode: Using mock data for deletePromotion');
+    console.log('🎭 Deleted mock promotion with ID:', id);
+    return;
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/promotions/${id}`, {
       method: 'DELETE',
@@ -170,6 +273,49 @@ export const deletePromotion = async (id: string): Promise<void> => {
 
 // Activate promotion
 export const activatePromotion = async (id: string): Promise<Promotion> => {
+  // For development, always use mock data
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🎭 Development mode: Using mock data for activatePromotion');
+    const { generateMockPromotions } = await import('./mockPromotionsData');
+    const mockPromotions = generateMockPromotions();
+    
+    // Find existing promotion or create a new one
+    let existingPromotion = mockPromotions.find(p => p.id === id);
+    if (!existingPromotion) {
+      existingPromotion = {
+        id: id,
+        title: 'Mock Promotion',
+        description: 'Mock promotion for development',
+        audience: 'rider',
+        reward_type: 'fixed_discount',
+        value_cents: 0,
+        start_at: new Date().toISOString(),
+        end_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        priority: 1,
+        is_active: true,
+        max_uses_per_user: 1,
+        global_cap: 100,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        created_by: 'admin-mock',
+        updated_by: 'admin-mock',
+        redemptions_count: 0,
+        global_redemptions_count: 0
+      };
+    }
+    
+    // Activate the promotion
+    const activatedPromotion: Promotion = {
+      ...existingPromotion,
+      is_active: true,
+      updated_at: new Date().toISOString(),
+      updated_by: 'admin-mock'
+    };
+    
+    console.log('🎭 Activated mock promotion:', activatedPromotion);
+    return activatedPromotion;
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/promotions/${id}/activate`, {
       method: 'PATCH',
@@ -188,6 +334,49 @@ export const activatePromotion = async (id: string): Promise<Promotion> => {
 
 // Deactivate promotion
 export const deactivatePromotion = async (id: string): Promise<Promotion> => {
+  // For development, always use mock data
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🎭 Development mode: Using mock data for deactivatePromotion');
+    const { generateMockPromotions } = await import('./mockPromotionsData');
+    const mockPromotions = generateMockPromotions();
+    
+    // Find existing promotion or create a new one
+    let existingPromotion = mockPromotions.find(p => p.id === id);
+    if (!existingPromotion) {
+      existingPromotion = {
+        id: id,
+        title: 'Mock Promotion',
+        description: 'Mock promotion for development',
+        audience: 'rider',
+        reward_type: 'fixed_discount',
+        value_cents: 0,
+        start_at: new Date().toISOString(),
+        end_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        priority: 1,
+        is_active: false,
+        max_uses_per_user: 1,
+        global_cap: 100,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        created_by: 'admin-mock',
+        updated_by: 'admin-mock',
+        redemptions_count: 0,
+        global_redemptions_count: 0
+      };
+    }
+    
+    // Deactivate the promotion
+    const deactivatedPromotion: Promotion = {
+      ...existingPromotion,
+      is_active: false,
+      updated_at: new Date().toISOString(),
+      updated_by: 'admin-mock'
+    };
+    
+    console.log('🎭 Deactivated mock promotion:', deactivatedPromotion);
+    return deactivatedPromotion;
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/promotions/${id}/deactivate`, {
       method: 'PATCH',
@@ -275,7 +464,10 @@ export const getPromotionsSummary = async (audience?: string): Promise<Promotion
     };
   } catch (error) {
     console.error('Error fetching promotions summary:', error);
-    throw error;
+    // Fallback to mock data for local development
+    console.log('Falling back to mock summary data for local development');
+    const { generateMockPromotionSummary } = await import('./mockPromotionsData');
+    return generateMockPromotionSummary();
   }
 };
 

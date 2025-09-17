@@ -69,10 +69,17 @@ const BusinessListPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
+      console.log('🔄 Loading businesses...');
       const data = await getBusinessList();
-      setBusinesses(data);
+      console.log('📊 Businesses data received:', data);
+      // Ensure data is always an array
+      const businessArray = Array.isArray(data) ? data : [];
+      console.log('📊 Setting businesses to:', businessArray);
+      setBusinesses(businessArray);
     } catch (err: any) {
+      console.error('❌ Error loading businesses:', err);
       setError(err.response?.data?.message || 'Failed to load businesses');
+      setBusinesses([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
@@ -95,10 +102,10 @@ const BusinessListPage: React.FC = () => {
     setPage(0);
   };
 
-  const paginatedBusinesses = businesses.slice(
+  const paginatedBusinesses = Array.isArray(businesses) ? businesses.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
-  );
+  ) : [];
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
@@ -124,7 +131,7 @@ const BusinessListPage: React.FC = () => {
             <CardContent sx={{ textAlign: 'center' }}>
               <BusinessIcon sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
               <Typography variant="h4" color="primary" gutterBottom>
-                {businesses.length}
+                {Array.isArray(businesses) ? businesses.length : 0}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Total Businesses
@@ -138,7 +145,7 @@ const BusinessListPage: React.FC = () => {
             <CardContent sx={{ textAlign: 'center' }}>
               <MoneyIcon sx={{ fontSize: 40, color: 'success.main', mb: 1 }} />
               <Typography variant="h4" color="success.main" gutterBottom>
-                {formatCurrency(businesses.reduce((sum, biz) => sum + biz.month_spend_cents, 0))}
+                {formatCurrency(Array.isArray(businesses) ? businesses.reduce((sum, biz) => sum + biz.month_spend_cents, 0) : 0)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Total Month Spend
@@ -152,7 +159,7 @@ const BusinessListPage: React.FC = () => {
             <CardContent sx={{ textAlign: 'center' }}>
               <WalletIcon sx={{ fontSize: 40, color: 'warning.main', mb: 1 }} />
               <Typography variant="h4" color="warning.main" gutterBottom>
-                {formatCurrency(businesses.reduce((sum, biz) => sum + biz.wallet_balance_cents, 0))}
+                {formatCurrency(Array.isArray(businesses) ? businesses.reduce((sum, biz) => sum + biz.wallet_balance_cents, 0) : 0)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Total Wallet Balance
@@ -166,7 +173,7 @@ const BusinessListPage: React.FC = () => {
             <CardContent sx={{ textAlign: 'center' }}>
               <RewardsIcon sx={{ fontSize: 40, color: 'info.main', mb: 1 }} />
               <Typography variant="h4" color="info.main" gutterBottom>
-                {businesses.reduce((sum, biz) => sum + biz.rewards_points, 0).toLocaleString()}
+                {Array.isArray(businesses) ? businesses.reduce((sum, biz) => sum + biz.rewards_points, 0).toLocaleString() : '0'}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Total Rewards Points
@@ -189,7 +196,7 @@ const BusinessListPage: React.FC = () => {
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
               <CircularProgress />
             </Box>
-          ) : businesses.length > 0 ? (
+          ) : Array.isArray(businesses) && businesses.length > 0 ? (
             <>
               <TableContainer>
                 <Table>
@@ -275,7 +282,7 @@ const BusinessListPage: React.FC = () => {
               <TablePagination
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"
-                count={businesses.length}
+                count={Array.isArray(businesses) ? businesses.length : 0}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handlePageChange}

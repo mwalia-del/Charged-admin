@@ -35,6 +35,7 @@ const ReferralFilters: React.FC<ReferralFiltersProps> = ({
 }) => {
   const [actorType, setActorType] = useState<string>(filters.actor_type || 'ride');
   const [actorId, setActorId] = useState<string>(filters.actor_id || '');
+  const [referralId, setReferralId] = useState<string>(filters.referral_id || '');
   const [range, setRange] = useState<string>(filters.range || 'this_month');
   const [startDate, setStartDate] = useState<string>(
     filters.start_date || ''
@@ -81,6 +82,14 @@ const ReferralFilters: React.FC<ReferralFiltersProps> = ({
     });
   };
 
+  const handleReferralIdChange = (value: string) => {
+    setReferralId(value);
+    onFiltersChange({
+      ...filters,
+      referral_id: value || undefined
+    });
+  };
+
   const handleRangeChange = (value: string) => {
     setRange(value);
     if (value !== 'custom') {
@@ -115,6 +124,7 @@ const ReferralFilters: React.FC<ReferralFiltersProps> = ({
   const handleClear = () => {
     setActorType('ride');
     setActorId('');
+    setReferralId('');
     setRange('this_month');
     setStartDate('');
     setEndDate('');
@@ -172,6 +182,18 @@ const ReferralFilters: React.FC<ReferralFiltersProps> = ({
             />
           </Grid>
         )}
+
+        <Grid item xs={12} md={2}>
+          <TextField
+            label="Referral ID"
+            size="small"
+            fullWidth
+            value={referralId}
+            onChange={(e) => handleReferralIdChange(e.target.value)}
+            placeholder="e.g., DRV12345678, RID12345678"
+            helperText="Enter specific referral ID to filter"
+          />
+        </Grid>
 
         <Grid item xs={12} md={2}>
           <FormControl fullWidth size="small">

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Tip, TipSummary, TipsFilters, TipsResponse } from "../types";
-import { generateMockTips, generateMockSummary } from "./mockTipsData";
+import { getUnifiedTips, getUnifiedTipSummary } from "./unifiedMockData";
 
 const instance = axios.create({
   baseURL: "https://api.charged.autos",
@@ -46,7 +46,7 @@ export const getTips = async (filters: TipsFilters): Promise<TipsResponse> => {
   } catch (error) {
     // Fallback to mock data for development
     console.warn('API call failed, using mock data:', error);
-    const mockTips = generateMockTips(50);
+    const mockTips = getUnifiedTips();
     const page = filters.page || 1;
     const pageSize = filters.page_size || 25;
     const startIndex = (page - 1) * pageSize;
@@ -80,8 +80,7 @@ export const getTipsSummary = async (filters: TipsFilters): Promise<TipSummary> 
   } catch (error) {
     // Fallback to mock data for development
     console.warn('API call failed, using mock data:', error);
-    const mockTips = generateMockTips(50);
-    return generateMockSummary(mockTips);
+    return getUnifiedTipSummary();
   }
 };
 
@@ -101,7 +100,7 @@ export const getDriverTips = async (driverId: string, filters: Omit<TipsFilters,
   } catch (error) {
     // Fallback to mock data for development
     console.warn('API call failed, using mock data:', error);
-    const mockTips = generateMockTips(50).filter(tip => tip.driver_id === driverId);
+    const mockTips = getUnifiedTips().filter((tip: Tip) => tip.driver_id === driverId);
     const page = filters.page || 1;
     const pageSize = filters.page_size || 25;
     const startIndex = (page - 1) * pageSize;
@@ -135,7 +134,7 @@ export const getRiderTips = async (riderId: string, filters: Omit<TipsFilters, '
   } catch (error) {
     // Fallback to mock data for development
     console.warn('API call failed, using mock data:', error);
-    const mockTips = generateMockTips(50).filter(tip => tip.rider_id === riderId);
+    const mockTips = getUnifiedTips().filter((tip: Tip) => tip.rider_id === riderId);
     const page = filters.page || 1;
     const pageSize = filters.page_size || 25;
     const startIndex = (page - 1) * pageSize;

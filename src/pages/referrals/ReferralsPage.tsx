@@ -102,7 +102,8 @@ const ReferralsPage: React.FC = () => {
       actor_type: 'ride',
       range: 'this_month',
       page: 1,
-      page_size: 25
+      page_size: 25,
+      referral_id: undefined
     });
   }, []);
 

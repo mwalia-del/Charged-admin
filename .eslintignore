@@ -1,0 +1,18 @@
+# Ignore cleanup directory (server files)
+cleanup/
+
+# Ignore build outputs
+build/
+dist/
+
+# Ignore node_modules
+node_modules/
+
+# Ignore test artifacts
+coverage/
+test-results/
+playwright-report/
+
+
+
+
