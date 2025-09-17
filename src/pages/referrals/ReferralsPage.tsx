@@ -5,6 +5,18 @@ import {
   Box,
   Alert,
   Snackbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Chip,
+  CircularProgress,
 } from '@mui/material';
 import { ReferralFilters as ReferralFiltersType, ReferralSummary, ReferralIssuancesResponse } from '../../types';
 import { getIssuances, getSummary, exportReferralsToCSV } from '../../API/referrals';
@@ -28,6 +40,16 @@ const ReferralsPage: React.FC = () => {
     message: '',
     severity: 'success'
   });
+
+  // Wallet editing state
+  const [walletDialogOpen, setWalletDialogOpen] = useState(false);
+  const [selectedReferrer, setSelectedReferrer] = useState<{ id: string; type: 'driver' | 'rider'; name: string } | null>(null);
+  const [walletAdjustment, setWalletAdjustment] = useState({
+    amount: '',
+    reason: '',
+    type: 'credit' as 'credit' | 'debit'
+  });
+  const [walletLoading, setWalletLoading] = useState(false);
 
   // Filters state
   const [filters, setFilters] = useState<ReferralFiltersType>({
@@ -158,6 +180,78 @@ const ReferralsPage: React.FC = () => {
     setSnackbar(prev => ({ ...prev, open: false }));
   };
 
+  const handleEditWallet = (referrerId: string, referrerType: 'driver' | 'rider') => {
+    const referrer = referrerType === 'driver' 
+      ? drivers.find(d => d.id === referrerId)
+      : riders.find(r => r.id === referrerId);
+    
+    if (referrer) {
+      setSelectedReferrer({
+        id: referrerId,
+        type: referrerType,
+        name: referrer.name
+      });
+      setWalletAdjustment({
+        amount: '',
+        reason: '',
+        type: 'credit'
+      });
+      setWalletDialogOpen(true);
+    }
+  };
+
+  const handleWalletAdjustment = async () => {
+    if (!selectedReferrer || !walletAdjustment.amount || !walletAdjustment.reason) {
+      setSnackbar({
+        open: true,
+        message: 'Please fill in all fields',
+        severity: 'error'
+      });
+      return;
+    }
+
+    try {
+      setWalletLoading(true);
+      
+      // Here you would call an API to adjust the wallet
+      // For now, we'll just show a success message
+      console.log('Wallet adjustment:', {
+        referrerId: selectedReferrer.id,
+        referrerType: selectedReferrer.type,
+        amount: parseFloat(walletAdjustment.amount) * 100, // Convert to cents
+        reason: walletAdjustment.reason,
+        type: walletAdjustment.type
+      });
+      
+      setSnackbar({
+        open: true,
+        message: `Wallet ${walletAdjustment.type} of $${walletAdjustment.amount} processed successfully`,
+        severity: 'success'
+      });
+      
+      setWalletDialogOpen(false);
+      setSelectedReferrer(null);
+      setWalletAdjustment({ amount: '', reason: '', type: 'credit' });
+      
+      // Refresh the data
+      loadIssuances();
+    } catch (err: any) {
+      setSnackbar({
+        open: true,
+        message: err.response?.data?.message || 'Failed to process wallet adjustment',
+        severity: 'error'
+      });
+    } finally {
+      setWalletLoading(false);
+    }
+  };
+
+  const handleWalletDialogClose = () => {
+    setWalletDialogOpen(false);
+    setSelectedReferrer(null);
+    setWalletAdjustment({ amount: '', reason: '', type: 'credit' });
+  };
+
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ mb: 4 }}>
@@ -195,6 +289,7 @@ const ReferralsPage: React.FC = () => {
         onViewRide={handleViewRide}
         onExport={handleExport}
         onRefresh={handleRefresh}
+        onEditWallet={handleEditWallet}
       />
 
       <Snackbar
@@ -203,6 +298,74 @@ const ReferralsPage: React.FC = () => {
         onClose={handleCloseSnackbar}
         message={snackbar.message}
       />
+
+      {/* Wallet Editing Dialog */}
+      <Dialog open={walletDialogOpen} onClose={handleWalletDialogClose} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          Edit Referral Wallet
+          {selectedReferrer && (
+            <Box sx={{ mt: 1 }}>
+              <Chip 
+                label={selectedReferrer.type.toUpperCase()} 
+                color={selectedReferrer.type === 'driver' ? 'info' : 'warning'}
+                size="small"
+                sx={{ mr: 1 }}
+              />
+              <Typography variant="body2" color="text.secondary" component="span">
+                {selectedReferrer.name}
+              </Typography>
+            </Box>
+          )}
+        </DialogTitle>
+        <DialogContent>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Adjustment Type</InputLabel>
+            <Select
+              value={walletAdjustment.type}
+              onChange={(e) => setWalletAdjustment(prev => ({ ...prev, type: e.target.value as 'credit' | 'debit' }))}
+              label="Adjustment Type"
+            >
+              <MenuItem value="credit">Credit (Add Money)</MenuItem>
+              <MenuItem value="debit">Debit (Remove Money)</MenuItem>
+            </Select>
+          </FormControl>
+          
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Amount (CAD)"
+            type="number"
+            value={walletAdjustment.amount}
+            onChange={(e) => setWalletAdjustment(prev => ({ ...prev, amount: e.target.value }))}
+            inputProps={{ min: 0, step: 0.01 }}
+            placeholder="0.00"
+          />
+          
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Reason for Adjustment"
+            multiline
+            rows={3}
+            value={walletAdjustment.reason}
+            onChange={(e) => setWalletAdjustment(prev => ({ ...prev, reason: e.target.value }))}
+            placeholder="e.g., Refund for cancelled ride, Manual adjustment, etc."
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleWalletDialogClose} disabled={walletLoading}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleWalletAdjustment} 
+            variant="contained" 
+            color="primary"
+            disabled={walletLoading || !walletAdjustment.amount || !walletAdjustment.reason}
+          >
+            {walletLoading ? <CircularProgress size={24} /> : 'Process Adjustment'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

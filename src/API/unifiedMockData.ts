@@ -12,7 +12,7 @@ class UnifiedMockDataStore {
   // Initialize all mock data with consistent relationships
   initialize(count: { drivers?: number; riders?: number; issuances?: number; tips?: number } = {}) {
     const driverCount = count.drivers || 10;
-    const riderCount = count.riders || 30;
+    const riderCount = count.riders || 10;
     const issuanceCount = count.issuances || 100;
     const tipCount = count.tips || 50;
 
@@ -178,6 +178,7 @@ class UnifiedMockDataStore {
         referrer_type: referrerType,
         referrer_id: referrer.id,
         referrer_name: referrer.name,
+        referrer_code: referrer.referral_code || `${referrerType === 'driver' ? 'DRV' : 'RID'}${Math.random().toString(36).substring(2, 10).toUpperCase()}`, // Include the actual referral code
         tier: tier,
         amount_cents: amountCents,
         currency: 'CAD',
@@ -441,7 +442,7 @@ const mockDataStore = new UnifiedMockDataStore();
 // Initialize with default counts
 mockDataStore.initialize({
   drivers: 10,
-  riders: 30,
+  riders: 10, // Reduced from 30 to 10
   issuances: 100,
   tips: 50
 });

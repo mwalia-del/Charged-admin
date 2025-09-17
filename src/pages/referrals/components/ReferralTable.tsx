@@ -20,11 +20,18 @@ import {
   TextField,
   Button,
   Alert,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
 import { 
   Visibility as ViewIcon, 
   FileDownload as ExportIcon,
   Block as VoidIcon,
+  AccountBalanceWallet as WalletIcon,
+  MoreVert as MoreIcon,
+  ContentCopy as CopyIcon,
 } from '@mui/icons-material';
 import { ReferralIssuancesResponse } from '../../../types';
 import { formatDate } from '../../../utils/formatters';
@@ -38,6 +45,7 @@ interface ReferralTableProps {
   onViewRide: (rideId: string) => void;
   onExport: () => void;
   onRefresh: () => void;
+  onEditWallet?: (referrerId: string, referrerType: 'driver' | 'rider') => void;
 }
 
 const ReferralTable: React.FC<ReferralTableProps> = ({
@@ -47,13 +55,16 @@ const ReferralTable: React.FC<ReferralTableProps> = ({
   onPageSizeChange,
   onViewRide,
   onExport,
-  onRefresh
+  onRefresh,
+  onEditWallet
 }) => {
   const [voidDialogOpen, setVoidDialogOpen] = useState(false);
   const [selectedIssuance, setSelectedIssuance] = useState<any>(null);
   const [voidReason, setVoidReason] = useState('');
   const [voiding, setVoiding] = useState(false);
   const [voidError, setVoidError] = useState<string | null>(null);
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [selectedRow, setSelectedRow] = useState<any>(null);
 
   const formatCurrency = (cents: number) => {
     return `$${(cents / 100).toFixed(2)}`;
@@ -132,6 +143,28 @@ const ReferralTable: React.FC<ReferralTableProps> = ({
     setVoidError(null);
   };
 
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>, issuance: any) => {
+    setMenuAnchor(event.currentTarget);
+    setSelectedRow(issuance);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+    setSelectedRow(null);
+  };
+
+  const handleEditWallet = () => {
+    if (selectedRow && onEditWallet) {
+      onEditWallet(selectedRow.referrer_id, selectedRow.referrer_type);
+    }
+    handleMenuClose();
+  };
+
+  const handleCopyReferralCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    // You could add a snackbar notification here
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
@@ -172,8 +205,9 @@ const ReferralTable: React.FC<ReferralTableProps> = ({
                 <TableCell>Ride #</TableCell>
                 <TableCell>Referred Rider</TableCell>
                 <TableCell>Referrer</TableCell>
+                <TableCell>Referral Code</TableCell>
                 <TableCell>Tier</TableCell>
-                <TableCell align="right">Amount</TableCell>
+                <TableCell align="right">Earned Amount</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Issuance ID</TableCell>
                 <TableCell align="center">Actions</TableCell>
@@ -219,6 +253,23 @@ const ReferralTable: React.FC<ReferralTableProps> = ({
                     </Box>
                   </TableCell>
                   <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="body2" fontFamily="monospace" fontWeight="medium">
+                        {issuance.referrer_code || 'N/A'}
+                      </Typography>
+                      {issuance.referrer_code && (
+                        <Tooltip title="Copy Referral Code">
+                          <IconButton
+                            size="small"
+                            onClick={() => handleCopyReferralCode(issuance.referrer_code)}
+                          >
+                            <CopyIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Box>
+                  </TableCell>
+                  <TableCell>
                     <Chip
                       label={`Tier ${issuance.tier}`}
                       color={getTierColor(issuance.tier) as any}
@@ -246,7 +297,7 @@ const ReferralTable: React.FC<ReferralTableProps> = ({
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
-                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                    <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
                       <Tooltip title="View Ride Details">
                         <IconButton
                           size="small"
@@ -256,17 +307,14 @@ const ReferralTable: React.FC<ReferralTableProps> = ({
                           <ViewIcon />
                         </IconButton>
                       </Tooltip>
-                      {issuance.status === 'issued' && (
-                        <Tooltip title="Void Issuance">
-                          <IconButton
-                            size="small"
-                            color="error"
-                            onClick={() => handleVoidClick(issuance)}
-                          >
-                            <VoidIcon />
-                          </IconButton>
-                        </Tooltip>
-                      )}
+                      <Tooltip title="More Actions">
+                        <IconButton
+                          size="small"
+                          onClick={(e) => handleMenuClick(e, issuance)}
+                        >
+                          <MoreIcon />
+                        </IconButton>
+                      </Tooltip>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -338,6 +386,39 @@ const ReferralTable: React.FC<ReferralTableProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Actions Menu */}
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={handleMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MenuItem onClick={handleEditWallet}>
+          <ListItemIcon>
+            <WalletIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Edit Wallet</ListItemText>
+        </MenuItem>
+        {selectedRow?.status === 'issued' && (
+          <MenuItem onClick={() => {
+            handleVoidClick(selectedRow);
+            handleMenuClose();
+          }}>
+            <ListItemIcon>
+              <VoidIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Void Issuance</ListItemText>
+          </MenuItem>
+        )}
+      </Menu>
     </>
   );
 };

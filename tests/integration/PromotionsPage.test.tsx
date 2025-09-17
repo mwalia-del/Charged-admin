@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/lib/native';
 import { render } from '@tests/utils/renderWithProviders';
-import { mockApiResponse, mockApiError, clearAllMocks } from '@tests/utils/testHelpers';
+import { clearAllMocks } from '@tests/utils/testHelpers';
 import PromotionsPage from '../../src/pages/promotions/PromotionsPage';
 import promotionFixtures from '../fixtures/promotion.json';
 

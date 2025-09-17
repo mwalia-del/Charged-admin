@@ -7,7 +7,7 @@ import {
 } from '../types';
 
 // Mock business data for development/testing
-export const generateMockBusinesses = (count: number = 20): Business[] => {
+export const generateMockBusinesses = (count: number = 5): Business[] => {
   const businesses: Business[] = [];
   const billingModes: Array<"invoice" | "credit" | null> = ["invoice", "credit", "invoice", "credit", null];
   

@@ -44,13 +44,8 @@ interface ScheduledTableProps {
   onCancelRide: (scheduledRideId: string, reason: string) => void;
 }
 
-const mockDrivers = [
-  { id: 'driver-1', name: 'Alex Thompson' },
-  { id: 'driver-2', name: 'Maria Rodriguez' },
-  { id: 'driver-3', name: 'Ahmed Hassan' },
-  { id: 'driver-4', name: 'Jennifer Lee' },
-  { id: 'driver-5', name: 'Michael O\'Connor' }
-];
+// Mock drivers removed - will be populated from API when available
+const mockDrivers: Array<{ id: string; name: string }> = [];
 
 const ScheduledTable: React.FC<ScheduledTableProps> = ({
   scheduledRides,

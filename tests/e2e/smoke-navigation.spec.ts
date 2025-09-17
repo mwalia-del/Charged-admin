@@ -113,9 +113,7 @@ test.describe('Smoke Navigation Tests', () => {
     
     // Mobile menu should be accessible
     const mobileMenuButton = page.locator('[data-testid="mobile-menu-button"]');
-    if (await mobileMenuButton.isVisible()) {
-      await mobileMenuButton.click();
-      await expect(page.locator('[data-testid="mobile-navigation"]')).toBeVisible();
-    }
+    await mobileMenuButton.click();
+    await expect(page.locator('[data-testid="mobile-navigation"]')).toBeVisible();
   });
 });

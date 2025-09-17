@@ -57,108 +57,81 @@ test.describe('Admin Dashboard E2E Tests', () => {
     // Look for driver-related content
     const driverSection = page.locator('text=/driver/i, [data-testid*="driver"], .driver-section');
     
-    if (await driverSection.count() > 0) {
-      await expect(driverSection.first()).toBeVisible();
-    }
+    await expect(driverSection.first()).toBeVisible();
   });
 
   test('should display business management section', async ({ page }) => {
     // Look for business-related content
     const businessSection = page.locator('text=/business/i, [data-testid*="business"], .business-section');
     
-    if (await businessSection.count() > 0) {
-      await expect(businessSection.first()).toBeVisible();
-    }
+    await expect(businessSection.first()).toBeVisible();
   });
 
   test('should display analytics section', async ({ page }) => {
     // Look for analytics-related content
     const analyticsSection = page.locator('text=/analytics/i, [data-testid*="analytics"], .analytics-section');
     
-    if (await analyticsSection.count() > 0) {
-      await expect(analyticsSection.first()).toBeVisible();
-    }
+    await expect(analyticsSection.first()).toBeVisible();
   });
 
   test('should handle form submissions', async ({ page }) => {
     // Look for forms on the page
     const forms = page.locator('form');
-    const formCount = await forms.count();
     
-    if (formCount > 0) {
-      // Test the first form
-      const firstForm = forms.first();
-      await expect(firstForm).toBeVisible();
-      
-      // Try to find submit button
-      const submitButton = firstForm.locator('button[type="submit"], input[type="submit"], button:has-text("Submit"), button:has-text("Save")');
-      
-      if (await submitButton.count() > 0) {
-        // Don't actually submit, just verify it exists
-        await expect(submitButton.first()).toBeVisible();
-      }
-    }
+    // Test the first form
+    const firstForm = forms.first();
+    await expect(firstForm).toBeVisible();
+    
+    // Try to find submit button
+    const submitButton = firstForm.locator('button[type="submit"], input[type="submit"], button:has-text("Submit"), button:has-text("Save")');
+    
+    // Don't actually submit, just verify it exists
+    await expect(submitButton.first()).toBeVisible();
   });
 
   test('should display data tables', async ({ page }) => {
     // Look for data tables
     const tables = page.locator('table, .table, [role="table"]');
-    const tableCount = await tables.count();
     
-    if (tableCount > 0) {
-      await expect(tables.first()).toBeVisible();
-    }
+    await expect(tables.first()).toBeVisible();
   });
 
   test('should handle modal dialogs', async ({ page }) => {
     // Look for modal triggers
     const modalTriggers = page.locator('button:has-text("Add"), button:has-text("Create"), button:has-text("Edit"), button:has-text("Delete")');
-    const triggerCount = await modalTriggers.count();
     
-    if (triggerCount > 0) {
-      // Click the first trigger
-      await modalTriggers.first().click();
-      
-      // Look for modal content
-      const modal = page.locator('.modal, [role="dialog"], .dialog, .popup');
-      
-      if (await modal.count() > 0) {
-        await expect(modal.first()).toBeVisible();
-        
-        // Close modal
-        const closeButton = modal.locator('button:has-text("Close"), button:has-text("Cancel"), .close, [aria-label="Close"]');
-        if (await closeButton.count() > 0) {
-          await closeButton.first().click();
-        }
-      }
-    }
+    // Click the first trigger
+    await modalTriggers.first().click();
+    
+    // Look for modal content
+    const modal = page.locator('.modal, [role="dialog"], .dialog, .popup');
+    
+    await expect(modal.first()).toBeVisible();
+    
+    // Close modal
+    const closeButton = modal.locator('button:has-text("Close"), button:has-text("Cancel"), .close, [aria-label="Close"]');
+    await closeButton.first().click();
   });
 
   test('should display status indicators', async ({ page }) => {
     // Look for status indicators
     const statusIndicators = page.locator('.status, .badge, .indicator, [data-status]');
     
-    if (await statusIndicators.count() > 0) {
-      await expect(statusIndicators.first()).toBeVisible();
-    }
+    await expect(statusIndicators.first()).toBeVisible();
   });
 
   test('should handle pagination', async ({ page }) => {
     // Look for pagination controls
     const pagination = page.locator('.pagination, [role="navigation"]:has-text("Next"), [role="navigation"]:has-text("Previous")');
     
-    if (await pagination.count() > 0) {
-      await expect(pagination.first()).toBeVisible();
-    }
+    await expect(pagination.first()).toBeVisible();
   });
 
   test('should display loading states', async ({ page }) => {
     // Look for loading indicators
     const loadingIndicators = page.locator('.loading, .spinner, [data-loading], .skeleton');
     
-    if (await loadingIndicators.count() > 0) {
-      await expect(loadingIndicators.first()).toBeVisible();
-    }
+    await expect(loadingIndicators.first()).toBeVisible();
   });
 
   test('should handle error states gracefully', async ({ page }) => {
@@ -181,31 +154,23 @@ test.describe('Admin Dashboard E2E Tests', () => {
     // Look for mobile-specific elements
     const mobileMenu = page.locator('.mobile-menu, .hamburger, [data-mobile-menu]');
     
-    if (await mobileMenu.count() > 0) {
-      await expect(mobileMenu.first()).toBeVisible();
-    }
+    await expect(mobileMenu.first()).toBeVisible();
   });
 
   test('should have proper accessibility attributes', async ({ page }) => {
     // Check for proper heading structure
     const headings = page.locator('h1, h2, h3, h4, h5, h6');
-    const headingCount = await headings.count();
     
-    if (headingCount > 0) {
-      await expect(headings.first()).toBeVisible();
-    }
+    await expect(headings.first()).toBeVisible();
     
     // Check for proper button labels
     const buttons = page.locator('button');
-    const buttonCount = await buttons.count();
     
-    if (buttonCount > 0) {
-      const firstButton = buttons.first();
-      const buttonText = await firstButton.textContent();
-      const buttonAriaLabel = await firstButton.getAttribute('aria-label');
-      
-      // Button should have either text content or aria-label
-      expect(buttonText || buttonAriaLabel).toBeTruthy();
-    }
+    const firstButton = buttons.first();
+    const buttonText = await firstButton.textContent();
+    const buttonAriaLabel = await firstButton.getAttribute('aria-label');
+    
+    // Button should have either text content or aria-label
+    expect(buttonText || buttonAriaLabel).toBeTruthy();
   });
 });

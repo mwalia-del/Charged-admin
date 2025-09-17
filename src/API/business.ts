@@ -44,7 +44,7 @@ export const getBusinessList = async (): Promise<Business[]> => {
   // For development, always use mock data
   if (process.env.NODE_ENV === 'development') {
     console.log('🎭 Development mode: Using mock data');
-    const mockData = generateMockBusinesses(20);
+    const mockData = generateMockBusinesses(5);
     console.log('🎭 Generated mock data:', mockData.length, 'businesses');
     return mockData;
   }
@@ -64,7 +64,7 @@ export const getBusinessList = async (): Promise<Business[]> => {
       status: error.response?.status,
       url: error.config?.url
     });
-    const mockData = generateMockBusinesses(20);
+    const mockData = generateMockBusinesses(5);
     console.log('🎭 Generated mock data:', mockData.length, 'businesses');
     return mockData;
   }

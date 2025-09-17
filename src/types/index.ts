@@ -422,6 +422,7 @@ export interface ReferralIssuance {
   referrer_type: 'driver' | 'rider';
   referrer_id: string;
   referrer_name: string;
+  referrer_code: string; // The actual referral code (e.g., DRV12345678)
   tier: 1 | 2;
   amount_cents: number;
   currency: string;

@@ -10,8 +10,11 @@ import {
   Paper,
   Autocomplete,
   Chip,
+  Box,
+  Typography,
+  InputAdornment,
 } from '@mui/material';
-import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material';
+import { Search as SearchIcon, Clear as ClearIcon, QrCode as QrCodeIcon } from '@mui/icons-material';
 import { ReferralFilters as ReferralFiltersType } from '../../../types';
 
 interface ReferralFiltersProps {
@@ -136,6 +139,39 @@ const ReferralFilters: React.FC<ReferralFiltersProps> = ({
 
   return (
     <Paper sx={{ p: 3, mb: 3 }}>
+      {/* Filter Summary */}
+      {(referralId || actorId) && (
+        <Box sx={{ mb: 2, p: 2, bgcolor: 'primary.50', borderRadius: 1 }}>
+          <Typography variant="subtitle2" color="primary" gutterBottom>
+            Active Filters:
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {referralId && (
+              <Chip
+                label={`Referral ID: ${referralId}`}
+                color="primary"
+                size="small"
+                onDelete={() => {
+                  setReferralId('');
+                  handleReferralIdChange('');
+                }}
+              />
+            )}
+            {actorId && (
+              <Chip
+                label={`${actorType === 'referrer' ? 'Referrer' : 'Referred Rider'}: ${getActorOptions().find(option => option.id === actorId)?.name || actorId}`}
+                color="secondary"
+                size="small"
+                onDelete={() => {
+                  setActorId('');
+                  handleActorChange('');
+                }}
+              />
+            )}
+          </Box>
+        </Box>
+      )}
+      
       <Grid container spacing={3} alignItems="center">
         <Grid item xs={12} md={2}>
           <FormControl fullWidth size="small">
@@ -192,6 +228,21 @@ const ReferralFilters: React.FC<ReferralFiltersProps> = ({
             onChange={(e) => handleReferralIdChange(e.target.value)}
             placeholder="e.g., DRV12345678, RID12345678"
             helperText="Enter specific referral ID to filter"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <QrCodeIcon color="action" fontSize="small" />
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': {
+                  borderColor: 'primary.main',
+                  borderWidth: 2,
+                },
+              },
+            }}
           />
         </Grid>
 

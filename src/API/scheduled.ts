@@ -9,7 +9,7 @@ import {
   AssignDriverRequest,
   CancelScheduledRequest
 } from '../types';
-import { generateMockScheduledRides, generateMockScheduledSummary } from './mockScheduledData';
+// Mock data imports removed - returning empty data instead
 
 const instance = axios.create({
   baseURL: "https://api.charged.autos",
@@ -55,14 +55,14 @@ export const getScheduledRides = async (filters: ScheduledRideFilters = {}): Pro
     return response.data;
   } catch (error) {
     console.error('Failed to fetch scheduled rides:', error);
-    // Return mock data for development
+    // Return empty data
     return {
-      data: generateMockScheduledRides(20),
+      data: [],
       pagination: {
         page: filters.page || 1,
         page_size: filters.page_size || 10,
-        total: 20,
-        total_pages: 2
+        total: 0,
+        total_pages: 0
       }
     };
   }
@@ -83,8 +83,15 @@ export const getScheduledRideSummary = async (filters: ScheduledRideFilters = {}
     return response.data;
   } catch (error) {
     console.error('Failed to fetch scheduled ride summary:', error);
-    // Return mock data for development
-    return generateMockScheduledSummary();
+    // Return empty summary
+    return {
+      scheduled_count: 0,
+      converted_24h: 0,
+      converted_7d: 0,
+      cancelled_count: 0,
+      failed_count: 0,
+      upcoming_count: 0
+    };
   }
 };
 
@@ -161,14 +168,14 @@ export const getRiderScheduledRides = async (filters: ScheduledRideFilters = {})
     return response.data;
   } catch (error) {
     console.error('Failed to fetch rider scheduled rides:', error);
-    // Return mock data for development
+    // Return empty data
     return {
-      data: generateMockScheduledRides(5).filter(ride => ride.source === 'rider'),
+      data: [],
       pagination: {
         page: filters.page || 1,
         page_size: filters.page_size || 10,
-        total: 5,
-        total_pages: 1
+        total: 0,
+        total_pages: 0
       }
     };
   }
@@ -223,14 +230,14 @@ export const getBusinessScheduledRides = async (orgId: string, filters: Schedule
     return response.data;
   } catch (error) {
     console.error('Failed to fetch business scheduled rides:', error);
-    // Return mock data for development
+    // Return empty data
     return {
-      data: generateMockScheduledRides(10).filter(ride => ride.source === 'business'),
+      data: [],
       pagination: {
         page: filters.page || 1,
         page_size: filters.page_size || 10,
-        total: 10,
-        total_pages: 1
+        total: 0,
+        total_pages: 0
       }
     };
   }
