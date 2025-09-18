@@ -13,6 +13,7 @@ import {
   Button,
   Box,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 import { VehicleClass, VehicleClassUpdate } from '../../../types';
 import { updateVehicleClass } from '../../../API/vehicleClasses';
@@ -44,10 +45,19 @@ const VehicleClassRow: React.FC<VehicleClassRowProps> = ({
 
   const updateVehicleClassField = async (field: keyof VehicleClassUpdate, value: any) => {
     setIsUpdating(true);
+    const originalValue = vehicleClass[field];
+    
     try {
+      console.log(`🌐 Updating vehicle class ${vehicleClass.code}:`, { [field]: value });
       await updateVehicleClass(vehicleClass.code, { [field]: value });
+      console.log('✅ Vehicle class updated successfully');
       onUpdate(vehicleClass.code, { [field]: value });
     } catch (error) {
+      console.error('❌ Failed to update vehicle class:', error);
+      // Rollback local state on error
+      if (field === 'is_enabled') {
+        setPendingEnabled(originalValue as boolean);
+      }
       onError(`Failed to update ${field}: ${error}`);
     } finally {
       setIsUpdating(false);
@@ -101,12 +111,19 @@ const VehicleClassRow: React.FC<VehicleClassRowProps> = ({
         <TableCell>
           <Box display="flex" alignItems="center" gap={1}>
             <Tooltip title={vehicleClass.is_enabled ? "Disable Charged XL" : "Enable Charged XL"}>
-              <Switch
-                checked={vehicleClass.is_enabled}
-                onChange={(e) => handleToggleEnabled(e.target.checked)}
-                disabled={isUpdating}
-                size="small"
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Switch
+                  checked={vehicleClass.is_enabled}
+                  onChange={(e) => handleToggleEnabled(e.target.checked)}
+                  disabled={isUpdating}
+                  size="small"
+                />
+                {isUpdating && (
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <CircularProgress size={16} />
+                  </Box>
+                )}
+              </Box>
             </Tooltip>
           </Box>
         </TableCell>

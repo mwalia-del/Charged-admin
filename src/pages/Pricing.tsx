@@ -33,6 +33,7 @@ import {
 import { rideTypes, VehicleClass, VehicleClassUpdate } from "../types";
 import { useAuth } from "../contexts/AuthContext";
 import { generateMockVehicleClassesResponse } from "../API/mockVehicleClassesData";
+import { listVehicleClasses, subscribeToVehicleClassUpdates } from "../API/vehicleClasses";
 import VehicleClassRow from "./pricing/components/VehicleClassRow";
 import toast from "react-hot-toast";
 
@@ -59,6 +60,32 @@ const Pricing: React.FC = () => {
     fetchPricingRules();
     fetchVehicleClasses();
     // eslint-disable-next-line
+  }, []);
+
+  // Subscribe to real-time vehicle class updates
+  useEffect(() => {
+    console.log('🔄 Subscribing to vehicle class updates...');
+    const subscription = subscribeToVehicleClassUpdates((update) => {
+      console.log('📡 Received vehicle class update:', update);
+      if (update.code === 'charged_xl') {
+        setVehicleClasses(prev => 
+          prev.map(vc => 
+            vc.code === update.code 
+              ? { ...vc, is_enabled: update.is_enabled, updated_at: update.updated_at }
+              : vc
+          )
+        );
+        toast(`ChargedXL ${update.is_enabled ? 'enabled' : 'disabled'} by another admin`, {
+          icon: 'ℹ️',
+          duration: 4000,
+        });
+      }
+    });
+    
+    return () => {
+      console.log('🔄 Unsubscribing from vehicle class updates');
+      subscription.unsubscribe();
+    };
   }, []);
 
   const fetchPricingRules = async () => {
@@ -102,13 +129,22 @@ const Pricing: React.FC = () => {
   const fetchVehicleClasses = async () => {
     setVehicleClassesLoading(true);
     try {
-      // Use mock data for now
-      const response = generateMockVehicleClassesResponse();
+      console.log('🌐 Fetching vehicle classes from API...');
+      const response = await listVehicleClasses();
+      console.log('✅ Vehicle classes API response:', response);
       setVehicleClasses(response.vehicle_classes);
       setVehicleClassesError(null);
+      toast.success('Vehicle classes loaded successfully');
     } catch (err) {
-      setVehicleClassesError("Failed to load vehicle classes. Please try again.");
-      console.error("Error fetching vehicle classes:", err);
+      console.error('❌ API call failed, using mock data:', err);
+      // Fallback to mock data if API fails
+      const mockResponse = generateMockVehicleClassesResponse();
+      setVehicleClasses(mockResponse.vehicle_classes);
+      setVehicleClassesError("Using offline data - API unavailable");
+      toast('Using offline data - API unavailable', {
+        icon: '⚠️',
+        duration: 5000,
+      });
     } finally {
       setVehicleClassesLoading(false);
     }
@@ -122,7 +158,14 @@ const Pricing: React.FC = () => {
           : vc
       )
     );
-    toast.success("Vehicle class updated successfully. Changes are live now!");
+    
+    // Show specific success message based on the update
+    if (updates.is_enabled !== undefined) {
+      const status = updates.is_enabled ? 'enabled' : 'disabled';
+      toast.success(`ChargedXL ${status} successfully! Changes are live across all platforms.`);
+    } else {
+      toast.success("Vehicle class updated successfully. Changes are live now!");
+    }
   };
 
   const handleVehicleClassError = (error: string) => {
@@ -432,15 +475,41 @@ const Pricing: React.FC = () => {
       {/* Vehicle Classes Tab */}
       {activeTab === 1 && (
         <Box sx={{ mt: 4 }}>
-          <Typography variant="h6" gutterBottom>
-            Charged XL Management
-          </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Enable or disable Charged XL across all platforms. Changes take effect immediately.
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                Charged XL Management
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Enable or disable Charged XL across all platforms. Changes take effect immediately.
+              </Typography>
+            </Box>
+            <Button
+              variant="outlined"
+              startIcon={<RefreshIcon />}
+              onClick={fetchVehicleClasses}
+              disabled={vehicleClassesLoading}
+              size="small"
+            >
+              Refresh
+            </Button>
+          </Box>
 
           {vehicleClassesError && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert 
+              severity={vehicleClassesError.includes('offline') ? 'warning' : 'error'} 
+              sx={{ mb: 2 }}
+              action={
+                <Button 
+                  color="inherit" 
+                  size="small" 
+                  onClick={fetchVehicleClasses}
+                  disabled={vehicleClassesLoading}
+                >
+                  Retry
+                </Button>
+              }
+            >
               {vehicleClassesError}
             </Alert>
           )}
