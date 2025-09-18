@@ -40,7 +40,14 @@
     "predeploy:verify": "npm run lint && npm run typecheck && npm run test:cov && npm run e2e && npm run a11y && npm run perf",
     "eject": "react-scripts eject",
     "format": "prettier --write .",
-    "cleanup:test-artifacts": "rm -rf coverage/ test-report/ playwright-report/ test-results/ traces/ screenshots/"
+    "cleanup:test-artifacts": "rm -rf coverage/ test-report/ playwright-report/ test-results/ traces/ screenshots/",
+    "recon:schema": "ts-node tools/recon/snapshot-schema.ts",
+    "recon:api": "ts-node tools/recon/fetch-api-samples.ts",
+    "recon:db": "ts-node tools/recon/run-db-audit.ts",
+    "recon:compare": "ts-node tools/recon/compare.ts",
+    "recon:plan": "ts-node tools/recon/plan-fixes.ts",
+    "recon:apply": "ts-node tools/recon/apply-views.ts",
+    "recon:all": "npm run recon:schema && npm run recon:api && npm run recon:db && npm run recon:compare && npm run recon:plan"
   },
   "eslintConfig": {
     "extends": [
@@ -68,6 +75,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
+    "@types/pg": "^8.15.5",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
@@ -75,7 +83,9 @@
     "jest-html-reporters": "^3.1.7",
     "jest-transform-stub": "^2.0.0",
     "msw": "^2.11.2",
+    "pg": "^8.16.3",
     "prettier": "3.5.3",
-    "ts-jest": "^29.4.1"
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2"
   }
 }

@@ -44,10 +44,10 @@ const RidersTable = ({
   const [riderToDelete, setRiderToDelete] = useState<Rider | null>(null);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const getReferralId = (rider: Rider) => {
-    // Display the referral code from the database (generated during registration)
-    if (rider.referral_code) {
-      return rider.referral_code;
+  const getRiderReferralId = (rider: Rider) => {
+    // Display the rider referral ID from the API response
+    if (rider.rider_referral_id) {
+      return rider.rider_referral_id;
     }
     return 'Not Assigned';
   };
@@ -79,7 +79,7 @@ const RidersTable = ({
             <TableRow>
               <TableCell>Rider</TableCell>
               <TableCell>Contact</TableCell>
-              <TableCell align="center">Referral ID</TableCell>
+              <TableCell align="center">Rider Referral ID</TableCell>
               <TableCell align="center">Rating</TableCell>
               <TableCell align="center">Reward Points</TableCell>
               <TableCell align="center">Rides</TableCell>
@@ -118,16 +118,16 @@ const RidersTable = ({
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                      <Typography variant="body2" fontFamily="monospace" data-testid="rider-referral-code">
-                        {getReferralId(rider)}
+                      <Typography variant="body2" fontFamily="monospace" data-testid="rider-referral-id">
+                        {getRiderReferralId(rider)}
                       </Typography>
-                      {rider.referral_code && (
-                        <Tooltip title="Copy Referral ID">
+                      {rider.rider_referral_id && (
+                        <Tooltip title="Copy Rider Referral ID">
                           <IconButton
                             size="small"
                             color="primary"
-                            onClick={() => copyReferralId(rider.referral_code!)}
-                            data-testid="copy-referral-code"
+                            onClick={() => copyReferralId(rider.rider_referral_id!)}
+                            data-testid="copy-rider-referral-id"
                           >
                             <CopyIcon fontSize="small" />
                           </IconButton>
@@ -194,7 +194,7 @@ const RidersTable = ({
 
             {filteredRiders.length === 0 && (
               <TableRow>
-                <TableCell colSpan={8} align="center" sx={{ py: 3 }}>
+                <TableCell colSpan={9} align="center" sx={{ py: 3 }}>
                   <Typography variant="body1" color="text.secondary">
                     No riders found matching your search.
                   </Typography>

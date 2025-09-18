@@ -59,7 +59,7 @@ export const getIssuances = async (filters: ReferralFilters): Promise<ReferralIs
     if (filters.page) params.append("page", filters.page.toString());
     if (filters.page_size) params.append("page_size", filters.page_size.toString());
 
-    const response = await instance.get(`/admin/referrals/issuances?${params.toString()}`);
+    const response = await instance.get(`/referral/admin?${params.toString()}`);
     return response.data;
   } catch (error) {
     // Fallback to unified mock data for development
@@ -384,6 +384,55 @@ export const requestReferralPayout = async (driverId: string, amountCents: numbe
       success: true,
       payoutId: `payout_${Date.now()}`,
       message: 'Payout request submitted successfully'
+    };
+  }
+};
+
+// Get driver referral details by user ID (Admin)
+export const getDriverReferralDetails = async (userId: string): Promise<any> => {
+  try {
+    const response = await instance.get(`/admin/referral/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.warn('API call failed, using mock data:', error);
+    return {
+      user_id: userId,
+      referral_code: `DRV${userId}`,
+      total_referrals: 5,
+      total_earnings: 125.00
+    };
+  }
+};
+
+// Get driver referral statistics (Admin)
+export const getDriverReferralStats = async (userId: string): Promise<any> => {
+  try {
+    const response = await instance.get(`/admin/referral/stats/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.warn('API call failed, using mock data:', error);
+    return {
+      user_id: userId,
+      total_referrals: 5,
+      successful_referrals: 4,
+      total_earnings: 125.00,
+      last_referral_date: new Date().toISOString()
+    };
+  }
+};
+
+// Get driver referral tier information (Admin)
+export const getDriverReferralTier = async (userId: string): Promise<any> => {
+  try {
+    const response = await instance.get(`/admin/referral/tier/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.warn('API call failed, using mock data:', error);
+    return {
+      user_id: userId,
+      current_tier: 'bronze',
+      referrals_to_next_tier: 5,
+      tier_benefits: ['5% bonus on referrals']
     };
   }
 };

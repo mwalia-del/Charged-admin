@@ -41,6 +41,26 @@ export const listVehicleClasses = async (): Promise<VehicleClassesResponse> => {
   }
 };
 
+export const getVehicleClassByCode = async (code: string): Promise<VehicleClass> => {
+  try {
+    const response = await instance.get(`/admin/vehicle-classes/${code}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching vehicle class:', error);
+    throw error;
+  }
+};
+
+export const createVehicleClass = async (payload: Omit<VehicleClass, 'code'>): Promise<VehicleClass> => {
+  try {
+    const response = await instance.post('/admin/vehicle-classes', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating vehicle class:', error);
+    throw error;
+  }
+};
+
 export const updateVehicleClass = async (
   code: string,
   payload: VehicleClassUpdate
@@ -50,6 +70,15 @@ export const updateVehicleClass = async (
     return response.data;
   } catch (error) {
     console.error('Error updating vehicle class:', error);
+    throw error;
+  }
+};
+
+export const deleteVehicleClass = async (code: string): Promise<void> => {
+  try {
+    await instance.delete(`/admin/vehicle-classes/${code}`);
+  } catch (error) {
+    console.error('Error deleting vehicle class:', error);
     throw error;
   }
 };

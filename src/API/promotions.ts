@@ -53,7 +53,7 @@ const convertToServerPromotion = (frontendPromo: any) => {
   };
 };
 
-// Get all promotions with optional filters
+// Get all promotions with optional filters (Admin endpoint)
 export const listPromotions = async (filters: PromotionFilters = {}): Promise<{ data: Promotion[]; total: number }> => {
   try {
     const queryParams = new URLSearchParams();
@@ -70,7 +70,7 @@ export const listPromotions = async (filters: PromotionFilters = {}): Promise<{ 
       queryParams.append('search', filters.search);
     }
 
-    const url = `${API_BASE_URL}/promotions${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const url = `${API_BASE_URL}/promotions/admin${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -143,7 +143,7 @@ export const getPromotion = async (id: string): Promise<Promotion> => {
   }
 };
 
-// Create new promotion
+// Create new promotion (Admin endpoint)
 export const createPromotion = async (promotion: Omit<Promotion, 'id' | 'created_at' | 'updated_at' | 'created_by' | 'updated_by' | 'redemptions_count' | 'global_redemptions_count'>): Promise<Promotion> => {
   // For development, always use mock data
   if (process.env.NODE_ENV === 'development') {
@@ -167,7 +167,7 @@ export const createPromotion = async (promotion: Omit<Promotion, 'id' | 'created
 
   try {
     const serverPromotion = convertToServerPromotion(promotion);
-    const response = await fetch(`${API_BASE_URL}/promotions`, {
+    const response = await fetch(`${API_BASE_URL}/promotions/admin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ export const createPromotion = async (promotion: Omit<Promotion, 'id' | 'created
   }
 };
 
-// Update promotion
+// Update promotion (Admin endpoint)
 export const updatePromotion = async (id: string, promotion: Partial<Promotion>): Promise<Promotion> => {
   // For development, always use mock data
   if (process.env.NODE_ENV === 'development') {
@@ -231,7 +231,7 @@ export const updatePromotion = async (id: string, promotion: Partial<Promotion>)
 
   try {
     const serverPromotion = convertToServerPromotion(promotion);
-    const response = await fetch(`${API_BASE_URL}/promotions/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/promotions/admin/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -247,7 +247,7 @@ export const updatePromotion = async (id: string, promotion: Partial<Promotion>)
   }
 };
 
-// Delete promotion
+// Delete promotion (Admin endpoint)
 export const deletePromotion = async (id: string): Promise<void> => {
   // For development, always use mock data
   if (process.env.NODE_ENV === 'development') {
@@ -257,7 +257,7 @@ export const deletePromotion = async (id: string): Promise<void> => {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/promotions/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/promotions/admin/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

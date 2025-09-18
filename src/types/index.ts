@@ -60,6 +60,7 @@ export interface Rider {
   photo?: string;
   is_active: boolean;
   referral_code?: string; // 8-digit alphanumeric referral code
+  rider_referral_id?: string; // Rider referral ID from API response
 }
 
 // Driver types
@@ -78,6 +79,7 @@ export interface Driver {
   photo?: string;
   documents: DriverDocument[];
   referral_code?: string; // 8-digit alphanumeric referral code
+  driver_referral_id?: string; // Driver referral ID from API response
   vehicleDetails?: {
     make: string;
     model: string;
@@ -220,17 +222,26 @@ export interface CreateRewardBody {
 
 // Tip types
 export interface Tip {
-  tip_id: string;
-  ride_id: string;
-  ride_number: string;
-  rider_id: string;
-  rider_name: string;
-  driver_id: string;
-  driver_name: string;
-  amount_cents: number;
-  currency: string;
-  status: "authorized" | "settled" | "refunded" | "void";
-  created_at: string;
+  id: number;
+  ride_id: number;
+  tip_amount: string;
+  tip_percentage: string;
+  payment_method: string;
+  rider_email: string;
+  pickup_address: string;
+  dropoff_address: string;
+  added_at: string;
+  // Optional fields that might be present
+  tip_id?: string;
+  ride_number?: string;
+  rider_id?: string;
+  rider_name?: string;
+  driver_id?: string;
+  driver_name?: string;
+  amount_cents?: number;
+  currency?: string;
+  status?: "authorized" | "settled" | "refunded" | "void";
+  created_at?: string;
 }
 
 export interface TipSummary {

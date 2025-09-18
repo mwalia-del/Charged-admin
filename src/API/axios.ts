@@ -39,15 +39,45 @@ instance.interceptors.request.use(
   },
 );
 
-// Add a response interceptor to log API responses
+// Add a response interceptor to log API responses and handle token refresh
 instance.interceptors.response.use(
   (response) => {
     console.log("✅ API Response:", response.status, response.config.url);
     return response;
   },
-  (error) => {
+  async (error) => {
     console.error("❌ API Error:", error.response?.status, error.config?.url);
     console.error("❌ Error details:", error.response?.data);
+    
+    // Handle 401 errors by refreshing token
+    if (error.response?.status === 401) {
+      const userString = localStorage.getItem("charged_admin_user");
+      if (userString) {
+        const user = JSON.parse(userString);
+        console.log("🔄 Attempting to refresh token due to 401 error");
+        
+        // Try to refresh the token
+        try {
+          const { auth } = await import("../firebase/firebaseConfig");
+          if (auth.currentUser) {
+            const newToken = await auth.currentUser.getIdToken(true);
+            const updatedUser = { ...user, token: newToken };
+            localStorage.setItem("charged_admin_user", JSON.stringify(updatedUser));
+            
+            // Retry the original request with new token
+            error.config.headers.Authorization = `Bearer ${newToken}`;
+            console.log("🔄 Retrying request with refreshed token");
+            return instance.request(error.config);
+          }
+        } catch (refreshError) {
+          console.error("❌ Token refresh failed:", refreshError);
+          // Redirect to login or clear user data
+          localStorage.removeItem("charged_admin_user");
+          window.location.href = "/login";
+        }
+      }
+    }
+    
     return Promise.reject(error);
   },
 );
@@ -162,14 +192,38 @@ export const updateRidetypedata = (id: number, body: object) =>
 // It returns the array of rides
 // It is used in the dashboard page
 
-export const getRecentRidesData = () => instance.get("/ride");
+export const getRecentRidesData = () => instance.get("/admin/ride/fetchlatest");
 
 // Api to get rides data on basis of userId
 // It returns the array of rides
 // It is used in the riders and drivers page
 
-export const getRidesDataByUserId = (Id: number) =>
-  instance.get(`admin/ride/userrides/${Id}`);
+export const getRidesDataByUserId = (userId: number) =>
+  instance.get(`/admin/ride/userrides/${userId}`);
+
+// Api to get specific ride details
+// This API is used to get detailed information about a specific ride
+// It takes the rideId as a parameter
+// and returns the ride details
+
+export const getRideDetails = (rideId: string) =>
+  instance.get(`/admin/ride/fetchride/${rideId}`);
+
+// Api to get driver details by ID
+// This API is used to get driver information by ID
+// It takes the driverId as a parameter
+// and returns the driver details
+
+export const getDriverDetails = (driverId: string) =>
+  instance.get(`/ride/fetchdriver/${driverId}`);
+
+// Api to get rider details by ID
+// This API is used to get rider information by ID
+// It takes the riderId as a parameter
+// and returns the rider details
+
+export const getRiderDetails = (riderId: string) =>
+  instance.get(`/ride/fetchrider/${riderId}`);
 
 // Api to get dashboard Stats
 // This API is used to get all dashboard data
@@ -241,3 +295,69 @@ export const deleteRewardPoints = (rewardPointId: number) =>
 
 export const deleteUser = (userId: string) =>
   instance.delete(`/admin/deleteusers/${userId}`);
+
+// ===== WALLET MANAGEMENT ENDPOINTS =====
+
+// Api to get wallet balance
+// This API is used to get wallet balance (admin access)
+// It returns the wallet balance information
+
+export const getWalletBalance = () => instance.get("/wallet/balance");
+
+// Api to get wallet transactions
+// This API is used to get all wallet transactions
+// It takes optional query parameters for filtering
+// It returns paginated wallet transactions
+
+export const getWalletTransactions = (params?: {
+  user_id?: string;
+  type?: string;
+  start_date?: string;
+  end_date?: string;
+  page?: number;
+  limit?: number;
+}) => {
+  const queryParams = new URLSearchParams();
+  if (params?.user_id) queryParams.append('user_id', params.user_id);
+  if (params?.type) queryParams.append('type', params.type);
+  if (params?.start_date) queryParams.append('start_date', params.start_date);
+  if (params?.end_date) queryParams.append('end_date', params.end_date);
+  if (params?.page) queryParams.append('page', params.page.toString());
+  if (params?.limit) queryParams.append('limit', params.limit.toString());
+  
+  return instance.get(`/wallet/transactions?${queryParams.toString()}`);
+};
+
+// Api to request payout
+// This API is used to process payout request
+// It takes payout data as request body
+// It returns the result of the payout request
+
+export const requestPayout = (data: {
+  amount: number;
+  currency?: string;
+  payment_method?: string;
+  notes?: string;
+}) => instance.post("/wallet/payout", data);
+
+// Api to get all payouts
+// This API is used to get all payout requests
+// It takes optional query parameters for filtering
+// It returns paginated payout requests
+
+export const getPayouts = (params?: {
+  status?: string;
+  start_date?: string;
+  end_date?: string;
+  page?: number;
+  limit?: number;
+}) => {
+  const queryParams = new URLSearchParams();
+  if (params?.status) queryParams.append('status', params.status);
+  if (params?.start_date) queryParams.append('start_date', params.start_date);
+  if (params?.end_date) queryParams.append('end_date', params.end_date);
+  if (params?.page) queryParams.append('page', params.page.toString());
+  if (params?.limit) queryParams.append('limit', params.limit.toString());
+  
+  return instance.get(`/wallet/payouts?${queryParams.toString()}`);
+};

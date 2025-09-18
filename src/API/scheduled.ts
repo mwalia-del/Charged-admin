@@ -51,7 +51,7 @@ export const getScheduledRides = async (filters: ScheduledRideFilters = {}): Pro
     if (filters.page) params.append('page', filters.page.toString());
     if (filters.page_size) params.append('page_size', filters.page_size.toString());
 
-    const response = await instance.get(`/admin/scheduled-rides?${params.toString()}`);
+    const response = await instance.get(`/scheduled/admin?${params.toString()}`);
     return response.data;
   } catch (error) {
     console.error('Failed to fetch scheduled rides:', error);

@@ -28,7 +28,7 @@ instance.interceptors.request.use(
   }
 );
 
-// Get tips with filters
+// Get tips with filters (Admin endpoint)
 export const getTips = async (filters: TipsFilters): Promise<TipsResponse> => {
   try {
     const params = new URLSearchParams();
@@ -41,7 +41,30 @@ export const getTips = async (filters: TipsFilters): Promise<TipsResponse> => {
     if (filters.page) params.append("page", filters.page.toString());
     if (filters.page_size) params.append("page_size", filters.page_size.toString());
 
-    const response = await instance.get(`/analytics/tips?${params.toString()}`);
+    console.log('🌐 Tips API - Filters:', filters);
+    console.log('🌐 Tips API - URL params:', params.toString());
+    // Try different endpoints for tips list
+    // The current endpoint returns summary data, we need the actual tips list
+    const url = `/tips/driver?${params.toString()}`;
+    console.log('🌐 Tips API - Full URL:', url);
+    console.log('🌐 Tips API - Current endpoint returns summary data, need tips list');
+    
+    const response = await instance.get(url);
+    console.log('✅ Tips API - Response:', response.data);
+    console.log('✅ Tips API - Response structure:', {
+      hasRows: !!response.data?.rows,
+      hasData: !!response.data?.data,
+      hasStatus: !!response.data?.status,
+      responseKeys: Object.keys(response.data || {})
+    });
+    
+    // Backend returns: {status: true, data: {rows: [...], pagination: {...}}}
+    // Frontend expects: {rows: [...], pagination: {...}}
+    if (response.data?.status && response.data?.data) {
+      console.log('✅ Tips API - Extracting data from backend response');
+      return response.data.data; // Return the nested data object
+    }
+    
     return response.data;
   } catch (error) {
     // Fallback to mock data for development
@@ -64,7 +87,7 @@ export const getTips = async (filters: TipsFilters): Promise<TipsResponse> => {
   }
 };
 
-// Get tips summary
+// Get tips summary (Admin endpoint)
 export const getTipsSummary = async (filters: TipsFilters): Promise<TipSummary> => {
   try {
     const params = new URLSearchParams();
@@ -75,7 +98,7 @@ export const getTipsSummary = async (filters: TipsFilters): Promise<TipSummary> 
     if (filters.start_date) params.append("start_date", filters.start_date);
     if (filters.end_date) params.append("end_date", filters.end_date);
 
-    const response = await instance.get(`/analytics/tips/summary?${params.toString()}`);
+    const response = await instance.get(`/tips/driver/summary?${params.toString()}`);
     return response.data;
   } catch (error) {
     // Fallback to mock data for development
@@ -163,6 +186,39 @@ export const addTipToRide = async (rideId: string, amountCents: number, currency
     }
   });
   return response.data;
+};
+
+// Get tip by ride ID (Admin endpoint)
+export const getTipByRideId = async (rideId: string): Promise<Tip> => {
+  try {
+    const response = await instance.get(`/tips/driver/ride/${rideId}`);
+    return response.data;
+  } catch (error) {
+    console.warn('API call failed, using mock data:', error);
+    // Return a mock tip for development
+        return {
+          id: parseInt(rideId) || 0,
+          ride_id: parseInt(rideId) || 0,
+          tip_amount: '5.00',
+          tip_percentage: '15.00',
+          payment_method: 'card',
+          rider_email: 'mock.rider@example.com',
+          pickup_address: 'Mock Pickup Address',
+          dropoff_address: 'Mock Dropoff Address',
+          added_at: new Date().toISOString(),
+          // Optional fields for compatibility
+          tip_id: `tip_${rideId}`,
+          ride_number: `R${rideId}`,
+          rider_id: 'rider_mock',
+          rider_name: 'Mock Rider',
+          driver_id: 'driver_mock',
+          driver_name: 'Mock Driver',
+          amount_cents: 500,
+          currency: 'CAD',
+          status: 'settled' as const,
+          created_at: new Date().toISOString()
+        };
+  }
 };
 
 // Export tips to CSV

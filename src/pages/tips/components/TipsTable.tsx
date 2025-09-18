@@ -77,11 +77,35 @@ const TipsTable: React.FC<TipsTableProps> = ({
     );
   }
 
-  if (!tips || tips.rows.length === 0) {
+  // Debug: Log the tips data structure
+  console.log('🎯 TipsTable - tips data:', tips);
+  console.log('🎯 TipsTable - tips structure:', {
+    hasTips: !!tips,
+    hasRows: !!tips?.rows,
+    tipsKeys: Object.keys(tips || {}),
+    rowsLength: tips?.rows?.length || 0
+  });
+
+  if (!tips || !tips.rows || tips.rows.length === 0) {
+    console.log('🎯 TipsTable - No tips found, showing empty state');
     return (
       <Paper sx={{ p: 4, textAlign: 'center' }}>
         <Typography variant="h6" color="text.secondary">
           No tips found matching your criteria
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          Debug: tips={!!tips}, rows={!!tips?.rows}, length={tips?.rows?.length || 0}
+        </Typography>
+      </Paper>
+    );
+  }
+
+  // Additional safety check for pagination
+  if (!tips.pagination) {
+    return (
+      <Paper sx={{ p: 4, textAlign: 'center' }}>
+        <Typography variant="h6" color="text.secondary">
+          Error loading tips data
         </Typography>
       </Paper>
     );
@@ -114,55 +138,55 @@ const TipsTable: React.FC<TipsTableProps> = ({
           </TableHead>
           <TableBody>
             {tips.rows.map((tip) => (
-              <TableRow key={tip.tip_id} hover>
+              <TableRow key={tip.id || tip.tip_id} hover>
                 <TableCell>
                   <Typography variant="body2">
-                    {formatDate(tip.created_at)}
+                    {formatDate(tip.added_at || tip.created_at || '')}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="body2" fontWeight="medium">
-                    {tip.ride_number}
+                    {tip.ride_number || `R${tip.ride_id}`}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Box>
                     <Typography variant="body2" fontWeight="medium">
-                      {tip.rider_name}
+                      {tip.rider_name || tip.rider_email}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      ID: {tip.rider_id}
+                      {tip.rider_id ? `ID: ${tip.rider_id}` : tip.rider_email}
                     </Typography>
                   </Box>
                 </TableCell>
                 <TableCell>
                   <Box>
                     <Typography variant="body2" fontWeight="medium">
-                      {tip.driver_name}
+                      {tip.driver_name || 'Unknown Driver'}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      ID: {tip.driver_id}
+                      {tip.driver_id ? `ID: ${tip.driver_id}` : 'Driver ID not available'}
                     </Typography>
                   </Box>
                 </TableCell>
                 <TableCell align="right">
                   <Typography variant="body2" fontWeight="bold" color="primary">
-                    {formatCurrency(tip.amount_cents)}
+                    ${tip.tip_amount || formatCurrency(tip.amount_cents || 0)}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    {tip.currency}
+                    {tip.tip_percentage ? `${tip.tip_percentage}%` : tip.currency || 'CAD'}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Chip
-                    label={getStatusLabel(tip.status)}
-                    color={getStatusColor(tip.status) as any}
+                    label={getStatusLabel(tip.status || 'settled')}
+                    color={getStatusColor(tip.status || 'settled') as any}
                     size="small"
                   />
                 </TableCell>
                 <TableCell>
                   <Typography variant="caption" color="text.secondary">
-                    {tip.tip_id.substring(0, 8)}...
+                    {(tip.tip_id || tip.id.toString()).substring(0, 8)}...
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
@@ -170,7 +194,7 @@ const TipsTable: React.FC<TipsTableProps> = ({
                     <IconButton
                       size="small"
                       color="primary"
-                      onClick={() => onViewRide(tip.ride_id)}
+                      onClick={() => onViewRide(tip.ride_id.toString())}
                     >
                       <ViewIcon />
                     </IconButton>

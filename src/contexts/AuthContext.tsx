@@ -195,30 +195,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [authState, setAuthState] = useState<AuthState>(initialAuthState);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // Check for existing session on mount
+  // Simplified session check - no async operations that could cause loops
   useEffect(() => {
-    const checkExistingSession = async () => {
-      setLoading(true);
-      try {
-        // Check if user data exists in localStorage
-        const userData = localStorage.getItem("charged_admin_user");
+    console.log("🔍 Checking existing session...");
+    setLoading(true); // Set loading to true during session check
+    
+    try {
+      const userData = localStorage.getItem("charged_admin_user");
+      console.log("🔍 User data found:", !!userData);
 
-        if (userData) {
-          setAuthState({
-            user: JSON.parse(userData),
-            error: null,
-          });
-        }
-      } catch (error) {
-        console.error("Error restoring session:", error);
-      } finally {
-        setLoading(false);
+      if (userData) {
+        const parsedUser = JSON.parse(userData);
+        console.log("🔍 Parsed user:", parsedUser);
+        setAuthState({
+          user: parsedUser,
+          error: null,
+        });
+      } else {
+        console.log("🔍 No user data found, setting to null");
+        setAuthState({
+          user: null,
+          error: null,
+        });
       }
-    };
+    } catch (error) {
+      console.error("❌ Error restoring session:", error);
+      setAuthState({
+        user: null,
+        error: null,
+      });
+    } finally {
+      setLoading(false); // Set loading to false after session check is complete
+    }
+  }, []);
 
-    checkExistingSession();
+  // Simplified token refresh - disabled to prevent loops
+  useEffect(() => {
+    console.log("🔄 Token refresh mechanism disabled to prevent loops");
   }, []);
 
   const handleExpiredtoken = (error: any) => {
@@ -312,26 +327,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Function to get drivers
 
   const getDrivers = async (): Promise<any> => {
-    // For development, always use mock data
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🎭 Development mode: Using unified mock drivers data');
-      const mockDrivers = getUnifiedDrivers();
-      console.log('🎭 Unified mock drivers loaded:', mockDrivers.length, 'drivers');
-      console.log('🎭 Sample driver referral codes:', mockDrivers.slice(0, 3).map(d => ({ name: d.name, referral_code: d.referral_code })));
-      return mockDrivers;
-    }
-
     try {
+      console.log('🌐 Attempting to fetch drivers from API...');
       const drivers: any = await getDriversdata();
-      return drivers?.data?.data || drivers?.data || drivers || [];
+      console.log('✅ API response received:', drivers);
+      
+      // Handle different response structures
+      const driversData = drivers?.data?.data || drivers?.data || drivers || [];
+      console.log('📊 Processed drivers data:', driversData.length, 'drivers');
+      
+      if (driversData.length > 0) {
+        return driversData;
+      } else {
+        console.warn('⚠️ API returned empty drivers array, falling back to mock data');
+        return getUnifiedDrivers();
+      }
     } catch (error: any) {
+      console.error('❌ API call failed:', error);
       handleExpiredtoken(error);
       setAuthState((prev) => ({
         ...prev,
         error: error.response?.data?.message || error.message,
       }));
-      // Return mock data as fallback for development
-      console.warn('API call failed, using mock drivers data:', error);
+      // Return mock data as fallback
+      console.warn('🎭 Using mock drivers data as fallback');
       return getUnifiedDrivers();
     }
   };
@@ -432,26 +451,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Function to get Riders
   const getRiders = async (): Promise<any> => {
-    // For development, always use mock data
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🎭 Development mode: Using unified mock riders data');
-      const mockRiders = getUnifiedRiders();
-      console.log('🎭 Unified mock riders loaded:', mockRiders.length, 'riders');
-      console.log('🎭 Sample rider referral codes:', mockRiders.slice(0, 3).map(r => ({ name: r.name, referral_code: r.referral_code })));
-      return mockRiders;
-    }
-
     try {
+      console.log('🌐 Attempting to fetch riders from API...');
       const riders: any = await getridersdata();
-      return riders?.data?.data || riders?.data || riders || [];
+      console.log('✅ API response received:', riders);
+      
+      // Handle different response structures
+      const ridersData = riders?.data?.data || riders?.data || riders || [];
+      console.log('📊 Processed riders data:', ridersData.length, 'riders');
+      
+      if (ridersData.length > 0) {
+        return ridersData;
+      } else {
+        console.warn('⚠️ API returned empty riders array, falling back to mock data');
+        return getUnifiedRiders();
+      }
     } catch (error: any) {
+      console.error('❌ API call failed:', error);
       handleExpiredtoken(error);
       setAuthState((prev) => ({
         ...prev,
         error: error.response?.data?.message || error.message,
       }));
-      // Return mock data as fallback for development
-      console.warn('API call failed, using mock riders data:', error);
+      // Return mock data as fallback
+      console.warn('🎭 Using mock riders data as fallback');
       return getUnifiedRiders();
     }
   };
@@ -484,15 +507,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const getrecentRides = async (): Promise<any> => {
+    // Don't make API calls if user is not authenticated
+    if (!authState.user) {
+      console.log("🚗 Skipping recent rides - user not authenticated");
+      return [];
+    }
+
     try {
       const recentRides = await getRecentRidesData();
       return recentRides?.data?.data || recentRides?.data || recentRides || [];
     } catch (error: any) {
-      handleExpiredtoken(error);
+      // Only handle token expiration if it's actually a token error
+      if (error?.response?.data?.error?.code === "auth/id-token-expired" || 
+          error?.response?.data?.error?.code === "auth/argument-error") {
+        handleExpiredtoken(error);
+      }
       setAuthState((prev) => ({
         ...prev,
         error: error.response?.data?.message || error.message,
       }));
+      return [];
     }
   };
 
@@ -510,6 +544,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const getDashboardStats = async (): Promise<any> => {
+    // Don't make API calls if user is not authenticated
+    if (!authState.user) {
+      console.log("📊 Skipping dashboard stats - user not authenticated");
+      return {
+        rideCount: "0",
+        activeDrivers: "0",
+        totalRevenue: "0.00",
+        platformCommission: "0.00",
+        rideTypeCounts: []
+      };
+    }
+
     console.log("📊 Loading dashboard stats...");
     try {
       const dashboardStats = await getDashboardStatsData();
@@ -524,7 +570,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         status: error.response?.status,
         data: error.response?.data
       });
-      handleExpiredtoken(error);
+      
+      // Only handle token expiration if it's actually a token error
+      if (error?.response?.data?.error?.code === "auth/id-token-expired" || 
+          error?.response?.data?.error?.code === "auth/argument-error") {
+        handleExpiredtoken(error);
+      }
+      
       setAuthState((prev) => ({
         ...prev,
         error: error.response?.data?.message || error.message,

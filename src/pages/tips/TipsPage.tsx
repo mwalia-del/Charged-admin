@@ -14,6 +14,7 @@ import TipsFilters from './components/TipsFilters';
 import TipsTable from './components/TipsTable';
 
 const TipsPage: React.FC = () => {
+  console.log('🎯 TipsPage component rendered');
   const { getDrivers, getRiders } = useAuth();
   
   // State
@@ -31,11 +32,24 @@ const TipsPage: React.FC = () => {
 
   // Filters state
   const [filters, setFilters] = useState<TipsFiltersType>({
-    actor_type: 'ride',
+    // Remove actor_type filter to show all tips by default
     range: 'this_month',
     page: 1,
     page_size: 25
   });
+
+  // Debug: Log when drivers are loaded to check if "Manpreet Walia" is in the list
+  useEffect(() => {
+    if (drivers.length > 0) {
+      console.log('🚗 Loaded drivers:', drivers.map(d => d.name));
+      const manpreetDriver = drivers.find(d => d.name.toLowerCase().includes('manpreet'));
+      if (manpreetDriver) {
+        console.log('✅ Found Manpreet driver:', manpreetDriver);
+      } else {
+        console.log('❌ Manpreet driver not found in drivers list');
+      }
+    }
+  }, [drivers]);
 
   const loadInitialData = useCallback(async () => {
     try {
@@ -56,6 +70,7 @@ const TipsPage: React.FC = () => {
   }, [getDrivers, getRiders]);
 
   const loadTips = useCallback(async () => {
+    console.log('🎯 loadTips function called with filters:', filters);
     try {
       setLoading(true);
       setError(null);
@@ -64,6 +79,14 @@ const TipsPage: React.FC = () => {
         getTips(filters),
         getTipsSummary(filters)
       ]);
+      
+      console.log('Tips data received:', tipsData);
+      console.log('Summary data received:', summaryData);
+      console.log('Tips data structure:', {
+        hasRows: !!tipsData?.rows,
+        tipsKeys: Object.keys(tipsData || {}),
+        rowsLength: tipsData?.rows?.length || 0
+      });
       
       setTips(tipsData);
       setSummary(summaryData);
@@ -99,7 +122,7 @@ const TipsPage: React.FC = () => {
 
   const handleClear = useCallback(() => {
     setFilters({
-      actor_type: 'ride',
+      // Remove actor_type filter to show all tips
       range: 'this_month',
       page: 1,
       page_size: 25

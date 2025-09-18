@@ -63,10 +63,14 @@ const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({
 }) => {
   const { isAuthenticated, loading } = useAuth();
 
+  console.log("🛡️ ProtectedRoute - loading:", loading, "isAuthenticated:", isAuthenticated);
+
   if (loading) {
+    console.log("🛡️ ProtectedRoute - showing loading...");
     return <div>Loading...</div>;
   }
 
+  console.log("🛡️ ProtectedRoute - redirecting to:", isAuthenticated ? "protected content" : "login");
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
 

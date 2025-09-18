@@ -75,6 +75,7 @@ class UnifiedMockDataStore {
         is_active: Math.random() > 0.1,
         photo: Math.random() > 0.5 ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${fullName}` : undefined,
         referral_code: referralCode,
+        driver_referral_id: `DRV_${i.toString().padStart(6, '0')}`,
         documents: [],
         vehicleDetails: {
           make: vehicleMakes[Math.floor(Math.random() * vehicleMakes.length)],
@@ -127,7 +128,8 @@ class UnifiedMockDataStore {
         lastRideDate: lastRideDate,
         photo: Math.random() > 0.5 ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${fullName}` : undefined,
         is_active: Math.random() > 0.15,
-        referral_code: referralCode
+        referral_code: referralCode,
+        rider_referral_id: `RID_${i.toString().padStart(6, '0')}`
       });
     }
     
@@ -301,8 +303,17 @@ class UnifiedMockDataStore {
       const rider = this.riders[Math.floor(Math.random() * this.riders.length)];
       
       tips.push({
+        id: i,
+        ride_id: i,
+        tip_amount: (Math.floor(Math.random() * 2000) + 100).toString(),
+        tip_percentage: (Math.floor(Math.random() * 20) + 5).toString(),
+        payment_method: 'card',
+        rider_email: rider.email || `${rider.name.toLowerCase().replace(' ', '.')}@example.com`,
+        pickup_address: `Pickup Address ${i}`,
+        dropoff_address: `Dropoff Address ${i}`,
+        added_at: createdDate.toISOString(),
+        // Optional fields for compatibility
         tip_id: `tip_${i.toString().padStart(6, '0')}`,
-        ride_id: `ride_${i.toString().padStart(6, '0')}`,
         ride_number: `R${i.toString().padStart(6, '0')}`,
         rider_id: rider.id,
         rider_name: rider.name,
@@ -315,7 +326,7 @@ class UnifiedMockDataStore {
       });
     }
     
-    return tips.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    return tips.sort((a, b) => new Date(b.added_at || b.created_at || '').getTime() - new Date(a.added_at || a.created_at || '').getTime());
   }
 
   // Getters for accessing the data
@@ -392,28 +403,32 @@ class UnifiedMockDataStore {
   }
 
   getTipSummary(): TipSummary {
-    const totalAmount = this.tips.reduce((sum, tip) => sum + tip.amount_cents, 0);
+    const totalAmount = this.tips.reduce((sum, tip) => sum + (tip.amount_cents || 0), 0);
     const count = this.tips.length;
     
     // Group by driver
     const driverMap = new Map<string, { name: string; total: number; count: number }>();
     this.tips.forEach(tip => {
-      if (!driverMap.has(tip.driver_id)) {
-        driverMap.set(tip.driver_id, { name: tip.driver_name, total: 0, count: 0 });
+      const driverId = tip.driver_id || 'unknown';
+      const driverName = tip.driver_name || 'Unknown Driver';
+      if (!driverMap.has(driverId)) {
+        driverMap.set(driverId, { name: driverName, total: 0, count: 0 });
       }
-      const driver = driverMap.get(tip.driver_id)!;
-      driver.total += tip.amount_cents;
+      const driver = driverMap.get(driverId)!;
+      driver.total += tip.amount_cents || 0;
       driver.count += 1;
     });
     
     // Group by rider
     const riderMap = new Map<string, { name: string; total: number; count: number }>();
     this.tips.forEach(tip => {
-      if (!riderMap.has(tip.rider_id)) {
-        riderMap.set(tip.rider_id, { name: tip.rider_name, total: 0, count: 0 });
+      const riderId = tip.rider_id || 'unknown';
+      const riderName = tip.rider_name || 'Unknown Rider';
+      if (!riderMap.has(riderId)) {
+        riderMap.set(riderId, { name: riderName, total: 0, count: 0 });
       }
-      const rider = riderMap.get(tip.rider_id)!;
-      rider.total += tip.amount_cents;
+      const rider = riderMap.get(riderId)!;
+      rider.total += tip.amount_cents || 0;
       rider.count += 1;
     });
     

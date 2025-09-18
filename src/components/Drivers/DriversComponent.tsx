@@ -261,10 +261,10 @@ const DriversComponent: React.FC = () => {
     }
   };
 
-  const getReferralId = (driver: Driver) => {
-    // Display the referral code from the database (generated during registration)
-    if (driver.referral_code) {
-      return driver.referral_code;
+  const getDriverReferralId = (driver: Driver) => {
+    // Display the driver referral ID from the API response
+    if (driver.driver_referral_id) {
+      return driver.driver_referral_id;
     }
     return 'Not Assigned';
   };
@@ -482,7 +482,7 @@ const DriversComponent: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Driver</TableCell>
-                <TableCell>Referral ID</TableCell>
+                <TableCell>Driver Referral ID</TableCell>
                 <TableCell>Vehicle Type</TableCell>
                 <TableCell>License Plate</TableCell>
                 <TableCell>Rating</TableCell>
@@ -513,15 +513,15 @@ const DriversComponent: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Typography variant="body2" fontFamily="monospace" data-testid="driver-referral-code">
-                          {getReferralId(driver)}
+                        <Typography variant="body2" fontFamily="monospace" data-testid="driver-referral-id">
+                          {getDriverReferralId(driver)}
                         </Typography>
-                        {driver.referral_code && (
-                          <Tooltip title="Copy Referral ID">
+                        {driver.driver_referral_id && (
+                          <Tooltip title="Copy Driver Referral ID">
                             <IconButton
                               size="small"
-                              onClick={() => copyReferralId(driver.referral_code!)}
-                              data-testid="copy-referral-code"
+                              onClick={() => copyReferralId(driver.driver_referral_id!)}
+                              data-testid="copy-driver-referral-id"
                             >
                               <CopyIcon fontSize="small" />
                             </IconButton>
