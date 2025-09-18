@@ -63,9 +63,9 @@ const DriverReferralWalletsPage: React.FC = () => {
   };
 
   const getReferralId = (driver: any) => {
-    // Display the referral code from the database (generated during registration)
-    if (driver.referral_code) {
-      return driver.referral_code;
+    // Display the driver referral ID from the API response (consistent with driver page)
+    if (driver.driver_referral_id) {
+      return driver.driver_referral_id;
     }
     return 'Not Assigned';
   };
@@ -291,11 +291,11 @@ const DriverReferralWalletsPage: React.FC = () => {
                         <Typography variant="body2" fontFamily="monospace" data-testid="wallet-referral-code">
                           {referralId}
                         </Typography>
-                        {driver.referral_code && (
+                        {driver.driver_referral_id && (
                           <Tooltip title="Copy Referral ID">
                             <IconButton
                               size="small"
-                              onClick={() => copyReferralId(driver.referral_code)}
+                              onClick={() => copyReferralId(driver.driver_referral_id)}
                               data-testid="copy-referral-code"
                             >
                               <CopyIcon fontSize="small" />

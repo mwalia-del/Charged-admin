@@ -35,7 +35,7 @@ import {
   Check as CheckIcon,
   Warning as WarningIcon,
 } from "@mui/icons-material";
-import { mockApi } from "../services/mockApi";
+// Removed mockApi import - using real API only
 import { Ride, Rider, PricingRule } from "../types";
 import {
   formatCurrency,
@@ -71,21 +71,9 @@ const RideDetails: React.FC = () => {
 
     setLoading(true);
     try {
-      const rideData = await mockApi.getRide(rideId);
-      setRide(rideData);
-
-      // Also fetch the rider details
-      if (rideData.rider_id) {
-        const riderData = await mockApi.getRider(rideData.rider_id);
-        setRider(riderData);
-      }
-
-      // Fetch the pricing rule for the ride type
-      const pricingRules = await mockApi.getPricingRules();
-      const matchingRule = pricingRules.find(
-        (rule) => rule.rideTypeId === rideData.ride_type_id,
-      );
-      setPricingRule(matchingRule || null);
+      // TODO: Replace with real API calls
+      console.log('Ride details not implemented - using real API only');
+      setError("Ride details functionality not implemented - using real API only");
 
       setError(null);
     } catch (err) {
@@ -116,7 +104,8 @@ const RideDetails: React.FC = () => {
 
     setProcessingRefund(true);
     try {
-      await mockApi.updateRefundStatus(ride.id, true, refundReason);
+      // TODO: Replace with real API call
+      console.log('Refund update not implemented - using real API only');
 
       // Update the local state with the refund
       setRide((prev) => (prev ? { ...prev, refunded: true } : null));

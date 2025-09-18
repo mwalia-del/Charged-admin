@@ -1,6 +1,5 @@
 import axios from "axios";
 import { Tip, TipSummary, TipsFilters, TipsResponse } from "../types";
-import { getUnifiedTips, getUnifiedTipSummary } from "./unifiedMockData";
 
 const instance = axios.create({
   baseURL: "https://api.charged.autos",
@@ -67,23 +66,8 @@ export const getTips = async (filters: TipsFilters): Promise<TipsResponse> => {
     
     return response.data;
   } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockTips = getUnifiedTips();
-    const page = filters.page || 1;
-    const pageSize = filters.page_size || 25;
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    
-    return {
-      rows: mockTips.slice(startIndex, endIndex),
-      pagination: {
-        page: page,
-        page_size: pageSize,
-        total: mockTips.length,
-        total_pages: Math.ceil(mockTips.length / pageSize)
-      }
-    };
+    console.error('Failed to fetch tips:', error);
+    throw error;
   }
 };
 
@@ -101,9 +85,8 @@ export const getTipsSummary = async (filters: TipsFilters): Promise<TipSummary> 
     const response = await instance.get(`/tips/driver/summary?${params.toString()}`);
     return response.data;
   } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    return getUnifiedTipSummary();
+    console.error('Failed to fetch tips summary:', error);
+    throw error;
   }
 };
 
@@ -121,23 +104,8 @@ export const getDriverTips = async (driverId: string, filters: Omit<TipsFilters,
     const response = await instance.get(`/drivers/${driverId}/tips?${params.toString()}`);
     return response.data;
   } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockTips = getUnifiedTips().filter((tip: Tip) => tip.driver_id === driverId);
-    const page = filters.page || 1;
-    const pageSize = filters.page_size || 25;
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    
-    return {
-      rows: mockTips.slice(startIndex, endIndex),
-      pagination: {
-        page: page,
-        page_size: pageSize,
-        total: mockTips.length,
-        total_pages: Math.ceil(mockTips.length / pageSize)
-      }
-    };
+    console.error('Failed to fetch driver tips:', error);
+    throw error;
   }
 };
 
@@ -155,23 +123,8 @@ export const getRiderTips = async (riderId: string, filters: Omit<TipsFilters, '
     const response = await instance.get(`/riders/${riderId}/tips?${params.toString()}`);
     return response.data;
   } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockTips = getUnifiedTips().filter((tip: Tip) => tip.rider_id === riderId);
-    const page = filters.page || 1;
-    const pageSize = filters.page_size || 25;
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    
-    return {
-      rows: mockTips.slice(startIndex, endIndex),
-      pagination: {
-        page: page,
-        page_size: pageSize,
-        total: mockTips.length,
-        total_pages: Math.ceil(mockTips.length / pageSize)
-      }
-    };
+    console.error('Failed to fetch rider tips:', error);
+    throw error;
   }
 };
 
@@ -194,30 +147,8 @@ export const getTipByRideId = async (rideId: string): Promise<Tip> => {
     const response = await instance.get(`/tips/driver/ride/${rideId}`);
     return response.data;
   } catch (error) {
-    console.warn('API call failed, using mock data:', error);
-    // Return a mock tip for development
-        return {
-          id: parseInt(rideId) || 0,
-          ride_id: parseInt(rideId) || 0,
-          tip_amount: '5.00',
-          tip_percentage: '15.00',
-          payment_method: 'card',
-          rider_email: 'mock.rider@example.com',
-          pickup_address: 'Mock Pickup Address',
-          dropoff_address: 'Mock Dropoff Address',
-          added_at: new Date().toISOString(),
-          // Optional fields for compatibility
-          tip_id: `tip_${rideId}`,
-          ride_number: `R${rideId}`,
-          rider_id: 'rider_mock',
-          rider_name: 'Mock Rider',
-          driver_id: 'driver_mock',
-          driver_name: 'Mock Driver',
-          amount_cents: 500,
-          currency: 'CAD',
-          status: 'settled' as const,
-          created_at: new Date().toISOString()
-        };
+    console.error('Failed to fetch tip by ride ID:', error);
+    throw error;
   }
 };
 

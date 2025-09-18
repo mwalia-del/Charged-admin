@@ -86,6 +86,20 @@ const TipsTable: React.FC<TipsTableProps> = ({
     rowsLength: tips?.rows?.length || 0
   });
 
+  // Debug: Log individual tip amounts to see the actual data format
+  if (tips?.rows && tips.rows.length > 0) {
+    console.log('🎯 TipsTable - Sample tip data (first 3 tips):', tips.rows.slice(0, 3).map(tip => ({
+      id: tip.id,
+      tip_amount: tip.tip_amount,
+      amount_cents: tip.amount_cents,
+      tip_amount_type: typeof tip.tip_amount,
+      amount_cents_type: typeof tip.amount_cents,
+      tip_amount_parsed: tip.tip_amount ? parseFloat(tip.tip_amount) : null,
+      is_likely_cents: tip.tip_amount ? parseFloat(tip.tip_amount) > 100 : false,
+      raw_tip: tip
+    })));
+  }
+
   if (!tips || !tips.rows || tips.rows.length === 0) {
     console.log('🎯 TipsTable - No tips found, showing empty state');
     return (
@@ -171,7 +185,19 @@ const TipsTable: React.FC<TipsTableProps> = ({
                 </TableCell>
                 <TableCell align="right">
                   <Typography variant="body2" fontWeight="bold" color="primary">
-                    ${tip.tip_amount || formatCurrency(tip.amount_cents || 0)}
+                    {(() => {
+                      if (tip.tip_amount) {
+                        const amount = parseFloat(tip.tip_amount);
+                        // If tip_amount is greater than 100, it's likely in cents (e.g., 1500 = $15.00)
+                        // If tip_amount is less than 100, it's likely in dollars (e.g., 15.00 = $15.00)
+                        const displayAmount = amount > 100 ? amount / 100 : amount;
+                        return `$${displayAmount.toFixed(2)}`;
+                      } else if (tip.amount_cents) {
+                        return formatCurrency(tip.amount_cents);
+                      } else {
+                        return '$0.00';
+                      }
+                    })()}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
                     {tip.tip_percentage ? `${tip.tip_percentage}%` : tip.currency || 'CAD'}

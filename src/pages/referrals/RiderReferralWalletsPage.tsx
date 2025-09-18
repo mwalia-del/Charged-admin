@@ -57,9 +57,9 @@ const RiderReferralWalletsPage: React.FC = () => {
   };
 
   const getReferralId = (rider: any) => {
-    // Display the referral code from the database (generated during registration)
-    if (rider.referral_code) {
-      return rider.referral_code;
+    // Display the rider referral ID from the API response (consistent with rider page)
+    if (rider.rider_referral_id) {
+      return rider.rider_referral_id;
     }
     return 'Not Assigned';
   };
@@ -232,11 +232,11 @@ const RiderReferralWalletsPage: React.FC = () => {
                         <Typography variant="body2" fontFamily="monospace" data-testid="wallet-referral-code">
                           {referralId}
                         </Typography>
-                        {rider.referral_code && (
+                        {rider.rider_referral_id && (
                           <Tooltip title="Copy Referral ID">
                             <IconButton
                               size="small"
-                              onClick={() => copyReferralId(rider.referral_code)}
+                              onClick={() => copyReferralId(rider.rider_referral_id)}
                               data-testid="copy-referral-code"
                             >
                               <CopyIcon fontSize="small" />

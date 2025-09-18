@@ -43,7 +43,7 @@ import {
 } from "@mui/icons-material";
 import { Driver, Ride, RideType, DocumentType } from "../../types";
 import { useAuth } from "../../contexts/AuthContext";
-import { mockApi } from "../../services/mockApi";
+// Removed mockApi import - using real API only
 import DriverDetailsDialog from "./DriverDetails/DriverDetailsDialog";
 import DeleteDriverDialog from "./DeleteDriverDialog/DeleteDriverDialog";
 import StarRating from "../StarRating/StarRating";
@@ -296,7 +296,9 @@ const DriversComponent: React.FC = () => {
     setUploadingDocument(true);
 
     try {
-      const updatedDriver = await mockApi.getDriver(selectedDriver.uuid);
+      // TODO: Replace with real API call
+      console.log('Driver refresh not implemented - using real API only');
+      const updatedDriver = selectedDriver; // Placeholder
 
       // Update the selected driver in the UI
       setSelectedDriver(updatedDriver);

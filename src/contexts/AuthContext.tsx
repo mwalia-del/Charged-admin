@@ -42,7 +42,7 @@ import {
   createDocumenttype,
   updateDocumenttype,
 } from "../API/axios";
-import { getUnifiedDrivers, getUnifiedRiders } from "../API/unifiedMockData";
+// Removed unifiedMockData imports - using real API only
 // Using direct API calls instead of wrapper
 import toast from "react-hot-toast";
 
@@ -339,8 +339,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (driversData.length > 0) {
         return driversData;
       } else {
-        console.warn('⚠️ API returned empty drivers array, falling back to mock data');
-        return getUnifiedDrivers();
+        console.warn('⚠️ API returned empty drivers array');
+        return [];
       }
     } catch (error: any) {
       console.error('❌ API call failed:', error);
@@ -349,9 +349,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         ...prev,
         error: error.response?.data?.message || error.message,
       }));
-      // Return mock data as fallback
-      console.warn('🎭 Using mock drivers data as fallback');
-      return getUnifiedDrivers();
+      // Return empty array as fallback
+      console.warn('🎭 No drivers data available');
+      return [];
     }
   };
 
@@ -463,8 +463,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (ridersData.length > 0) {
         return ridersData;
       } else {
-        console.warn('⚠️ API returned empty riders array, falling back to mock data');
-        return getUnifiedRiders();
+        console.warn('⚠️ API returned empty riders array');
+        return [];
       }
     } catch (error: any) {
       console.error('❌ API call failed:', error);
@@ -473,9 +473,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         ...prev,
         error: error.response?.data?.message || error.message,
       }));
-      // Return mock data as fallback
-      console.warn('🎭 Using mock riders data as fallback');
-      return getUnifiedRiders();
+      // Return empty array as fallback
+      console.warn('🎭 No riders data available');
+      return [];
     }
   };
 
