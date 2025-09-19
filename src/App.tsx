@@ -76,6 +76,8 @@ const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({
 };
 
 const App: React.FC = () => {
+  console.log("🚀 App component rendering...");
+  
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

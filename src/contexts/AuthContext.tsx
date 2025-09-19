@@ -757,6 +757,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isAuthenticated = !!authState.user;
 
+  console.log("🔍 AuthContext render - loading:", loading, "isAuthenticated:", isAuthenticated, "authState:", authState);
+
   return (
     <AuthContext.Provider
       value={{
