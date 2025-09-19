@@ -5,7 +5,6 @@ import {
   ReferralIssuancesResponse,
   ReferralClaimResponse,
   VoidReferralResponse,
-  ReferralIssuance,
   ReferralWallet,
   ReferralWalletTransaction,
   ReferralWalletResponse,

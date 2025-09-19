@@ -49,8 +49,8 @@ const RideDetails: React.FC = () => {
   const navigate = useNavigate();
 
   const [ride, setRide] = useState<Ride | null>(null);
-  const [rider, setRider] = useState<Rider | null>(null);
-  const [pricingRule, setPricingRule] = useState<PricingRule | null>(null);
+  const [rider] = useState<Rider | null>(null);
+  const [pricingRule] = useState<PricingRule | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refundDialogOpen, setRefundDialogOpen] = useState(false);

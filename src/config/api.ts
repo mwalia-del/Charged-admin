@@ -111,6 +111,16 @@ export const API_ENDPOINTS = {
   },
   
   // Scheduled Rides
+  SCHEDULED_RIDES: {
+    LIST: '/admin/scheduled-rides',
+    SUMMARY: '/admin/scheduled-rides/summary',
+    DETAIL: (id: string) => `/admin/scheduled-rides/${id}`,
+    ASSIGN_DRIVER: (id: string) => `/admin/scheduled-rides/${id}/assign-driver`,
+    CANCEL: (id: string) => `/admin/scheduled-rides/${id}/cancel`,
+    EXPORT: '/admin/scheduled-rides/export',
+  },
+  
+  // Scheduled Rides (Legacy - for backward compatibility)
   SCHEDULED: {
     LIST: '/admin/scheduled-rides',
     DETAIL: (id: string) => `/admin/scheduled-rides/${id}`,
