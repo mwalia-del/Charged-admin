@@ -23,8 +23,7 @@ instance.interceptors.request.use(
     if (userString) {
       const user = JSON.parse(userString);
       const token = user?.token;
-      console.log("🔑 Sending token with request:", token ? "Yes" : "No");
-      console.log("🔑 Token preview:", token ? `${token.substring(0, 20)}...` : "None");
+      // Token logging removed for security
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -42,7 +41,7 @@ instance.interceptors.request.use(
 // Add a response interceptor to log API responses and handle token refresh
 instance.interceptors.response.use(
   (response) => {
-    console.log("✅ API Response:", response.status, response.config.url);
+    // Response logging removed for security
     return response;
   },
   async (error) => {

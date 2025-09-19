@@ -289,14 +289,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           toast.success(`${User.name} login successfully!`);
           localStorage.setItem("charged_admin_user", JSON.stringify(User));
         } catch (apiError) {
-          // If API verification fails, allow login for testing
+          // SECURITY FIX: Fail secure - require successful verification
+          console.error('Admin verification failed:', apiError);
           setAuthState({
-            user: User,
-            error: null,
+            isAuthenticated: false,
+            user: null,
+            loading: false,
+            error: 'Admin verification failed. Please contact support.',
           });
-
-          toast.success(`${User.name} login successfully!`);
-          localStorage.setItem("charged_admin_user", JSON.stringify(User));
+          toast.error('Admin verification failed. Please contact support.');
+          return;
         }
       }
     } catch (error) {
