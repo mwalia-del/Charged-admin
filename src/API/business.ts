@@ -56,17 +56,15 @@ export const getBusinessList = async (): Promise<Business[]> => {
     // Handle both direct array response and wrapped response
     return Array.isArray(response.data) ? response.data : (response.data.data || []);
   } catch (error: any) {
-    // Fallback to mock data for development
-    console.warn('⚠️ API call failed, using mock data');
-    console.warn('Error details:', {
-      message: error.message,
-      code: error.code,
-      status: error.response?.status,
-      url: error.config?.url
-    });
-    const mockData = generateMockBusinesses(5);
-    console.log('🎭 Generated mock data:', mockData.length, 'businesses');
-    return mockData;
+    // SECURITY FIX: Don't fallback to mock data in production
+    console.error('❌ API call failed:', error);
+    if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_USE_MOCK_DATA === 'true') {
+      console.log('🎭 Development mode: Using mock data fallback');
+      const mockData = generateMockBusinesses(5);
+      return mockData;
+    }
+    // In production, throw the error instead of returning fake data
+    throw new Error(`Failed to fetch businesses: ${error.message || 'Unknown error'}`);
   }
 };
 

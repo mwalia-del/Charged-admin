@@ -1,5 +1,4 @@
-// API Base URL
-const API_BASE_URL = 'https://api.charged.autos';
+import { API_BASE_URL, API_ENDPOINTS, buildApiUrl } from '../config/api';
 
 // Types
 export interface Message {
@@ -65,7 +64,7 @@ export const getMessages = async (filters: MessageFilters = {}): Promise<{ data:
     if (filters.priority) queryParams.append('priority', filters.priority);
     if (filters.search) queryParams.append('search', filters.search);
 
-    const url = `${API_BASE_URL}/admin/messages${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const url = buildApiUrl(API_ENDPOINTS.MESSAGES.LIST) + (queryParams.toString() ? `?${queryParams.toString()}` : '');
 
     const response = await fetch(url, {
       method: 'GET',
@@ -94,7 +93,7 @@ export const getMessage = async (id: string): Promise<Message> => {
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch(`${API_BASE_URL}/admin/messages/${id}`, {
+    const response = await fetch(buildApiUrl(API_ENDPOINTS.MESSAGES.DETAIL(id)), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -118,7 +117,7 @@ export const createMessage = async (messageData: CreateMessageRequest): Promise<
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch(`${API_BASE_URL}/admin/messages`, {
+    const response = await fetch(buildApiUrl(API_ENDPOINTS.MESSAGES.CREATE), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -145,7 +144,7 @@ export const updateMessage = async (messageData: UpdateMessageRequest): Promise<
 
     const { id, ...updateData } = messageData;
 
-    const response = await fetch(`${API_BASE_URL}/admin/messages/${id}`, {
+    const response = await fetch(buildApiUrl(API_ENDPOINTS.MESSAGES.UPDATE(id)), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -170,7 +169,7 @@ export const deleteMessage = async (id: string): Promise<void> => {
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch(`${API_BASE_URL}/admin/messages/${id}`, {
+    const response = await fetch(buildApiUrl(API_ENDPOINTS.MESSAGES.DELETE(id)), {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -193,7 +192,7 @@ export const publishMessage = async (id: string): Promise<Message> => {
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch(`${API_BASE_URL}/admin/messages/${id}/publish`, {
+    const response = await fetch(buildApiUrl(API_ENDPOINTS.MESSAGES.PUBLISH(id)), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -217,7 +216,7 @@ export const archiveMessage = async (id: string): Promise<Message> => {
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch(`${API_BASE_URL}/admin/messages/${id}/archive`, {
+    const response = await fetch(buildApiUrl(API_ENDPOINTS.MESSAGES.ARCHIVE(id)), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -253,7 +252,7 @@ export const getMessageStats = async (): Promise<{
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch(`${API_BASE_URL}/admin/messages/stats`, {
+    const response = await fetch(buildApiUrl(API_ENDPOINTS.MESSAGES.STATS), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -288,7 +287,7 @@ export const getMessageRecipients = async (messageId: string): Promise<{
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch(`${API_BASE_URL}/admin/messages/${messageId}/recipients`, {
+    const response = await fetch(buildApiUrl(API_ENDPOINTS.MESSAGES.RECIPIENTS(messageId)), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

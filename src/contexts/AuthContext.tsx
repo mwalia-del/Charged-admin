@@ -91,7 +91,9 @@ interface AuthContextType {
 }
 
 const initialAuthState: AuthState = {
+  isAuthenticated: false,
   user: null,
+  loading: false,
   error: null,
 };
 
