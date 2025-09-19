@@ -35,6 +35,7 @@ import {
   AccountBalanceWallet as WalletIcon,
   Schedule as ScheduledIcon,
   Campaign as PromotionsIcon,
+  Message as MessageIcon,
 } from "@mui/icons-material";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -56,8 +57,9 @@ const navItems: NavItem[] = [
   { text: "Referrals", path: "/referrals", icon: <ReferralIcon /> },
   { text: "Driver Wallets", path: "/referrals/drivers", icon: <WalletIcon /> },
   { text: "Rider Wallets", path: "/referrals/riders", icon: <WalletIcon /> },
-    { text: "Scheduled Rides", path: "/scheduled", icon: <ScheduledIcon /> },
-    { text: "Promotions", path: "/promotions", icon: <PromotionsIcon /> },
+  { text: "Scheduled Rides", path: "/scheduled", icon: <ScheduledIcon /> },
+  { text: "Promotions", path: "/promotions", icon: <PromotionsIcon /> },
+  { text: "Messages", path: "/messages", icon: <MessageIcon /> },
   { text: "Riders", path: "/riders", icon: <PeopleIcon /> },
   { text: "Drivers", path: "/drivers", icon: <CarIcon /> },
 ];

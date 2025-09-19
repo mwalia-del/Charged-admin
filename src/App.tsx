@@ -26,6 +26,7 @@ import DriverReferralWalletsPage from "./pages/referrals/DriverReferralWalletsPa
 import RiderReferralWalletsPage from "./pages/referrals/RiderReferralWalletsPage";
 import ScheduledRidesPage from "./pages/scheduled/ScheduledRidesPage";
 import PromotionsPage from "./pages/promotions/PromotionsPage";
+import Messages from "./pages/Messages";
 
 // Create a theme instance
 const theme = createTheme({
@@ -96,7 +97,8 @@ const App: React.FC = () => {
               <Route path="referrals/drivers" element={<DriverReferralWalletsPage />} />
               <Route path="referrals/riders" element={<RiderReferralWalletsPage />} />
               <Route path="scheduled" element={<ScheduledRidesPage />} />
-            <Route path="promotions" element={<PromotionsPage />} />
+              <Route path="promotions" element={<PromotionsPage />} />
+              <Route path="messages" element={<Messages />} />
               <Route path="rides/:rideId" element={<RideDetails />} />
               <Route path="*" element={<NotFound />} />
             </Route>
