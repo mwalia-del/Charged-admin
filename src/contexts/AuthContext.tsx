@@ -212,20 +212,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const parsedUser = JSON.parse(userData);
         console.log("🔍 Parsed user:", parsedUser);
         setAuthState({
+          isAuthenticated: true,
           user: parsedUser,
+          loading: false,
           error: null,
         });
       } else {
         console.log("🔍 No user data found, setting to null");
         setAuthState({
+          isAuthenticated: false,
           user: null,
+          loading: false,
           error: null,
         });
       }
     } catch (error) {
       console.error("❌ Error restoring session:", error);
       setAuthState({
+        isAuthenticated: false,
         user: null,
+        loading: false,
         error: null,
       });
     } finally {
@@ -277,14 +283,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           //Check if the user is an admin
           if (userData?.data?.data?.user_type !== "admin") {
             setAuthState({
+              isAuthenticated: false,
               user: null,
+              loading: false,
               error: "Enter a valid Admin Credentials",
             });
             return;
           }
 
           setAuthState({
+            isAuthenticated: true,
             user: User,
+            loading: false,
             error: null,
           });
 
@@ -320,7 +330,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const errorMessage = errorCases[(error as any).code] || `Login failed: ${(error as any).message || "Unknown error"}`;
       
       setAuthState({
+        isAuthenticated: false,
         user: null,
+        loading: false,
         error: errorMessage,
       });
     } finally {

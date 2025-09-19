@@ -1,4 +1,4 @@
-import { API_BASE_URL, API_ENDPOINTS, buildApiUrl } from '../config/api';
+import { API_ENDPOINTS, buildApiUrl } from '../config/api';
 
 // Types
 export interface Message {
