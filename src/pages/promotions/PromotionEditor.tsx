@@ -30,6 +30,51 @@ interface PromotionEditorProps {
   onSave: () => void;
 }
 
+// Simple date and time helpers
+const formatDateForAPI = (dateStr: string, timeStr: string): string => {
+  if (!dateStr || !timeStr) return '';
+  try {
+    const dateTime = new Date(`${dateStr}T${timeStr}`);
+    if (isNaN(dateTime.getTime())) return '';
+    // Ensure we return proper ISO 8601 format with Z suffix
+    return dateTime.toISOString();
+  } catch (error) {
+    console.error('Error parsing date/time:', error);
+    return '';
+  }
+};
+
+const parseDateFromAPI = (dateString: string | undefined): { date: string; time: string } => {
+  if (!dateString) return { date: '', time: '' };
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return { date: '', time: '' };
+    
+    const dateStr = date.toISOString().split('T')[0];
+    const timeStr = date.toTimeString().split(' ')[0].slice(0, 5);
+    
+    return { date: dateStr, time: timeStr };
+  } catch (error) {
+    console.error('Error parsing date:', error);
+    return { date: '', time: '' };
+  }
+};
+
+const getDefaultStartDateTime = (): { date: string; time: string } => {
+  const now = new Date();
+  const dateStr = now.toISOString().split('T')[0];
+  const timeStr = now.toTimeString().split(' ')[0].slice(0, 5);
+  return { date: dateStr, time: timeStr };
+};
+
+const getDefaultEndDateTime = (): { date: string; time: string } => {
+  const future = new Date();
+  future.setDate(future.getDate() + 7);
+  const dateStr = future.toISOString().split('T')[0];
+  const timeStr = future.toTimeString().split(' ')[0].slice(0, 5);
+  return { date: dateStr, time: timeStr };
+};
+
 const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promotion, onSave }) => {
   const [formData, setFormData] = useState<Partial<Promotion>>({
     title: '',
@@ -38,8 +83,8 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
     reward_type: 'fixed_discount',
     value_cents: 0,
     percent_off: 0,
-    start_at: new Date().toISOString(),
-    end_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    start_at: '',
+    end_at: '',
     priority: 0,
     is_active: false,
     max_uses_per_user: undefined,
@@ -47,6 +92,10 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
     code: '',
     criteria_json: {},
   });
+
+  // Separate state for date/time inputs
+  const [startDateTime, setStartDateTime] = useState<{ date: string; time: string }>({ date: '', time: '' });
+  const [endDateTime, setEndDateTime] = useState<{ date: string; time: string }>({ date: '', time: '' });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -59,7 +108,15 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
   useEffect(() => {
     if (promotion) {
       setFormData(promotion);
+      // Parse existing dates
+      const startParsed = parseDateFromAPI(promotion.start_at);
+      const endParsed = parseDateFromAPI(promotion.end_at);
+      setStartDateTime(startParsed);
+      setEndDateTime(endParsed);
     } else {
+      const defaultStart = getDefaultStartDateTime();
+      const defaultEnd = getDefaultEndDateTime();
+      
       setFormData({
         title: '',
         description: '',
@@ -67,8 +124,8 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
         reward_type: 'fixed_discount',
         value_cents: 0,
         percent_off: 0,
-        start_at: new Date().toISOString(),
-        end_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        start_at: formatDateForAPI(defaultStart.date, defaultStart.time),
+        end_at: formatDateForAPI(defaultEnd.date, defaultEnd.time),
         priority: 0,
         is_active: false,
         max_uses_per_user: undefined,
@@ -76,6 +133,9 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
         code: '',
         criteria_json: {},
       });
+      
+      setStartDateTime(defaultStart);
+      setEndDateTime(defaultEnd);
     }
     setErrors({});
   }, [promotion, open]);
@@ -87,6 +147,48 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
+  };
+
+  const handleDateTimeChange = (type: 'start' | 'end', field: 'date' | 'time', value: string) => {
+    if (type === 'start') {
+      const newStartDateTime = { ...startDateTime, [field]: value };
+      setStartDateTime(newStartDateTime);
+      
+      // Update form data
+      const apiValue = formatDateForAPI(newStartDateTime.date, newStartDateTime.time);
+      setFormData(prev => ({ ...prev, start_at: apiValue }));
+      
+      // Auto-adjust end date if needed
+      if (field === 'date' && newStartDateTime.date && endDateTime.date) {
+        const startDate = new Date(`${newStartDateTime.date}T${newStartDateTime.time}`);
+        const endDate = new Date(`${endDateTime.date}T${endDateTime.time}`);
+        
+        if (endDate <= startDate) {
+          const newEndDate = new Date(startDate);
+          newEndDate.setDate(newEndDate.getDate() + 7);
+          const newEndDateTime = {
+            date: newEndDate.toISOString().split('T')[0],
+            time: newEndDate.toTimeString().split(' ')[0].slice(0, 5)
+          };
+          setEndDateTime(newEndDateTime);
+          setFormData(prev => ({ 
+            ...prev, 
+            end_at: formatDateForAPI(newEndDateTime.date, newEndDateTime.time) 
+          }));
+        }
+      }
+    } else {
+      const newEndDateTime = { ...endDateTime, [field]: value };
+      setEndDateTime(newEndDateTime);
+      
+      // Update form data
+      const apiValue = formatDateForAPI(newEndDateTime.date, newEndDateTime.time);
+      setFormData(prev => ({ ...prev, end_at: apiValue }));
+    }
+    
+    // Clear errors
+    if (errors.start_at) setErrors(prev => ({ ...prev, start_at: '' }));
+    if (errors.end_at) setErrors(prev => ({ ...prev, end_at: '' }));
   };
 
   const validateForm = () => {
@@ -112,16 +214,55 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
       newErrors.value_cents = 'Value must be greater than 0';
     }
 
+    // Validate start date
     if (!formData.start_at) {
       newErrors.start_at = 'Start date is required';
+    } else {
+      const startDate = new Date(formData.start_at);
+      if (isNaN(startDate.getTime())) {
+        newErrors.start_at = 'Invalid start date format';
+      } else if (startDate < new Date()) {
+        newErrors.start_at = 'Start date cannot be in the past';
+      } else {
+        // Validate ISO format
+        const isoString = startDate.toISOString();
+        if (!isoString.includes('T') || !isoString.endsWith('Z')) {
+          newErrors.start_at = 'Invalid date format - must be ISO 8601';
+        }
+      }
     }
 
+    // Validate end date
     if (!formData.end_at) {
       newErrors.end_at = 'End date is required';
+    } else {
+      const endDate = new Date(formData.end_at);
+      if (isNaN(endDate.getTime())) {
+        newErrors.end_at = 'Invalid end date format';
+      } else {
+        // Validate ISO format
+        const isoString = endDate.toISOString();
+        if (!isoString.includes('T') || !isoString.endsWith('Z')) {
+          newErrors.end_at = 'Invalid date format - must be ISO 8601';
+        }
+      }
     }
 
-    if (formData.start_at && formData.end_at && new Date(formData.start_at) >= new Date(formData.end_at)) {
-      newErrors.end_at = 'End date must be after start date';
+    // Validate date relationship
+    if (formData.start_at && formData.end_at && !newErrors.start_at && !newErrors.end_at) {
+      const startDate = new Date(formData.start_at);
+      const endDate = new Date(formData.end_at);
+      
+      if (startDate >= endDate) {
+        newErrors.end_at = 'End date must be after start date';
+      }
+      
+      // Check if promotion duration is too long (more than 1 year)
+      const durationMs = endDate.getTime() - startDate.getTime();
+      const oneYearMs = 365 * 24 * 60 * 60 * 1000;
+      if (durationMs > oneYearMs) {
+        newErrors.end_at = 'Promotion duration cannot exceed 1 year';
+      }
     }
 
     if (formData.max_uses_per_user !== undefined && formData.max_uses_per_user <= 0) {
@@ -143,6 +284,15 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
 
     setLoading(true);
     try {
+      // Debug: Log the form data being sent
+      console.log('🔍 Promotion Form Data:', {
+        formData,
+        startDateTime,
+        endDateTime,
+        start_at: formData.start_at,
+        end_at: formData.end_at
+      });
+
       if (promotion) {
         // Update existing promotion
         await updatePromotion(promotion.id, formData);
@@ -281,29 +431,136 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
               )}
 
               <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Start Date & Time"
-                  type="datetime-local"
-                  value={formData.start_at ? new Date(formData.start_at).toISOString().slice(0, 16) : ''}
-                  onChange={(e) => handleInputChange('start_at', e.target.value ? new Date(e.target.value).toISOString() : '')}
-                  error={!!errors.start_at}
-                  helperText={errors.start_at}
-                  InputLabelProps={{ shrink: true }}
-                />
+                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 500 }}>
+                  Start Date & Time
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                  <TextField
+                    label="Date"
+                    type="date"
+                    value={startDateTime.date}
+                    onChange={(e) => handleDateTimeChange('start', 'date', e.target.value)}
+                    error={!!errors.start_at}
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ flex: 1 }}
+                  />
+                  <TextField
+                    label="Time"
+                    type="time"
+                    value={startDateTime.time}
+                    onChange={(e) => handleDateTimeChange('start', 'time', e.target.value)}
+                    error={!!errors.start_at}
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ flex: 1 }}
+                  />
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => {
+                      const now = getDefaultStartDateTime();
+                      setStartDateTime(now);
+                      setFormData(prev => ({ ...prev, start_at: formatDateForAPI(now.date, now.time) }));
+                    }}
+                  >
+                    Now
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => {
+                      const tomorrow = new Date();
+                      tomorrow.setDate(tomorrow.getDate() + 1);
+                      const tomorrowDateTime = {
+                        date: tomorrow.toISOString().split('T')[0],
+                        time: '09:00'
+                      };
+                      setStartDateTime(tomorrowDateTime);
+                      setFormData(prev => ({ ...prev, start_at: formatDateForAPI(tomorrowDateTime.date, tomorrowDateTime.time) }));
+                    }}
+                  >
+                    Tomorrow 9 AM
+                  </Button>
+                </Box>
+                {errors.start_at && (
+                  <Typography variant="caption" color="error" sx={{ mt: 0.5, display: 'block' }}>
+                    {errors.start_at}
+                  </Typography>
+                )}
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="End Date & Time"
-                  type="datetime-local"
-                  value={formData.end_at ? new Date(formData.end_at).toISOString().slice(0, 16) : ''}
-                  onChange={(e) => handleInputChange('end_at', e.target.value ? new Date(e.target.value).toISOString() : '')}
-                  error={!!errors.end_at}
-                  helperText={errors.end_at}
-                  InputLabelProps={{ shrink: true }}
-                />
+                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 500 }}>
+                  End Date & Time
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                  <TextField
+                    label="Date"
+                    type="date"
+                    value={endDateTime.date}
+                    onChange={(e) => handleDateTimeChange('end', 'date', e.target.value)}
+                    error={!!errors.end_at}
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ flex: 1 }}
+                  />
+                  <TextField
+                    label="Time"
+                    type="time"
+                    value={endDateTime.time}
+                    onChange={(e) => handleDateTimeChange('end', 'time', e.target.value)}
+                    error={!!errors.end_at}
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ flex: 1 }}
+                  />
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => {
+                      if (startDateTime.date && startDateTime.time) {
+                        const startDate = new Date(`${startDateTime.date}T${startDateTime.time}`);
+                        const endDate = new Date(startDate);
+                        endDate.setDate(endDate.getDate() + 7);
+                        const endDateTime = {
+                          date: endDate.toISOString().split('T')[0],
+                          time: endDate.toTimeString().split(' ')[0].slice(0, 5)
+                        };
+                        setEndDateTime(endDateTime);
+                        setFormData(prev => ({ ...prev, end_at: formatDateForAPI(endDateTime.date, endDateTime.time) }));
+                      }
+                    }}
+                    disabled={!startDateTime.date || !startDateTime.time}
+                  >
+                    +7 days
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => {
+                      if (startDateTime.date && startDateTime.time) {
+                        const startDate = new Date(`${startDateTime.date}T${startDateTime.time}`);
+                        const endDate = new Date(startDate);
+                        endDate.setDate(endDate.getDate() + 30);
+                        const endDateTime = {
+                          date: endDate.toISOString().split('T')[0],
+                          time: endDate.toTimeString().split(' ')[0].slice(0, 5)
+                        };
+                        setEndDateTime(endDateTime);
+                        setFormData(prev => ({ ...prev, end_at: formatDateForAPI(endDateTime.date, endDateTime.time) }));
+                      }
+                    }}
+                    disabled={!startDateTime.date || !startDateTime.time}
+                  >
+                    +30 days
+                  </Button>
+                </Box>
+                {errors.end_at && (
+                  <Typography variant="caption" color="error" sx={{ mt: 0.5, display: 'block' }}>
+                    {errors.end_at}
+                  </Typography>
+                )}
               </Grid>
 
               <Grid item xs={12} sm={6}>
