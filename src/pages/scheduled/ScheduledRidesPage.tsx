@@ -9,7 +9,7 @@ import {
   Snackbar,
 } from '@mui/material';
 import { ScheduledRide, ScheduledRideFilters, ScheduledRideSummary } from '../../types';
-import { getScheduledRides, getScheduledRideSummary } from '../../API/scheduled';
+import { getScheduledRides, getScheduledRideSummary, assignDriver, cancelScheduledRide, exportScheduledRidesCSV } from '../../API/scheduled';
 import ScheduledSummary from './components/ScheduledSummary';
 import ScheduledFilters from './components/ScheduledFilters';
 import ScheduledTable from './components/ScheduledTable';
@@ -73,14 +73,21 @@ const ScheduledRidesPage: React.FC = () => {
 
   const handleAssignDriver = async (scheduledRideId: string, driverId: string) => {
     try {
-      // This would call the actual API
-      console.log('Assigning driver', driverId, 'to scheduled ride', scheduledRideId);
-      setSnackbar({
-        open: true,
-        message: 'Driver assigned successfully',
-        severity: 'success'
-      });
-      loadScheduledRides();
+      const result = await assignDriver(scheduledRideId, { driver_id: driverId });
+      if (result.success) {
+        setSnackbar({
+          open: true,
+          message: result.message,
+          severity: 'success'
+        });
+        loadScheduledRides();
+      } else {
+        setSnackbar({
+          open: true,
+          message: result.message,
+          severity: 'error'
+        });
+      }
     } catch (err: any) {
       setSnackbar({
         open: true,
@@ -92,14 +99,21 @@ const ScheduledRidesPage: React.FC = () => {
 
   const handleCancelRide = async (scheduledRideId: string, reason: string) => {
     try {
-      // This would call the actual API
-      console.log('Cancelling scheduled ride', scheduledRideId, 'with reason:', reason);
-      setSnackbar({
-        open: true,
-        message: 'Scheduled ride cancelled successfully',
-        severity: 'success'
-      });
-      loadScheduledRides();
+      const result = await cancelScheduledRide(scheduledRideId, { reason });
+      if (result.success) {
+        setSnackbar({
+          open: true,
+          message: result.message,
+          severity: 'success'
+        });
+        loadScheduledRides();
+      } else {
+        setSnackbar({
+          open: true,
+          message: result.message,
+          severity: 'error'
+        });
+      }
     } catch (err: any) {
       setSnackbar({
         open: true,
@@ -111,11 +125,21 @@ const ScheduledRidesPage: React.FC = () => {
 
   const handleExportCSV = async () => {
     try {
-      // This would call the actual API
-      console.log('Exporting CSV with filters:', filters);
+      const blob = await exportScheduledRidesCSV(filters);
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `scheduled-rides-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
       setSnackbar({
         open: true,
-        message: 'CSV export started',
+        message: 'CSV export completed',
         severity: 'success'
       });
     } catch (err: any) {

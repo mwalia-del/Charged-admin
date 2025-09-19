@@ -9,10 +9,10 @@ import {
   AssignDriverRequest,
   CancelScheduledRequest
 } from '../types';
-// Mock data imports removed - returning empty data instead
+import { API_ENDPOINTS, buildApiUrl, shouldUseMockData } from '../config/api';
 
 const instance = axios.create({
-  baseURL: "https://api.charged.autos",
+  baseURL: process.env.REACT_APP_API_URL || 'https://api.charged.autos',
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -51,20 +51,27 @@ export const getScheduledRides = async (filters: ScheduledRideFilters = {}): Pro
     if (filters.page) params.append('page', filters.page.toString());
     if (filters.page_size) params.append('page_size', filters.page_size.toString());
 
-    const response = await instance.get(`/scheduled/admin?${params.toString()}`);
+    const response = await instance.get(buildApiUrl(API_ENDPOINTS.SCHEDULED_RIDES.LIST) + `?${params.toString()}`);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to fetch scheduled rides:', error);
-    // Return empty data
-    return {
-      data: [],
-      pagination: {
-        page: filters.page || 1,
-        page_size: filters.page_size || 10,
-        total: 0,
-        total_pages: 0
-      }
-    };
+    
+    // SECURITY FIX: Don't fallback to mock data in production
+    if (shouldUseMockData()) {
+      console.log('🎭 Development mode: Using mock data fallback');
+      return {
+        data: [],
+        pagination: {
+          page: filters.page || 1,
+          page_size: filters.page_size || 10,
+          total: 0,
+          total_pages: 0
+        }
+      };
+    }
+    
+    // In production, throw the error instead of returning fake data
+    throw new Error(`Failed to fetch scheduled rides: ${error.message || 'Unknown error'}`);
   }
 };
 
@@ -79,25 +86,32 @@ export const getScheduledRideSummary = async (filters: ScheduledRideFilters = {}
     if (filters.from) params.append('from', filters.from);
     if (filters.to) params.append('to', filters.to);
 
-    const response = await instance.get(`/admin/scheduled-rides/summary?${params.toString()}`);
+    const response = await instance.get(buildApiUrl(API_ENDPOINTS.SCHEDULED_RIDES.SUMMARY) + `?${params.toString()}`);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to fetch scheduled ride summary:', error);
-    // Return empty summary
-    return {
-      scheduled_count: 0,
-      converted_24h: 0,
-      converted_7d: 0,
-      cancelled_count: 0,
-      failed_count: 0,
-      upcoming_count: 0
-    };
+    
+    // SECURITY FIX: Don't fallback to mock data in production
+    if (shouldUseMockData()) {
+      console.log('🎭 Development mode: Using mock summary data');
+      return {
+        scheduled_count: 0,
+        converted_24h: 0,
+        converted_7d: 0,
+        cancelled_count: 0,
+        failed_count: 0,
+        upcoming_count: 0
+      };
+    }
+    
+    // In production, throw the error instead of returning fake data
+    throw new Error(`Failed to fetch scheduled ride summary: ${error.message || 'Unknown error'}`);
   }
 };
 
 export const assignDriver = async (scheduledRideId: string, request: AssignDriverRequest): Promise<{ success: boolean; message: string }> => {
   try {
-    await instance.post(`/admin/scheduled-rides/${scheduledRideId}/assign-driver`, request);
+    await instance.post(buildApiUrl(API_ENDPOINTS.SCHEDULED_RIDES.ASSIGN_DRIVER(scheduledRideId)), request);
     return { success: true, message: 'Driver assigned successfully' };
   } catch (error: any) {
     console.error('Failed to assign driver:', error);
@@ -110,7 +124,7 @@ export const assignDriver = async (scheduledRideId: string, request: AssignDrive
 
 export const cancelScheduledRide = async (scheduledRideId: string, request: CancelScheduledRequest): Promise<{ success: boolean; message: string }> => {
   try {
-    await instance.post(`/admin/scheduled-rides/${scheduledRideId}/cancel`, request);
+    await instance.post(buildApiUrl(API_ENDPOINTS.SCHEDULED_RIDES.CANCEL(scheduledRideId)), request);
     return { success: true, message: 'Scheduled ride cancelled successfully' };
   } catch (error: any) {
     console.error('Failed to cancel scheduled ride:', error);
@@ -132,7 +146,7 @@ export const exportScheduledRidesCSV = async (filters: ScheduledRideFilters = {}
     if (filters.from) params.append('from', filters.from);
     if (filters.to) params.append('to', filters.to);
 
-    const response = await instance.get(`/admin/scheduled-rides/export?${params.toString()}`, {
+    const response = await instance.get(buildApiUrl(API_ENDPOINTS.SCHEDULED_RIDES.EXPORT) + `?${params.toString()}`, {
       responseType: 'blob'
     });
     return response.data;
