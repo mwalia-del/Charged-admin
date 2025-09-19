@@ -27,6 +27,7 @@ import RiderReferralWalletsPage from "./pages/referrals/RiderReferralWalletsPage
 import ScheduledRidesPage from "./pages/scheduled/ScheduledRidesPage";
 import PromotionsPage from "./pages/promotions/PromotionsPage";
 import Messages from "./pages/Messages";
+import TestPage from "./TestPage";
 
 // Create a theme instance
 const theme = createTheme({
@@ -78,38 +79,50 @@ const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({
 const App: React.FC = () => {
   console.log("🚀 App component rendering...");
   
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<ProtectedRoute element={<Layout />} />}>
-              <Route index element={<Dashboard />} />
-              <Route path="pricing" element={<Pricing />} />
-              <Route path="riders" element={<Riders />} />
-              <Route path="rewards" element={<Rewards />} />
-              <Route path="drivers" element={<Drivers />} />
-              <Route path="documents" element={<Documents />} />
-              <Route path="tips" element={<TipsPage />} />
-              <Route path="businesses" element={<BusinessListPage />} />
-              <Route path="businesses/:orgId" element={<BusinessDetailPage />} />
-              <Route path="referrals" element={<ReferralsPage />} />
-              <Route path="referrals/drivers" element={<DriverReferralWalletsPage />} />
-              <Route path="referrals/riders" element={<RiderReferralWalletsPage />} />
-              <Route path="scheduled" element={<ScheduledRidesPage />} />
-              <Route path="promotions" element={<PromotionsPage />} />
-              <Route path="messages" element={<Messages />} />
-              <Route path="rides/:rideId" element={<RideDetails />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-        </Router>
-      </AuthProvider>
-      <Toaster/>
-    </ThemeProvider>
-  );
+  try {
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AuthProvider>
+          <Router>
+            <Routes>
+              <Route path="/test" element={<TestPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<ProtectedRoute element={<Layout />} />}>
+                <Route index element={<Dashboard />} />
+                <Route path="pricing" element={<Pricing />} />
+                <Route path="riders" element={<Riders />} />
+                <Route path="rewards" element={<Rewards />} />
+                <Route path="drivers" element={<Drivers />} />
+                <Route path="documents" element={<Documents />} />
+                <Route path="tips" element={<TipsPage />} />
+                <Route path="businesses" element={<BusinessListPage />} />
+                <Route path="businesses/:orgId" element={<BusinessDetailPage />} />
+                <Route path="referrals" element={<ReferralsPage />} />
+                <Route path="referrals/drivers" element={<DriverReferralWalletsPage />} />
+                <Route path="referrals/riders" element={<RiderReferralWalletsPage />} />
+                <Route path="scheduled" element={<ScheduledRidesPage />} />
+                <Route path="promotions" element={<PromotionsPage />} />
+                <Route path="messages" element={<Messages />} />
+                <Route path="rides/:rideId" element={<RideDetails />} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
+          </Router>
+        </AuthProvider>
+        <Toaster/>
+      </ThemeProvider>
+    );
+  } catch (error) {
+    console.error("🚨 App component error:", error);
+    return (
+      <div style={{ padding: '20px', backgroundColor: 'red', color: 'white' }}>
+        <h1>App Error</h1>
+        <p>Error: {error instanceof Error ? error.message : 'Unknown error'}</p>
+        <pre>{error instanceof Error ? error.stack : 'No stack trace'}</pre>
+      </div>
+    );
+  }
 };
 
 export default App;
