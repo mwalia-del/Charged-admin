@@ -3,8 +3,7 @@ import {
   getMessages, 
   createMessage, 
   updateMessage, 
-  deleteMessage,
-  getMessageStats 
+  deleteMessage
 } from '../API/messages';
 import {
   Box,
