@@ -41,14 +41,6 @@ instance.interceptors.request.use(
 
 // Get business list
 export const getBusinessList = async (): Promise<Business[]> => {
-  // For development, always use mock data
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🎭 Development mode: Using mock data');
-    const mockData = generateMockBusinesses(5);
-    console.log('🎭 Generated mock data:', mockData.length, 'businesses');
-    return mockData;
-  }
-
   try {
     console.log('🌐 Attempting API call to /businesses');
     const response = await instance.get("/businesses");
@@ -56,13 +48,7 @@ export const getBusinessList = async (): Promise<Business[]> => {
     // Handle both direct array response and wrapped response
     return Array.isArray(response.data) ? response.data : (response.data.data || []);
   } catch (error: any) {
-    // SECURITY FIX: Don't fallback to mock data in production
     console.error('❌ API call failed:', error);
-    if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_USE_MOCK_DATA === 'true') {
-      console.log('🎭 Development mode: Using mock data fallback');
-      const mockData = generateMockBusinesses(5);
-      return mockData;
-    }
     // In production, throw the error instead of returning fake data
     throw new Error(`Failed to fetch businesses: ${error.message || 'Unknown error'}`);
   }
@@ -73,11 +59,9 @@ export const getBusiness = async (orgId: string): Promise<Business> => {
   try {
     const response = await instance.get(`/businesses/${orgId}`);
     return response.data;
-  } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockBusinesses = generateMockBusinesses(1);
-    return { ...mockBusinesses[0], org_id: orgId };
+  } catch (error: any) {
+    console.error('Failed to fetch business:', error);
+    throw new Error(`Failed to fetch business: ${error.message || 'Unknown error'}`);
   }
 };
 
@@ -106,24 +90,9 @@ export const getBusinessRides = async (orgId: string, filters: BusinessFilters):
 
     const response = await instance.get(`/businesses/${orgId}/rides?${params.toString()}`);
     return response.data;
-  } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockRides = generateMockBusinessRides(50);
-    const page = filters.page || 1;
-    const pageSize = filters.page_size || 25;
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    
-    return {
-      rows: mockRides.slice(startIndex, endIndex),
-      pagination: {
-        page: page,
-        page_size: pageSize,
-        total: mockRides.length,
-        total_pages: Math.ceil(mockRides.length / pageSize)
-      }
-    };
+  } catch (error: any) {
+    console.error('Failed to fetch business rides:', error);
+    throw new Error(`Failed to fetch business rides: ${error.message || 'Unknown error'}`);
   }
 };
 
@@ -138,25 +107,9 @@ export const getBusinessRideSummary = async (orgId: string, filters: BusinessFil
 
     const response = await instance.get(`/businesses/${orgId}/rides/summary?${params.toString()}`);
     return response.data;
-  } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockRides = generateMockBusinessRides(50);
-    const totalBillable = mockRides.reduce((sum, ride) => sum + ride.billable_amount_cents, 0);
-    
-    return {
-      total_rides: mockRides.length,
-      total_billable_cents: totalBillable,
-      by_driver: [
-        { driver_id: "driver_1", driver_name: "Driver 1", total_cents: totalBillable / 2, count: 25 },
-        { driver_id: "driver_2", driver_name: "Driver 2", total_cents: totalBillable / 2, count: 25 }
-      ],
-      by_day: mockRides.slice(0, 7).map((ride, index) => ({
-        date: new Date(Date.now() - index * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        total_cents: ride.billable_amount_cents,
-        count: 1
-      }))
-    };
+  } catch (error: any) {
+    console.error('Failed to fetch business ride summary:', error);
+    throw new Error(`Failed to fetch business ride summary: ${error.message || 'Unknown error'}`);
   }
 };
 
@@ -187,22 +140,9 @@ export const getWalletTransactions = async (orgId: string, page: number = 1, pag
   try {
     const response = await instance.get(`/businesses/${orgId}/wallet/transactions?page=${page}&page_size=${pageSize}`);
     return response.data;
-  } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockTransactions = generateMockBusinessWalletTransactions(50);
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    
-    return {
-      transactions: mockTransactions.slice(startIndex, endIndex),
-      pagination: {
-        page: page,
-        page_size: pageSize,
-        total: mockTransactions.length,
-        total_pages: Math.ceil(mockTransactions.length / pageSize)
-      }
-    };
+  } catch (error: any) {
+    console.error('Failed to fetch business wallet transactions:', error);
+    throw new Error(`Failed to fetch business wallet transactions: ${error.message || 'Unknown error'}`);
   }
 };
 
@@ -232,22 +172,9 @@ export const getBusinessInvoices = async (orgId: string, page: number = 1, pageS
   try {
     const response = await instance.get(`/businesses/${orgId}/invoices?page=${page}&page_size=${pageSize}`);
     return response.data;
-  } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockInvoices = generateMockBusinessInvoices(20);
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    
-    return {
-      invoices: mockInvoices.slice(startIndex, endIndex),
-      pagination: {
-        page: page,
-        page_size: pageSize,
-        total: mockInvoices.length,
-        total_pages: Math.ceil(mockInvoices.length / pageSize)
-      }
-    };
+  } catch (error: any) {
+    console.error('Failed to fetch business invoices:', error);
+    throw new Error(`Failed to fetch business invoices: ${error.message || 'Unknown error'}`);
   }
 };
 
@@ -256,19 +183,9 @@ export const getInvoice = async (invoiceId: string): Promise<{ invoice: Business
   try {
     const response = await instance.get(`/invoices/${invoiceId}`);
     return response.data;
-  } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockInvoices = generateMockBusinessInvoices(1);
-    return {
-      invoice: mockInvoices[0],
-      line_items: Array.from({ length: 10 }, (_, i) => ({
-        ride_id: `ride_${i + 1}`,
-        ride_number: `R${(i + 1).toString().padStart(6, '0')}`,
-        amount_cents: 2000 + (i * 100),
-        completed_at: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString()
-      }))
-    };
+  } catch (error: any) {
+    console.error('Failed to fetch invoice:', error);
+    throw new Error(`Failed to fetch invoice: ${error.message || 'Unknown error'}`);
   }
 };
 
@@ -277,14 +194,9 @@ export const getRewardsSummary = async (orgId: string): Promise<BusinessRewardsS
   try {
     const response = await instance.get(`/businesses/${orgId}/rewards/summary`);
     return response.data;
-  } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    return {
-      points: 1500,
-      lifetime_points: 5000,
-      last_earned_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-    };
+  } catch (error: any) {
+    console.error('Failed to fetch rewards summary:', error);
+    throw new Error(`Failed to fetch rewards summary: ${error.message || 'Unknown error'}`);
   }
 };
 
@@ -293,22 +205,9 @@ export const getRewardsLedger = async (orgId: string, page: number = 1, pageSize
   try {
     const response = await instance.get(`/businesses/${orgId}/rewards/ledger?page=${page}&page_size=${pageSize}`);
     return response.data;
-  } catch (error) {
-    // Fallback to mock data for development
-    console.warn('API call failed, using mock data:', error);
-    const mockEntries = generateMockBusinessRewards(50);
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    
-    return {
-      entries: mockEntries.slice(startIndex, endIndex),
-      pagination: {
-        page: page,
-        page_size: pageSize,
-        total: mockEntries.length,
-        total_pages: Math.ceil(mockEntries.length / pageSize)
-      }
-    };
+  } catch (error: any) {
+    console.error('Failed to fetch rewards ledger:', error);
+    throw new Error(`Failed to fetch rewards ledger: ${error.message || 'Unknown error'}`);
   }
 };
 
