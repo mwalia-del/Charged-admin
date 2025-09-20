@@ -110,6 +110,12 @@ const TipsTable: React.FC<TipsTableProps> = ({
       is_likely_cents: tip.tip_amount ? parseFloat(tip.tip_amount) > 100 : false,
       raw_tip: tip
     })));
+    
+    // Debug: Check if filtering is working - show all driver IDs in the data
+    const driverIds = tips.rows.map(tip => tip.driver_id);
+    const uniqueDriverIds = Array.from(new Set(driverIds));
+    console.log('🎯 TipsTable - All driver IDs in current data:', uniqueDriverIds);
+    console.log('🎯 TipsTable - Total tips count:', tips.rows.length);
   }
 
   if (!tips || !tips.rows || tips.rows.length === 0) {

@@ -79,7 +79,25 @@ const TipsPage: React.FC = () => {
         getTipsSummary(filters)
       ]);
       
-      setTips(tipsData);
+      // TEMPORARY FIX: Client-side filtering until backend filtering is fixed
+      let filteredTips = tipsData;
+      if (filters.actor_type === 'driver' && filters.actor_id) {
+        console.log('🔍 Tips Page - Applying client-side driver filter:', filters.actor_id);
+        filteredTips = {
+          ...tipsData,
+          rows: tipsData.rows.filter(tip => tip.driver_id === filters.actor_id)
+        };
+        console.log('🔍 Tips Page - Filtered tips count:', filteredTips.rows.length);
+      } else if (filters.actor_type === 'rider' && filters.actor_id) {
+        console.log('🔍 Tips Page - Applying client-side rider filter:', filters.actor_id);
+        filteredTips = {
+          ...tipsData,
+          rows: tipsData.rows.filter(tip => tip.rider_id === filters.actor_id)
+        };
+        console.log('🔍 Tips Page - Filtered tips count:', filteredTips.rows.length);
+      }
+      
+      setTips(filteredTips);
       setSummary(summaryData);
     } catch (err: any) {
       console.error('❌ Tips Page - Error loading tips:', err);
