@@ -176,7 +176,7 @@ export const getridersdata = () => instance.get("/admin/getriders");
 // It returns an array of ridetypes
 // It is used in the pricing component
 
-export const getRidetypesdata = () => instance.get("/ride/ridetype");
+export const getRidetypesdata = () => instance.get("/ridetype");
 
 // Api to update Ridetype
 // This API is used to update a particular ridetypes
@@ -184,7 +184,7 @@ export const getRidetypesdata = () => instance.get("/ride/ridetype");
 // It is used in the pricing component
 
 export const updateRidetypedata = (id: number, body: object) =>
-  instance.put(`/ride/ridetype/${id}`, body);
+  instance.put(`/ridetype/${id}`, body);
 
 // Api to get Rides
 // This API is used to get all rides

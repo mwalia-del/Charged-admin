@@ -77,6 +77,14 @@ const TipsTable: React.FC<TipsTableProps> = ({
     );
   }
 
+  if (!tips) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        <Typography>No tips data available</Typography>
+      </Box>
+    );
+  }
+
   // Debug: Log the tips data structure
   console.log('🎯 TipsTable - tips data:', tips);
   console.log('🎯 TipsTable - tips structure:', {
@@ -90,6 +98,10 @@ const TipsTable: React.FC<TipsTableProps> = ({
   if (tips?.rows && tips.rows.length > 0) {
     console.log('🎯 TipsTable - Sample tip data (first 3 tips):', tips.rows.slice(0, 3).map(tip => ({
       id: tip.id,
+      driver_id: tip.driver_id,
+      driver_name: tip.driver_name,
+      rider_id: tip.rider_id,
+      rider_name: tip.rider_name,
       tip_amount: tip.tip_amount,
       amount_cents: tip.amount_cents,
       tip_amount_type: typeof tip.tip_amount,
@@ -235,9 +247,9 @@ const TipsTable: React.FC<TipsTableProps> = ({
       <TablePagination
         rowsPerPageOptions={[10, 25, 50, 100]}
         component="div"
-        count={tips.pagination.total}
-        rowsPerPage={tips.pagination.page_size}
-        page={tips.pagination.page - 1}
+        count={tips.pagination?.total || 0}
+        rowsPerPage={tips.pagination?.page_size || 25}
+        page={(tips.pagination?.page || 1) - 1}
         onPageChange={(_, page) => onPageChange(page + 1)}
         onRowsPerPageChange={(e) => onPageSizeChange(parseInt(e.target.value, 10))}
       />

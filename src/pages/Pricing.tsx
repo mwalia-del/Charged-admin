@@ -92,11 +92,19 @@ const Pricing: React.FC = () => {
     setLoading(true);
     try {
       const rules = await getRidetypes();
-      setPricingRules(rules);
-      setError(null);
+      
+      // Ensure we have an array
+      if (Array.isArray(rules) && rules.length > 0) {
+        setPricingRules(rules);
+        setError(null);
+      } else {
+        setPricingRules([]);
+        setError("No pricing rules found. Please check your connection and try again.");
+      }
     } catch (err) {
-      setError("Failed to load pricing rules. Please try again.");
       console.error("Error fetching pricing rules:", err);
+      setPricingRules([]);
+      setError("Failed to load pricing rules. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -229,8 +237,13 @@ const Pricing: React.FC = () => {
       {/* Pricing Rules Tab */}
       {activeTab === 0 && (
         <Box sx={{ mt: 4 }}>
-          <Grid container spacing={4}>
-            {pricingRules.map((rule) => (
+          {pricingRules.length === 0 ? (
+            <Alert severity="info" sx={{ mb: 4 }}>
+              No pricing rules found. Please check your connection and try refreshing the page.
+            </Alert>
+          ) : (
+            <Grid container spacing={4}>
+              {pricingRules.map((rule) => (
             <Grid item xs={12} md={4} key={rule.id}>
               <Card elevation={3}>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -468,7 +481,8 @@ const Pricing: React.FC = () => {
               </Card>
             </Grid>
           ))}
-          </Grid>
+            </Grid>
+          )}
         </Box>
       )}
 

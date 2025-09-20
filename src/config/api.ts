@@ -137,8 +137,8 @@ export const API_ENDPOINTS = {
   
   // Pricing
   PRICING: {
-    RIDE_TYPES: '/ride/ridetype',
-    UPDATE_RIDE_TYPE: (id: number) => `/ride/ridetype/${id}`,
+    RIDE_TYPES: '/ridetype',
+    UPDATE_RIDE_TYPE: (id: number) => `/ridetype/${id}`,
   },
   
   // Wallet

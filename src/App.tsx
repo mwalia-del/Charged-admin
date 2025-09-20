@@ -27,7 +27,6 @@ import RiderReferralWalletsPage from "./pages/referrals/RiderReferralWalletsPage
 import ScheduledRidesPage from "./pages/scheduled/ScheduledRidesPage";
 import PromotionsPage from "./pages/promotions/PromotionsPage";
 import Messages from "./pages/Messages";
-import TestPage from "./TestPage";
 
 // Create a theme instance
 const theme = createTheme({
@@ -65,28 +64,21 @@ const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({
 }) => {
   const { isAuthenticated, loading } = useAuth();
 
-  console.log("🛡️ ProtectedRoute - loading:", loading, "isAuthenticated:", isAuthenticated);
 
   if (loading) {
-    console.log("🛡️ ProtectedRoute - showing loading...");
     return <div>Loading...</div>;
   }
 
-  console.log("🛡️ ProtectedRoute - redirecting to:", isAuthenticated ? "protected content" : "login");
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
 const App: React.FC = () => {
-  console.log("🚀 App component rendering...");
-  
-  try {
-    return (
+  return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
           <Router>
             <Routes>
-              <Route path="/test" element={<TestPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<ProtectedRoute element={<Layout />} />}>
                 <Route index element={<Dashboard />} />
@@ -112,17 +104,7 @@ const App: React.FC = () => {
         </AuthProvider>
         <Toaster/>
       </ThemeProvider>
-    );
-  } catch (error) {
-    console.error("🚨 App component error:", error);
-    return (
-      <div style={{ padding: '20px', backgroundColor: 'red', color: 'white' }}>
-        <h1>App Error</h1>
-        <p>Error: {error instanceof Error ? error.message : 'Unknown error'}</p>
-        <pre>{error instanceof Error ? error.stack : 'No stack trace'}</pre>
-      </div>
-    );
-  }
+  );
 };
 
 export default App;

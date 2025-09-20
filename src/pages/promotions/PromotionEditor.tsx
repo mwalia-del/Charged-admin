@@ -284,14 +284,6 @@ const PromotionEditor: React.FC<PromotionEditorProps> = ({ open, onClose, promot
 
     setLoading(true);
     try {
-      // Debug: Log the form data being sent
-      console.log('🔍 Promotion Form Data:', {
-        formData,
-        startDateTime,
-        endDateTime,
-        start_at: formData.start_at,
-        end_at: formData.end_at
-      });
 
       if (promotion) {
         // Update existing promotion

@@ -44,6 +44,16 @@ const TipsFilters: React.FC<TipsFiltersProps> = ({
     filters.end_date ? new Date(filters.end_date) : null
   );
 
+  // Sync internal state with props when filters change
+  React.useEffect(() => {
+    console.log('🔍 TipsFilters - Syncing with props:', filters);
+    setActorType(filters.actor_type || 'ride');
+    setActorId(filters.actor_id || '');
+    setRange(filters.range || 'this_month');
+    setStartDate(filters.start_date ? new Date(filters.start_date) : null);
+    setEndDate(filters.end_date ? new Date(filters.end_date) : null);
+  }, [filters]);
+
   const rangeOptions = [
     { value: 'last_ride', label: 'Last Ride' },
     { value: 'this_week', label: 'This Week' },
@@ -75,6 +85,7 @@ const TipsFilters: React.FC<TipsFiltersProps> = ({
   };
 
   const handleActorChange = (value: string) => {
+    console.log('🔍 TipsFilters - Actor change:', { value, actorType, currentActorId: actorId });
     setActorId(value);
     onFiltersChange({
       ...filters,
@@ -114,6 +125,7 @@ const TipsFilters: React.FC<TipsFiltersProps> = ({
   };
 
   const handleClear = () => {
+    console.log('🔍 TipsFilters - Clearing filters');
     setActorType('ride');
     setActorId('');
     setRange('this_month');
@@ -150,7 +162,8 @@ const TipsFilters: React.FC<TipsFiltersProps> = ({
               <Autocomplete
                 size="small"
                 options={getActorOptions()}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option.name || ''}
+                getOptionKey={(option) => option.id || `option-${option.name}`}
                 value={getActorOptions().find(option => option.id === actorId) || null}
                 onChange={(_, newValue) => handleActorChange(newValue?.id || '')}
                 renderInput={(params) => (
@@ -164,8 +177,8 @@ const TipsFilters: React.FC<TipsFiltersProps> = ({
                   value.map((option, index) => (
                     <Chip
                       {...getTagProps({ index })}
-                      key={option.id}
-                      label={option.name}
+                      key={option.id || `chip-${option.name}-${index}`}
+                      label={option.name || 'Unknown'}
                       size="small"
                     />
                   ))

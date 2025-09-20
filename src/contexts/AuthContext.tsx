@@ -211,6 +211,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (userData) {
         const parsedUser = JSON.parse(userData);
         console.log("🔍 Parsed user:", parsedUser);
+        console.log("🔍 User token exists:", !!parsedUser.token);
+        console.log("🔍 Token preview:", parsedUser.token ? `${parsedUser.token.substring(0, 20)}...` : 'None');
         setAuthState({
           isAuthenticated: true,
           user: parsedUser,
@@ -757,7 +759,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isAuthenticated = !!authState.user;
 
-  console.log("🔍 AuthContext render - loading:", loading, "isAuthenticated:", isAuthenticated, "authState:", authState);
 
   return (
     <AuthContext.Provider

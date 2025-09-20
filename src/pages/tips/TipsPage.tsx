@@ -14,7 +14,6 @@ import TipsFilters from './components/TipsFilters';
 import TipsTable from './components/TipsTable';
 
 const TipsPage: React.FC = () => {
-  console.log('🎯 TipsPage component rendered');
   const { getDrivers, getRiders } = useAuth();
   
   // State
@@ -32,24 +31,16 @@ const TipsPage: React.FC = () => {
 
   // Filters state
   const [filters, setFilters] = useState<TipsFiltersType>({
-    // Remove actor_type filter to show all tips by default
+    // Show all tips by default
+    actor_type: undefined,
+    actor_id: undefined,
     range: 'this_month',
+    start_date: undefined,
+    end_date: undefined,
     page: 1,
     page_size: 25
   });
 
-  // Debug: Log when drivers are loaded to check if "Manpreet Walia" is in the list
-  useEffect(() => {
-    if (drivers.length > 0) {
-      console.log('🚗 Loaded drivers:', drivers.map(d => d.name));
-      const manpreetDriver = drivers.find(d => d.name.toLowerCase().includes('manpreet'));
-      if (manpreetDriver) {
-        console.log('✅ Found Manpreet driver:', manpreetDriver);
-      } else {
-        console.log('❌ Manpreet driver not found in drivers list');
-      }
-    }
-  }, [drivers]);
 
   const loadInitialData = useCallback(async () => {
     try {
@@ -59,8 +50,17 @@ const TipsPage: React.FC = () => {
         getRiders()
       ]);
       
-      setDrivers(driversData.map(d => ({ id: d.id, name: d.name })));
-      setRiders(ridersData.map(r => ({ id: r.id, name: r.name })));
+      console.log('🔍 Tips Page - Raw drivers data:', driversData);
+      console.log('🔍 Tips Page - Raw riders data:', ridersData);
+      
+      const mappedDrivers = driversData.map(d => ({ id: d.id, name: d.name }));
+      const mappedRiders = ridersData.map(r => ({ id: r.id, name: r.name }));
+      
+      console.log('🔍 Tips Page - Mapped drivers:', mappedDrivers);
+      console.log('🔍 Tips Page - Mapped riders:', mappedRiders);
+      
+      setDrivers(mappedDrivers);
+      setRiders(mappedRiders);
     } catch (err) {
       setError('Failed to load initial data');
       console.error('Error loading initial data:', err);
@@ -70,7 +70,6 @@ const TipsPage: React.FC = () => {
   }, [getDrivers, getRiders]);
 
   const loadTips = useCallback(async () => {
-    console.log('🎯 loadTips function called with filters:', filters);
     try {
       setLoading(true);
       setError(null);
@@ -80,19 +79,20 @@ const TipsPage: React.FC = () => {
         getTipsSummary(filters)
       ]);
       
-      console.log('Tips data received:', tipsData);
-      console.log('Summary data received:', summaryData);
-      console.log('Tips data structure:', {
-        hasRows: !!tipsData?.rows,
-        tipsKeys: Object.keys(tipsData || {}),
-        rowsLength: tipsData?.rows?.length || 0
-      });
-      
       setTips(tipsData);
       setSummary(summaryData);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load tips');
-      console.error('Error loading tips:', err);
+      console.error('❌ Tips Page - Error loading tips:', err);
+      console.error('❌ Tips Page - Error response:', err.response);
+      console.error('❌ Tips Page - Error message:', err.message);
+      
+      if (err.response?.status === 401) {
+        setError('Authentication failed. Please log in again.');
+      } else if (err.response?.status === 403) {
+        setError('Access denied. You do not have permission to view tips.');
+      } else {
+        setError(err.response?.data?.message || err.message || 'Failed to load tips');
+      }
     } finally {
       setLoading(false);
     }
@@ -109,11 +109,16 @@ const TipsPage: React.FC = () => {
   }, [filters, loadTips]);
 
   const handleFiltersChange = useCallback((newFilters: TipsFiltersType) => {
-    setFilters(prev => ({
-      ...prev,
-      ...newFilters,
-      page: 1 // Reset to first page when filters change
-    }));
+    console.log('🔍 Tips Page - Filter change:', newFilters);
+    setFilters(prev => {
+      const updated = {
+        ...prev,
+        ...newFilters,
+        page: 1 // Reset to first page when filters change
+      };
+      console.log('🔍 Tips Page - Updated filters:', updated);
+      return updated;
+    });
   }, []);
 
   const handleSearch = useCallback(() => {
@@ -122,8 +127,12 @@ const TipsPage: React.FC = () => {
 
   const handleClear = useCallback(() => {
     setFilters({
-      // Remove actor_type filter to show all tips
+      // Reset to default state - show all tips
+      actor_type: undefined,
+      actor_id: undefined,
       range: 'this_month',
+      start_date: undefined,
+      end_date: undefined,
       page: 1,
       page_size: 25
     });
