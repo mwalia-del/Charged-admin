@@ -141,7 +141,7 @@ const ReferralFilters: React.FC<ReferralFiltersProps> = ({
     <Paper sx={{ p: 3, mb: 3 }}>
       {/* Filter Summary */}
       {(referralId || actorId) && (
-        <Box sx={{ mb: 2, p: 2, bgcolor: 'primary.50', borderRadius: 1 }}>
+        <Box sx={{ mb: 2, p: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
           <Typography variant="subtitle2" color="primary" gutterBottom>
             Active Filters:
           </Typography>

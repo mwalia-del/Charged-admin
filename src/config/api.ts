@@ -5,6 +5,11 @@ const getApiBaseUrl = (): string => {
     return process.env.REACT_APP_API_URL;
   }
   
+  // Default to localhost for development
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:3000';
+  }
+  
   // Fallback to production URL
   return 'https://api.charged.autos';
 };
@@ -137,8 +142,20 @@ export const API_ENDPOINTS = {
   
   // Pricing
   PRICING: {
-    RIDE_TYPES: '/ridetype',
-    UPDATE_RIDE_TYPE: (id: number) => `/ridetype/${id}`,
+    RIDE_TYPES: '/ride/ridetype',
+    UPDATE_RIDE_TYPE: (id: number) => `/ride/ridetype/${id}`,
+    CREATE_RIDE_TYPE: '/ride/ridetype',
+    DELETE_RIDE_TYPE: (id: number) => `/pricing/ridetype/${id}`,
+  },
+  
+  // Vehicle Classes
+  VEHICLE_CLASSES: {
+    LIST: '/admin/vehicle-classes',
+    DETAIL: (code: string) => `/admin/vehicle-classes/${code}`,
+    CREATE: '/admin/vehicle-classes',
+    UPDATE: (code: string) => `/pricing/admin/vehicle-classes/${code}`,
+    DELETE: (code: string) => `/admin/vehicle-classes/${code}`,
+    CATALOG: '/catalog/vehicle-classes',
   },
   
   // Wallet

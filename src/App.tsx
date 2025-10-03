@@ -28,18 +28,35 @@ import ScheduledRidesPage from "./pages/scheduled/ScheduledRidesPage";
 import PromotionsPage from "./pages/promotions/PromotionsPage";
 import Messages from "./pages/Messages";
 
-// Create a theme instance
+// Create a dark theme instance
 const theme = createTheme({
   palette: {
+    mode: 'dark',
     primary: {
-      main: "#1976d2",
-      light: "#42a5f5",
-      dark: "#1565c0",
+      main: "#2196f3", // Bright blue
+      light: "#64b5f6",
+      dark: "#1976d2",
+      contrastText: "#ffffff",
     },
     secondary: {
-      main: "#f50057",
-      light: "#ff4081",
-      dark: "#c51162",
+      main: "#00bcd4", // Cyan blue
+      light: "#4dd0e1",
+      dark: "#0097a7",
+      contrastText: "#ffffff",
+    },
+    background: {
+      default: "#0a0a0a", // Deep black
+      paper: "#1a1a1a", // Dark gray for cards
+    },
+    text: {
+      primary: "#ffffff",
+      secondary: "#b0b0b0",
+    },
+    divider: "#333333",
+    action: {
+      active: "#2196f3",
+      hover: "#1976d2",
+      selected: "#1976d2",
     },
   },
   typography: {
@@ -55,6 +72,172 @@ const theme = createTheme({
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
     ].join(","),
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundColor: "#0a0a0a",
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#1a1a1a",
+          border: "1px solid #333333",
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#1a1a1a",
+          border: "1px solid #333333",
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#1a1a1a",
+          borderBottom: "1px solid #333333",
+        },
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: "#1a1a1a",
+          borderRight: "1px solid #333333",
+        },
+      },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#2a2a2a",
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        head: {
+          backgroundColor: "#2a2a2a",
+          color: "#ffffff",
+          fontWeight: 600,
+        },
+        body: {
+          backgroundColor: "#1a1a1a",
+          color: "#ffffff",
+          borderBottom: "1px solid #333333",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          backgroundColor: "#2196f3",
+          color: "#ffffff",
+          "&:hover": {
+            backgroundColor: "#1976d2",
+          },
+        },
+        outlined: {
+          borderColor: "#2196f3",
+          color: "#2196f3",
+          "&:hover": {
+            borderColor: "#1976d2",
+            backgroundColor: "rgba(33, 150, 243, 0.1)",
+          },
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            backgroundColor: "#2a2a2a",
+            "& fieldset": {
+              borderColor: "#333333",
+            },
+            "&:hover fieldset": {
+              borderColor: "#2196f3",
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#2196f3",
+            },
+          },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#2a2a2a",
+          color: "#ffffff",
+          border: "1px solid #333333",
+        },
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        switchBase: {
+          "&.Mui-checked": {
+            color: "#2196f3",
+          },
+          "&.Mui-checked + .MuiSwitch-track": {
+            backgroundColor: "#2196f3",
+          },
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#1a1a1a",
+          color: "#ffffff",
+          border: "1px solid #333333",
+        },
+        standardError: {
+          backgroundColor: "#2d1b1b",
+          color: "#f44336",
+          border: "1px solid #d32f2f",
+        },
+        standardSuccess: {
+          backgroundColor: "#1b2d1b",
+          color: "#4caf50",
+          border: "1px solid #388e3c",
+        },
+        standardWarning: {
+          backgroundColor: "#2d2a1b",
+          color: "#ff9800",
+          border: "1px solid #f57c00",
+        },
+        standardInfo: {
+          backgroundColor: "#1b2a2d",
+          color: "#2196f3",
+          border: "1px solid #1976d2",
+        },
+      },
+    },
+    MuiLinearProgress: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#333333",
+        },
+        bar: {
+          backgroundColor: "#2196f3",
+        },
+      },
+    },
+    MuiCircularProgress: {
+      styleOverrides: {
+        root: {
+          color: "#2196f3",
+        },
+      },
+    },
   },
 });
 

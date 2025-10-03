@@ -11,8 +11,10 @@ import {
 } from '../types';
 import { API_ENDPOINTS, buildApiUrl, shouldUseMockData } from '../config/api';
 
+import { API_BASE_URL } from '../config/api';
+
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'https://api.charged.autos',
+  baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

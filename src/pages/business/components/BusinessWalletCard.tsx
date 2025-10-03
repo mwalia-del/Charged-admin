@@ -131,7 +131,7 @@ const BusinessWalletCard: React.FC<BusinessWalletCardProps> = ({
           </Box>
         </Box>
 
-        <Box sx={{ mb: 3, p: 2, bgcolor: 'primary.50', borderRadius: 1 }}>
+        <Box sx={{ mb: 3, p: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
           <Typography variant="h4" color="primary" gutterBottom>
             {formatCurrency(walletBalance)}
           </Typography>

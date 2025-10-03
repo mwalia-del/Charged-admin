@@ -3,8 +3,10 @@ import { Tip, TipSummary, TipsFilters, TipsResponse } from "../types";
 
 
 
+import { API_BASE_URL } from '../config/api';
+
 const instance = axios.create({
-  baseURL: "https://api.charged.autos",
+  baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

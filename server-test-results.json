@@ -1,0 +1,148 @@
+{
+  "serverReachable": true,
+  "endpoints": {
+    "health": {
+      "status": "success",
+      "response": {
+        "status": "healthy",
+        "service": "charged-api",
+        "timestamp": "2025-09-20T21:49:30.893Z",
+        "uptime": 469.131271927,
+        "memory": {
+          "rss": 113704960,
+          "heapTotal": 44814336,
+          "heapUsed": 41672640,
+          "external": 3710755,
+          "arrayBuffers": 176894
+        },
+        "version": "1.0.0",
+        "endpoints": {
+          "docs": "/api-docs",
+          "health": "/health",
+          "api_health": "/api/health"
+        }
+      }
+    },
+    "pricing": {
+      "status": "success",
+      "response": {
+        "status": true,
+        "data": [
+          {
+            "id": 1,
+            "name": "Charged X",
+            "description": "Can accomodate upto 4 people",
+            "base_price": 400,
+            "price_per_km": 4,
+            "price_per_minute": 4,
+            "min_fare": 20,
+            "icon": "https://charged-dev-media.s3.eu-north-1.amazonaws.com/admin_9/1745923089245.png",
+            "is_active": true,
+            "created_at": "2025-04-29T06:42:26.244Z",
+            "updated_at": "2025-09-20T08:17:47.830Z",
+            "cancel_fee": 5,
+            "refund_distance_in_m": 200,
+            "minimum_billable_distance": 3,
+            "commission_percentage": 15,
+            "keyword": "normal",
+            "govt_tax_percentage": 25,
+            "sort_order": 1
+          },
+          {
+            "id": 3,
+            "name": "Charged Black",
+            "description": "Can accomodate upto 4 people",
+            "base_price": 2,
+            "price_per_km": 1.2,
+            "price_per_minute": 1.2,
+            "min_fare": 20,
+            "icon": "https://static.vecteezy.com/system/resources/thumbnails/053/733/048/small_2x/modern-car-captured-in-close-upgraphy-with-precision-and-innovation-free-photo.jpg",
+            "is_active": true,
+            "created_at": "2025-04-29T06:44:15.642Z",
+            "updated_at": "2025-09-20T08:08:44.355Z",
+            "cancel_fee": 8,
+            "refund_distance_in_m": 200,
+            "minimum_billable_distance": 3,
+            "commission_percentage": 18,
+            "keyword": "black",
+            "govt_tax_percentage": 10,
+            "sort_order": 2
+          },
+          {
+            "id": 2,
+            "name": "Charged XL",
+            "description": "Can accomodate upto 4 people",
+            "base_price": 5000,
+            "price_per_km": 1.5,
+            "price_per_minute": 1.5,
+            "min_fare": 20,
+            "icon": "https://static.vecteezy.com/system/resources/thumbnails/053/733/048/small_2x/modern-car-captured-in-close-upgraphy-with-precision-and-innovation-free-photo.jpg",
+            "is_active": true,
+            "created_at": "2025-04-29T06:44:06.263Z",
+            "updated_at": "2025-09-15T06:30:59.967Z",
+            "cancel_fee": 10,
+            "refund_distance_in_m": 200,
+            "minimum_billable_distance": 3,
+            "commission_percentage": 10,
+            "keyword": "suv",
+            "govt_tax_percentage": 8,
+            "sort_order": 3
+          }
+        ]
+      },
+      "ruleCount": 3
+    },
+    "vehicleClasses": {
+      "status": "success",
+      "response": {
+        "vehicle_classes": [
+          {
+            "id": 2,
+            "code": "charged_black",
+            "display_name": "Charged Black",
+            "is_enabled": true,
+            "base_fare_cents": 200,
+            "per_km_cents": 120,
+            "per_min_cents": 120,
+            "created_at": "2025-09-15T00:59:46.684Z",
+            "updated_at": "2025-09-15T04:37:25.305Z"
+          }
+        ],
+        "pagination": {
+          "page": 1,
+          "page_size": 20,
+          "total": 1,
+          "total_pages": 1
+        }
+      },
+      "classCount": 1
+    },
+    "websocket": {
+      "status": "success",
+      "response": {
+        "status": true,
+        "message": "WebSocket server is running",
+        "connected_clients": 0,
+        "timestamp": "2025-09-20T21:49:31.051Z"
+      }
+    },
+    "Update Pricing Rule": {
+      "status": "auth_required",
+      "statusCode": 401
+    },
+    "Create Pricing Rule": {
+      "status": "auth_required",
+      "statusCode": 401
+    },
+    "Delete Pricing Rule": {
+      "status": "error",
+      "statusCode": 404
+    },
+    "Update Vehicle Class": {
+      "status": "error",
+      "statusCode": 404
+    }
+  },
+  "errors": [],
+  "timestamp": "2025-09-20T21:49:30.717Z"
+}

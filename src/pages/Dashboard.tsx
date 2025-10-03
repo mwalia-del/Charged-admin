@@ -219,8 +219,9 @@ const Dashboard: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              bgcolor: "primary.light",
-              color: "primary.contrastText",
+              bgcolor: "background.paper",
+              border: "1px solid",
+              borderColor: "primary.main",
             }}
           >
             <CardContent>
@@ -247,8 +248,9 @@ const Dashboard: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              bgcolor: "success.light",
-              color: "success.contrastText",
+              bgcolor: "background.paper",
+              border: "1px solid",
+              borderColor: "success.main",
             }}
           >
             <CardContent>
@@ -275,8 +277,9 @@ const Dashboard: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              bgcolor: "warning.light",
-              color: "warning.contrastText",
+              bgcolor: "background.paper",
+              border: "1px solid",
+              borderColor: "warning.main",
             }}
           >
             <CardContent>
@@ -303,8 +306,9 @@ const Dashboard: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              bgcolor: "info.light",
-              color: "info.contrastText",
+              bgcolor: "background.paper",
+              border: "1px solid",
+              borderColor: "info.main",
             }}
           >
             <CardContent>

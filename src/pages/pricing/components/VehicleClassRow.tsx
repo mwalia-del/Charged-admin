@@ -16,18 +16,20 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { VehicleClass, VehicleClassUpdate } from '../../../types';
-import { updateVehicleClass } from '../../../API/vehicleClasses';
+// import { updateVehicleClass } from '../../../API/vehicleClasses';
 
 interface VehicleClassRowProps {
   vehicleClass: VehicleClass;
   onUpdate: (code: string, updates: VehicleClassUpdate) => void;
   onError: (error: string) => void;
+  canToggle?: boolean;
 }
 
 const VehicleClassRow: React.FC<VehicleClassRowProps> = ({
   vehicleClass,
   onUpdate,
   onError,
+  canToggle = true,
 }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [showDisableDialog, setShowDisableDialog] = useState(false);
@@ -49,9 +51,9 @@ const VehicleClassRow: React.FC<VehicleClassRowProps> = ({
     
     try {
       console.log(`🌐 Updating vehicle class ${vehicleClass.code}:`, { [field]: value });
-      await updateVehicleClass(vehicleClass.code, { [field]: value });
+      // Use the onUpdate callback instead of direct API call
+      await onUpdate(vehicleClass.code, { [field]: value });
       console.log('✅ Vehicle class updated successfully');
-      onUpdate(vehicleClass.code, { [field]: value });
     } catch (error) {
       console.error('❌ Failed to update vehicle class:', error);
       // Rollback local state on error
@@ -109,23 +111,29 @@ const VehicleClassRow: React.FC<VehicleClassRowProps> = ({
         </TableCell>
 
         <TableCell>
-          <Box display="flex" alignItems="center" gap={1}>
-            <Tooltip title={vehicleClass.is_enabled ? "Disable Charged XL" : "Enable Charged XL"}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Switch
-                  checked={vehicleClass.is_enabled}
-                  onChange={(e) => handleToggleEnabled(e.target.checked)}
-                  disabled={isUpdating}
-                  size="small"
-                />
-                {isUpdating && (
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CircularProgress size={16} />
-                  </Box>
-                )}
-              </Box>
-            </Tooltip>
-          </Box>
+          {canToggle ? (
+            <Box display="flex" alignItems="center" gap={1}>
+              <Tooltip title={vehicleClass.is_enabled ? `Disable ${vehicleClass.display_name}` : `Enable ${vehicleClass.display_name}`}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Switch
+                    checked={vehicleClass.is_enabled}
+                    onChange={(e) => handleToggleEnabled(e.target.checked)}
+                    disabled={isUpdating}
+                    size="small"
+                  />
+                  {isUpdating && (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <CircularProgress size={16} />
+                    </Box>
+                  )}
+                </Box>
+              </Tooltip>
+            </Box>
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              Always Active
+            </Typography>
+          )}
         </TableCell>
       </TableRow>
 
@@ -136,14 +144,14 @@ const VehicleClassRow: React.FC<VehicleClassRowProps> = ({
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Disable Charged XL</DialogTitle>
+        <DialogTitle>Disable {vehicleClass.display_name}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to disable Charged XL? This will:
+            Are you sure you want to disable {vehicleClass.display_name}? This will:
             <br />
-            • Hide Charged XL from all rider, driver, and business apps
+            • Hide {vehicleClass.display_name} from all rider, driver, and business apps
             <br />
-            • Block any new bookings for Charged XL
+            • Block any new bookings for {vehicleClass.display_name}
             <br />
             • Apply changes immediately across all platforms
             <br />
@@ -156,7 +164,7 @@ const VehicleClassRow: React.FC<VehicleClassRowProps> = ({
             Cancel
           </Button>
           <Button onClick={confirmDisable} color="error" variant="contained">
-            Disable Charged XL
+            Disable {vehicleClass.display_name}
           </Button>
         </DialogActions>
       </Dialog>

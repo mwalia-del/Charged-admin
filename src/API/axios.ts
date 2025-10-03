@@ -8,8 +8,10 @@ import {
 
 // This file contains the API calls for the admin panel
 
+import { API_BASE_URL } from "../config/api";
+
 const instance = axios.create({
-  baseURL: "https://api.charged.autos",
+  baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -176,7 +178,7 @@ export const getridersdata = () => instance.get("/admin/getriders");
 // It returns an array of ridetypes
 // It is used in the pricing component
 
-export const getRidetypesdata = () => instance.get("/ridetype");
+export const getRidetypesdata = () => instance.get("/ride/ridetype");
 
 // Api to update Ridetype
 // This API is used to update a particular ridetypes
@@ -184,7 +186,15 @@ export const getRidetypesdata = () => instance.get("/ridetype");
 // It is used in the pricing component
 
 export const updateRidetypedata = (id: number, body: object) =>
-  instance.put(`/ridetype/${id}`, body);
+  instance.put(`/ride/ridetype/${id}`, body);
+
+// Api to create new Ridetype
+export const createRidetypedata = (body: object) =>
+  instance.post("/ride/ridetype", body);
+
+// Api to delete Ridetype
+export const deleteRidetypedata = (id: number) =>
+  instance.delete(`/pricing/ridetype/${id}`);
 
 // Api to get Rides
 // This API is used to get all rides
