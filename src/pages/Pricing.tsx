@@ -185,7 +185,7 @@ const Pricing: React.FC = () => {
       }
 
       // Get the latest rule from the store to ensure we have the updated values
-      const latestRule = pricingRules.find(r => r.id === rule.id);
+      const latestRule = pricingRules.find((r: any) => r.id === rule.id);
       if (!latestRule) {
         showSnackbar('Rule not found', 'error');
         return;
