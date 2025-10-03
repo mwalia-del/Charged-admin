@@ -23,19 +23,22 @@ import {
   Paper,
   Tabs,
   Tab,
+  Chip,
+  Snackbar,
 } from "@mui/material";
 import {
   Save as SaveIcon,
   Refresh as RefreshIcon,
   Settings as SettingsIcon,
   DirectionsCar as VehicleIcon,
+  LocalShipping as ParcelIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon,
 } from "@mui/icons-material";
 import { rideTypes, VehicleClass, VehicleClassUpdate } from "../types";
-import { useAuth } from "../contexts/AuthContext";
-import { generateMockVehicleClassesResponse } from "../API/mockVehicleClassesData";
-import { listVehicleClasses, subscribeToVehicleClassUpdates } from "../API/vehicleClasses";
+import { usePricingStore } from "../stores/simplePricingStore";
 import VehicleClassRow from "./pricing/components/VehicleClassRow";
-import toast from "react-hot-toast";
+import ParcelDeliveryPricingForm from "./pricing/components/ParcelDeliveryPricingForm";
 
 // // Ride type icons mapping
 // const rideTypeIcons: Record<string, React.ReactNode> = {
@@ -45,69 +48,104 @@ import toast from "react-hot-toast";
 // };
 
 const Pricing: React.FC = () => {
-  const [pricingRules, setPricingRules] = useState<rideTypes[]>([]);
-  const [vehicleClasses, setVehicleClasses] = useState<VehicleClass[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [vehicleClassesLoading, setVehicleClassesLoading] = useState(false);
-  const [savingRules, setSavingRules] = useState<Record<string, boolean>>({});
-  const [error, setError] = useState<string | null>(null);
-  const [vehicleClassesError, setVehicleClassesError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState(0);
-  const { getRidetypes, updateRidetype } = useAuth();
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' | 'warning' | 'info' }>({
+    open: false,
+    message: '',
+    severity: 'info'
+  });
 
-  // Load pricing rules on component mount
-  useEffect(() => {
-    fetchPricingRules();
-    fetchVehicleClasses();
-    // eslint-disable-next-line
-  }, []);
+  // Simple store
+  const {
+    pricingRules = [],
+    vehicleClasses = [],
+    loading,
+    vehicleClassesLoading,
+    error,
+    vehicleClassesError,
+    savingRules = {},
+    isWebSocketConnected,
+    serverSyncStatus,
+    fetchPricingRules,
+    fetchVehicleClasses,
+    updatePricingRule,
+    savePricingRule,
+    updateVehicleClass,
+    connectWebSocket,
+    disconnectWebSocket,
+    clearErrors,
+    syncWithServer,
+    checkServerConnection,
+  } = usePricingStore();
 
-  // Subscribe to real-time vehicle class updates
+  // Load data and connect WebSocket on component mount
   useEffect(() => {
-    console.log('🔄 Subscribing to vehicle class updates...');
-    const subscription = subscribeToVehicleClassUpdates((update) => {
-      console.log('📡 Received vehicle class update:', update);
-      if (update.code === 'charged_xl') {
-        setVehicleClasses(prev => 
-          prev.map(vc => 
-            vc.code === update.code 
-              ? { ...vc, is_enabled: update.is_enabled, updated_at: update.updated_at }
-              : vc
-          )
-        );
-        toast(`ChargedXL ${update.is_enabled ? 'enabled' : 'disabled'} by another admin`, {
-          icon: 'ℹ️',
-          duration: 4000,
-        });
+    const initializeData = async () => {
+      try {
+        // Check server connection first
+        await checkServerConnection();
+        
+        await Promise.all([
+          fetchPricingRules(),
+          fetchVehicleClasses(),
+        ]);
+        
+        // Connect to WebSocket for real-time updates
+        await connectWebSocket();
+      } catch (error) {
+        console.error('Failed to initialize pricing data:', error);
+        showSnackbar('Failed to load pricing data', 'error');
       }
-    });
-    
-    return () => {
-      console.log('🔄 Unsubscribing from vehicle class updates');
-      subscription.unsubscribe();
     };
-  }, []);
 
-  const fetchPricingRules = async () => {
-    setLoading(true);
-    try {
-      const rules = await getRidetypes();
-      
-      // Ensure we have an array
-      if (Array.isArray(rules) && rules.length > 0) {
-        setPricingRules(rules);
-        setError(null);
-      } else {
-        setPricingRules([]);
-        setError("No pricing rules found. Please check your connection and try again.");
-      }
-    } catch (err) {
-      console.error("Error fetching pricing rules:", err);
-      setPricingRules([]);
-      setError("Failed to load pricing rules. Please try again.");
-    } finally {
-      setLoading(false);
+    initializeData();
+
+    // Cleanup on unmount
+    return () => {
+      disconnectWebSocket();
+    };
+  }, [fetchPricingRules, fetchVehicleClasses, connectWebSocket, disconnectWebSocket, checkServerConnection]);
+
+  // Utility functions
+  const showSnackbar = (message: string, severity: 'success' | 'error' | 'warning' | 'info') => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+  };
+
+  const validateField = (field: string, value: any): string | null => {
+    switch (field) {
+      case 'base_price':
+      case 'price_per_km':
+      case 'price_per_minute':
+      case 'min_fare':
+      case 'cancel_fee':
+        if (isNaN(Number(value)) || Number(value) < 0) {
+          return 'Must be a positive number';
+        }
+        break;
+      case 'commission_percentage':
+      case 'govt_tax_percentage':
+        if (isNaN(Number(value)) || Number(value) < 0 || Number(value) > 100) {
+          return 'Must be between 0 and 100';
+        }
+        break;
+      case 'refund_distance_in_m':
+      case 'minimum_billable_distance':
+        if (isNaN(Number(value)) || Number(value) < 0) {
+          return 'Must be a positive number';
+        }
+        break;
+      case 'name':
+        if (!value || value.trim().length === 0) {
+          return 'Name is required';
+        }
+        break;
     }
+    return null;
   };
 
   const handlePricingChange = (
@@ -115,69 +153,75 @@ const Pricing: React.FC = () => {
     field: keyof rideTypes,
     value: any,
   ) => {
-    setPricingRules((prevRules) =>
-      prevRules.map((rule) =>
-        rule.id === id ? { ...rule, [field]: value || 0 } : rule,
-      ),
-    );
+    // Clear validation error for this field
+    const errorKey = `${id}-${field}`;
+    setValidationErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[errorKey];
+      return newErrors;
+    });
+
+    // Validate the field
+    const error = validateField(field, value);
+    if (error) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [errorKey]: error
+      }));
+      return;
+    }
+
+    // Update the store with the new value
+    updatePricingRule(id, { [field]: value });
   };
 
   const handleSaveRule = async (rule: rideTypes) => {
-    setSavingRules((prev) => ({ ...prev, [rule.id]: true }));
     try {
-      await updateRidetype(rule.id, rule);
-      toast.success(`Successfully updated ${rule?.name} pricing rules`);
-    } catch (err) {
-      toast.error(`Failed to update pricing rules: ${err}`);
-    } finally {
-      setSavingRules((prev) => ({ ...prev, [rule.id]: false }));
+      // Check for validation errors
+      const ruleErrors = Object.keys(validationErrors).filter(key => key.startsWith(`${rule.id}-`));
+      if (ruleErrors.length > 0) {
+        showSnackbar('Please fix validation errors before saving', 'error');
+        return;
+      }
+
+      // Get the latest rule from the store to ensure we have the updated values
+      const latestRule = pricingRules.find(r => r.id === rule.id);
+      if (!latestRule) {
+        showSnackbar('Rule not found', 'error');
+        return;
+      }
+
+
+      await savePricingRule(latestRule.id, latestRule);
+      showSnackbar(`Successfully updated ${latestRule.name} pricing rules`, 'success');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update pricing rules';
+      showSnackbar(errorMessage, 'error');
     }
   };
 
-  const fetchVehicleClasses = async () => {
-    setVehicleClassesLoading(true);
-    try {
-      console.log('🌐 Fetching vehicle classes from API...');
-      const response = await listVehicleClasses();
-      console.log('✅ Vehicle classes API response:', response);
-      setVehicleClasses(response.vehicle_classes);
-      setVehicleClassesError(null);
-      toast.success('Vehicle classes loaded successfully');
-    } catch (err) {
-      console.error('❌ API call failed, using mock data:', err);
-      // Fallback to mock data if API fails
-      const mockResponse = generateMockVehicleClassesResponse();
-      setVehicleClasses(mockResponse.vehicle_classes);
-      setVehicleClassesError("Using offline data - API unavailable");
-      toast('Using offline data - API unavailable', {
-        icon: '⚠️',
-        duration: 5000,
-      });
-    } finally {
-      setVehicleClassesLoading(false);
-    }
-  };
 
-  const handleVehicleClassUpdate = (code: string, updates: VehicleClassUpdate) => {
-    setVehicleClasses(prev => 
-      prev.map(vc => 
-        vc.code === code 
-          ? { ...vc, ...updates, updated_at: new Date().toISOString() }
-          : vc
-      )
-    );
-    
-    // Show specific success message based on the update
-    if (updates.is_enabled !== undefined) {
-      const status = updates.is_enabled ? 'enabled' : 'disabled';
-      toast.success(`ChargedXL ${status} successfully! Changes are live across all platforms.`);
-    } else {
-      toast.success("Vehicle class updated successfully. Changes are live now!");
+
+  const handleVehicleClassUpdate = async (code: string, updates: VehicleClassUpdate) => {
+    try {
+      // Use the store's updateVehicleClass method
+      await updateVehicleClass(code, updates);
+      
+      // Show specific success message based on the update
+      if (updates.is_enabled !== undefined) {
+        const status = updates.is_enabled ? 'enabled' : 'disabled';
+        showSnackbar(`Charged XL ${status} successfully! Changes are live across all platforms.`, 'success');
+      } else {
+        showSnackbar("Vehicle class updated successfully. Changes are live now!", 'success');
+      }
+    } catch (error) {
+      console.error('❌ Failed to update vehicle class:', error);
+      showSnackbar(`Failed to update vehicle class: ${error}`, 'error');
     }
   };
 
   const handleVehicleClassError = (error: string) => {
-    toast.error(error);
+    showSnackbar(error, 'error');
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -211,13 +255,48 @@ const Pricing: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Pricing & Vehicle Management
-      </Typography>
-
-      <Typography variant="body1" color="text.secondary" paragraph>
-        Configure pricing rules for different ride types and manage vehicle class availability across all platforms.
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Box>
+          <Typography variant="h4" gutterBottom>
+            Pricing & Vehicle Management
+          </Typography>
+          <Typography variant="body1" color="text.secondary" paragraph>
+            Configure pricing rules for different ride types and manage vehicle class availability across all platforms.
+          </Typography>
+        </Box>
+        
+        {/* Status Indicators */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {/* Server Sync Status */}
+          <Chip
+            icon={serverSyncStatus.isOnline ? <CheckCircleIcon /> : <ErrorIcon />}
+            label={serverSyncStatus.isOnline ? 'Server Online' : 'Server Offline'}
+            color={serverSyncStatus.isOnline ? 'success' : 'error'}
+            size="small"
+            onClick={checkServerConnection}
+            sx={{ cursor: 'pointer' }}
+          />
+          
+          {/* WebSocket Status */}
+          <Chip
+            icon={isWebSocketConnected ? <CheckCircleIcon /> : <ErrorIcon />}
+            label={isWebSocketConnected ? 'Live Updates' : 'Offline'}
+            color={isWebSocketConnected ? 'success' : 'error'}
+            size="small"
+          />
+          
+          {/* Sync Button */}
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<RefreshIcon />}
+            onClick={syncWithServer}
+            disabled={loading || !serverSyncStatus.isOnline}
+          >
+            Sync
+          </Button>
+        </Box>
+      </Box>
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={activeTab} onChange={handleTabChange}>
@@ -231,31 +310,68 @@ const Pricing: React.FC = () => {
             label="Vehicle Classes" 
             iconPosition="start"
           />
+          <Tab 
+            icon={<ParcelIcon />} 
+            label="Parcel Delivery" 
+            iconPosition="start"
+          />
         </Tabs>
       </Box>
 
       {/* Pricing Rules Tab */}
       {activeTab === 0 && (
         <Box sx={{ mt: 4 }}>
-          {pricingRules.length === 0 ? (
+          {/* Error Display */}
+          {error && (
+            <Alert 
+              severity="error" 
+              sx={{ mb: 4 }}
+              action={
+                <Button 
+                  color="inherit" 
+                  size="small" 
+                  onClick={() => {
+                    clearErrors();
+                    fetchPricingRules();
+                  }}
+                >
+                  Retry
+                </Button>
+              }
+            >
+              {error}
+            </Alert>
+          )}
+
+          {/* Header */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Typography variant="h6">
+              Pricing Rules ({pricingRules.length})
+            </Typography>
+          </Box>
+
+          {pricingRules.length === 0 && !loading ? (
             <Alert severity="info" sx={{ mb: 4 }}>
-              No pricing rules found. Please check your connection and try refreshing the page.
+              No pricing rules found.
             </Alert>
           ) : (
             <Grid container spacing={4}>
-              {pricingRules.map((rule) => (
+              {Array.isArray(pricingRules) && pricingRules.map((rule: rideTypes) => (
             <Grid item xs={12} md={4} key={rule.id}>
               <Card elevation={3}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Avatar
-                    src={rule?.icon}
-                    alt={rule?.name}
-                    sx={{ ml: 2, width: 40, height: 40 }}
-                  />
-                  <CardHeader
-                    title={<Typography variant="h6">{rule.name}</Typography>}
-                    subheader={`Last updated: ${new Date(rule.updated_at).toLocaleDateString()}`}
-                  />
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Avatar
+                      src={rule?.icon}
+                      alt={rule?.name}
+                      sx={{ ml: 2, width: 40, height: 40 }}
+                    />
+                    <CardHeader
+                      title={<Typography variant="h6">{rule.name}</Typography>}
+                      subheader={`Last updated: ${new Date(rule.updated_at).toLocaleDateString()}`}
+                    />
+                  </Box>
+                  
                 </Box>
                 <Divider />
                 <CardContent>
@@ -278,6 +394,8 @@ const Pricing: React.FC = () => {
                             e.target.value,
                           )
                         }
+                        error={!!validationErrors[`${rule.id}-base_price`]}
+                        helperText={validationErrors[`${rule.id}-base_price`]}
                       />
                     </Grid>
 
@@ -299,6 +417,8 @@ const Pricing: React.FC = () => {
                             e.target.value,
                           )
                         }
+                        error={!!validationErrors[`${rule.id}-price_per_km`]}
+                        helperText={validationErrors[`${rule.id}-price_per_km`]}
                       />
                     </Grid>
 
@@ -320,6 +440,8 @@ const Pricing: React.FC = () => {
                             e.target.value,
                           )
                         }
+                        error={!!validationErrors[`${rule.id}-price_per_minute`]}
+                        helperText={validationErrors[`${rule.id}-price_per_minute`]}
                       />
                     </Grid>
 
@@ -468,12 +590,12 @@ const Pricing: React.FC = () => {
                         variant="contained"
                         color="primary"
                         fullWidth
-                        startIcon={<SaveIcon />}
+                        startIcon={savingRules[rule.id.toString()] ? <CircularProgress size={20} /> : <SaveIcon />}
                         onClick={() => handleSaveRule(rule)}
-                        disabled={savingRules[rule.id]}
+                        disabled={savingRules[rule.id.toString()] || Object.keys(validationErrors).some(key => key.startsWith(`${rule.id}-`))}
                         sx={{ mt: 2 }}
                       >
-                        {savingRules[rule.id] ? "Saving..." : "Save Changes"}
+                        {savingRules[rule.id.toString()] ? "Saving..." : "Save Changes"}
                       </Button>
                     </Grid>
                   </Grid>
@@ -492,10 +614,10 @@ const Pricing: React.FC = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Box>
               <Typography variant="h6" gutterBottom>
-                Charged XL Management
+                Vehicle Classes Management
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Enable or disable Charged XL across all platforms. Changes take effect immediately.
+                Manage vehicle class availability. Only Charged XL can be disabled to prevent rider bookings.
               </Typography>
             </Box>
             <Button
@@ -544,14 +666,14 @@ const Pricing: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {vehicleClasses
-                    .filter(vehicleClass => vehicleClass.code === 'charged_xl')
-                    .map((vehicleClass) => (
+                  {Array.isArray(vehicleClasses) && vehicleClasses
+                    .map((vehicleClass: VehicleClass) => (
                       <VehicleClassRow
                         key={vehicleClass.id}
                         vehicleClass={vehicleClass}
                         onUpdate={handleVehicleClassUpdate}
                         onError={handleVehicleClassError}
+                        canToggle={vehicleClass.code === 'charged_xl'}
                       />
                     ))}
                 </TableBody>
@@ -559,14 +681,58 @@ const Pricing: React.FC = () => {
             </TableContainer>
           )}
 
-          <Box sx={{ mt: 3, p: 2, bgcolor: 'info.light', borderRadius: 1 }}>
-            <Typography variant="body2" color="info.contrastText">
+          <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+            <Typography variant="body2" color="text.primary">
               <strong>Realtime Updates:</strong> When you disable a vehicle class, it will be hidden from all rider, driver, and business apps within seconds. 
               Any attempt to book a disabled vehicle class will be rejected by the server.
             </Typography>
           </Box>
         </Box>
       )}
+
+      {/* Parcel Delivery Tab */}
+      {activeTab === 2 && (
+        <Box sx={{ mt: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                Parcel Delivery Pricing Management
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Configure pricing rules for parcel delivery services. All pricing is in Canadian Dollars (CAD).
+              </Typography>
+            </Box>
+          </Box>
+
+          <ParcelDeliveryPricingForm
+            onSuccess={(message) => showSnackbar(message, 'success')}
+            onError={(message) => showSnackbar(message, 'error')}
+          />
+
+          <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+            <Typography variant="body2" color="text.primary">
+              <strong>Real-time Updates:</strong> Changes to parcel delivery pricing are applied immediately across all platforms. 
+              The pricing rules affect all parcel delivery bookings and driver earnings calculations.
+            </Typography>
+          </Box>
+        </Box>
+      )}
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={handleSnackbarClose} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
